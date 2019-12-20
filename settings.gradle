@@ -1,0 +1,2 @@
+include ':app', ':mnn', ':common', ':ncnn'
+rootProject.name='DnnBenchmark'
