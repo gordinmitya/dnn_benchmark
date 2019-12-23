@@ -25,7 +25,7 @@ class SuccessResult(
     val preparation: Long
 ) : InferenceResult(inferenceFramework, inferenceType, model) {
     override fun toString(): String {
-        return "${super.toString()} $min $max $avg"
+        return "${super.toString()} $min $max ${"%.2f".format(avg)}"
     }
 }
 
