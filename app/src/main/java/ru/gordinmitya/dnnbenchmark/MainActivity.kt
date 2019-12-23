@@ -9,7 +9,6 @@ import ru.gordinmitya.mnn.MNNFramework
 import ru.gordinmitya.ncnn.NCNNFramework
 import ru.gordinmitya.tflite.TFLiteFramework
 
-
 class MainActivity : AppCompatActivity() {
 
     lateinit var textView: TextView
@@ -20,6 +19,10 @@ class MainActivity : AppCompatActivity() {
             it.movementMethod = ScrollingMovementMethod()
             it.isVerticalScrollBarEnabled = true
             it.setHorizontallyScrolling(true)
+
+            it.isEnabled = true
+            it.isLongClickable = true
+            it.setTextIsSelectable(true)
         }
         setContentView(textView)
 
