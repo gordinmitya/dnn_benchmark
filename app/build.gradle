@@ -51,4 +51,5 @@ dependencies {
     implementation project(path: ':mnn')
     implementation project(path: ':ncnn')
     implementation project(path: ':tflite')
+    implementation project(path: ':tf_mobile')
 }

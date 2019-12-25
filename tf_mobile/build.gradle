@@ -1,0 +1,41 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.2"
+
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'consumer-rules.pro'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+repositories {
+    maven {
+        url 'https://google.bintray.com/tensorflow'
+    }
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    implementation 'org.tensorflow:tensorflow-android:1.13.1'
+    implementation project(path: ':common')
+
+    testImplementation 'junit:junit:4.12'
+}
