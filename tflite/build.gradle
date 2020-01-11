@@ -36,10 +36,9 @@ android {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-    implementation project(path: ':common')
     implementation 'org.tensorflow:tensorflow-lite:2.0.0'
     implementation 'org.tensorflow:tensorflow-lite-gpu:2.0.0'
     implementation 'org.tensorflow:tensorflow-lite-support:0.0.0-nightly'
 
-    testImplementation 'junit:junit:4.12'
+    implementation project(path: ':common')
 }
