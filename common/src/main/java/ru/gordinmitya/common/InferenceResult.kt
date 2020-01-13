@@ -1,42 +1,26 @@
 package ru.gordinmitya.common
 
-sealed class InferenceResult(
-    val inferenceFramework: InferenceFramework,
-    val inferenceType: InferenceType,
-    val model: Model
-) {
-    override fun toString(): String {
-        return "${model.name} ${inferenceFramework.name} ${inferenceType.name}"
+sealed class InferenceResult(val configuration: Configuration) {
+    override fun toString(): String = configuration.run {
+        return "${inferenceFramework.name} ${inferenceType.name}"
     }
 }
 
 class SuccessResult(
-    inferenceFramework: InferenceFramework,
-    inferenceType: InferenceType,
-    model: Model,
-
-    val loops: Int,
-    // time in milliseconds
-    val min: Long,
-    val max: Long,
-    val avg: Double,
-
-    val firstRun: Long,
-    val preparation: Long
-) : InferenceResult(inferenceFramework, inferenceType, model) {
+    configuration: Configuration,
+    val benchmarkResult: BenchmarkResult,
+    val precisionResult: PrecisionResult
+) : InferenceResult(configuration) {
     override fun toString(): String {
-        return "${super.toString()} $min $max ${"%.2f".format(avg)}"
+        return "${super.toString()} $benchmarkResult $precisionResult"
     }
 }
 
 class FailureResult(
-    inferenceFramework: InferenceFramework,
-    inferenceType: InferenceType,
-    model: Model,
-
+    configuration: Configuration,
     val message: String
-) : InferenceResult(inferenceFramework, inferenceType, model) {
+) : InferenceResult(configuration) {
     override fun toString(): String {
-        return "${super.toString()} FAILED ${message}"
+        return "${super.toString()} FAILED $message"
     }
 }

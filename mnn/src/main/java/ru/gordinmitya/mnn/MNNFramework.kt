@@ -1,7 +1,11 @@
 package ru.gordinmitya.mnn
 
 import android.content.Context
-import ru.gordinmitya.common.*
+import ru.gordinmitya.common.Configuration
+import ru.gordinmitya.common.InferenceFramework
+import ru.gordinmitya.common.InferenceType
+import ru.gordinmitya.common.Model
+import ru.gordinmitya.common.classification.Classifier
 
 object MNNFramework : InferenceFramework("MNN", "by Alibaba") {
     private val TYPES = arrayListOf(
@@ -16,26 +20,12 @@ object MNNFramework : InferenceFramework("MNN", "by Alibaba") {
     override val models: List<Model>
         get() = ConvertedModel.all.map { it.model }.toList()
 
-    override fun benchmark(
-        context: Context,
-        model: Model,
-        inferenceType: InferenceType,
-        loops: Int
-    ): InferenceResult {
-        val convertedModel = ConvertedModel.getByModel(model)
+    override fun createClassifier(context: Context, configuration: Configuration): Classifier {
+        val convertedModel = ConvertedModel.getByModel(configuration.model)
             ?: throw IllegalArgumentException("not supported model")
-        val inferenceType = inferenceType as? MNNInferenceType
+        val inferenceType = configuration.inferenceType as? MNNInferenceType
             ?: throw IllegalArgumentException("not supported inference type")
 
-        return try {
-            Engine.benchmark(context, convertedModel, inferenceType, loops)
-        } catch (e: RuntimeException) {
-            FailureResult(
-                this,
-                inferenceType,
-                model,
-                e.message ?: ""
-            )
-        }
+        return MNNClassifier(context, configuration, convertedModel, inferenceType)
     }
 }

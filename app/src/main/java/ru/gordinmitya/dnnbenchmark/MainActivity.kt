@@ -4,12 +4,17 @@ import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import ru.gordinmitya.common.InferenceFramework
-import ru.gordinmitya.common.Model
-import ru.gordinmitya.tflite.TFLiteFramework
+import ru.gordinmitya.common.Benchmarker
+import ru.gordinmitya.common.Configuration
+import ru.gordinmitya.common.Task
+import ru.gordinmitya.common.classification.ClassificationEvaluator
+import ru.gordinmitya.common.classification.ClassificationModel
+import ru.gordinmitya.common.classification.ClassificationRunner
+import ru.gordinmitya.common.classification.GTSampler
+import ru.gordinmitya.mnn.MNNFramework
 import ru.gordinmitya.ncnn.NCNNFramework
 import ru.gordinmitya.tf_mobile.TFMobileFramework
-import ru.gordinmitya.mnn.MNNFramework
+import ru.gordinmitya.tflite.TFLiteFramework
 
 class MainActivity : AppCompatActivity() {
 
@@ -31,7 +36,7 @@ class MainActivity : AppCompatActivity() {
         doit()
     }
 
-    val logBuilder = StringBuilder()
+    private val logBuilder = StringBuilder()
     private fun log(msg: String) = textView.post {
         logBuilder.append(msg)
         logBuilder.append("\n")
@@ -41,27 +46,42 @@ class MainActivity : AppCompatActivity() {
     val loops = 48
     val sleep = 1_000L
 
-    private fun <T : InferenceFramework> run(f: T) {
-        f.inferenceTypes.map { type ->
-            f.benchmark(
-                App.instance,
-                Model.mobilenet_v2,
-                type,
-                loops
-            )
-        }.forEach {
-            log(it.toString())
-            Thread.sleep(sleep)
-        }
-    }
-
     private fun doit() {
+        val frameworks = listOf(
+//            TFMobileFramework,
+//            TFLiteFramework,
+//            MNNFramework,
+            NCNNFramework
+        )
+        val configurations = ArrayList<Configuration>()
+        for (framework in frameworks) {
+            for (model in framework.models) {
+                if (model.task != Task.CLASSIFICATION) continue
+                for (type in framework.inferenceTypes) {
+                    val configuration = Configuration(framework, type, model)
+                    configurations.add(configuration)
+                }
+            }
+        }
         Thread {
-            while (true) {
-                run(TFLiteFramework)
-                run(TFMobileFramework)
-                run(NCNNFramework)
-                run(MNNFramework)
+            for (i in 0 until 3) {
+                configurations
+                    .map { configuration ->
+                        val model = configuration.model as ClassificationModel
+                        val classifier =
+                            configuration.inferenceFramework.createClassifier(this, configuration)
+                        ClassificationRunner.benchmark(
+                            classifier,
+                            GTSampler(model.truths),
+                            Benchmarker(),
+                            ClassificationEvaluator(),
+                            loops
+                        )
+                    }
+                    .forEach {
+                        log(it.toString())
+                        Thread.sleep(sleep)
+                    }
                 log("\n" + "–".repeat(8) + "\n")
             }
         }.start()

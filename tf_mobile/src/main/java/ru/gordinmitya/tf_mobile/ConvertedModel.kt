@@ -1,18 +1,18 @@
 package ru.gordinmitya.tf_mobile
 
 import ru.gordinmitya.common.Model
+import ru.gordinmitya.common.classification.ClassificationModel
+import ru.gordinmitya.common.classification.MobileNet_v2
 
 class ConvertedModel private constructor(
-    val model: Model,
-    val inputSize: Pair<Int, Int>,
+    val model: ClassificationModel,
     val inputName: String,
     val outputName: String,
     val file: String
 ) {
     companion object {
         val mobilenet_v2 = ConvertedModel(
-            Model.mobilenet_v2,
-            224 to 224,
+            MobileNet_v2,
             "input",
             "MobilenetV2/Predictions/Reshape_1",
             "mobilenet_v2.pb"

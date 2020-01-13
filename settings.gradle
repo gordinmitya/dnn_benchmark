@@ -1,2 +1,2 @@
-include ':app', ':mnn', ':common', ':ncnn', ':tflite', ':tf_mobile'
+include ':app', ':common', ':mnn', ':tf_mobile', ':tflite', ':ncnn'
 rootProject.name='DnnBenchmark'

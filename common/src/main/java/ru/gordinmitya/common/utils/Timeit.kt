@@ -1,9 +1,9 @@
-package ru.gordinmitya.common
+package ru.gordinmitya.common.utils
 
 import java.util.concurrent.TimeUnit
 
 object Timeit {
-    fun measure(code: ()->Unit): Long {
+    fun measure(code: () -> Unit): Long {
         val start = System.nanoTime()
         code()
         val end = System.nanoTime()

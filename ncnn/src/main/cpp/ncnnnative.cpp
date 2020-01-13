@@ -83,19 +83,15 @@ Java_ru_gordinmitya_ncnn_NCNNNative_nativeInit(JNIEnv *env, jclass type, jobject
 
 JNIEXPORT jboolean JNICALL
 Java_ru_gordinmitya_ncnn_NCNNNative_nativeRun(JNIEnv *env, jclass type, jlong netPtr,
-                                              jobject bitmap) {
+                                              jobject bitmap, jfloatArray output) {
     auto net = (ncnn::Net *) netPtr;
 
     AndroidBitmapInfo info;
     AndroidBitmap_getInfo(env, bitmap, &info);
 
-    const int EXPECTED_SIZE = 224;
     int width = info.width;
     int height = info.height;
-    if (width != EXPECTED_SIZE || height != EXPECTED_SIZE) {
-        __android_log_print(ANDROID_LOG_DEBUG, TAG, "bitmap size should be 224x224");
-        return JNI_FALSE;
-    }
+
     if (info.format != ANDROID_BITMAP_FORMAT_RGBA_8888) {
         __android_log_print(ANDROID_LOG_DEBUG, TAG, "bitmap format should be RGBA_8888");
         return JNI_FALSE;
@@ -117,6 +113,18 @@ Java_ru_gordinmitya_ncnn_NCNNNative_nativeRun(JNIEnv *env, jclass type, jlong ne
 
         ncnn::Mat out;
         ex.extract("465", out);
+
+        int outputLen = env->GetArrayLength(output);
+//        if (out.w != outputLen) {
+//            __android_log_print(ANDROID_LOG_DEBUG, TAG, "output array size missmatch");
+//            return JNI_FALSE;
+//        }
+        auto scores = new jfloat[outputLen];
+        for (int i = 0; i < out.w; i++) {
+            scores[i] = out[i];
+        }
+        env->SetFloatArrayRegion(output, 0, outputLen, scores);
+        delete scores;
     }
 
     return JNI_TRUE;

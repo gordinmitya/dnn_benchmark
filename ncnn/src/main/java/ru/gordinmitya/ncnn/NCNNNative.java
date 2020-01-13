@@ -11,9 +11,9 @@ public class NCNNNative {
         return netPtr != 0;
     }
 
-    public boolean run(Bitmap bitmap) {
+    public boolean run(Bitmap bitmap, float[] output) {
         checkPtr();
-        return nativeRun(netPtr, bitmap);
+        return nativeRun(netPtr, bitmap, output);
     }
 
     public void release() {
@@ -29,7 +29,7 @@ public class NCNNNative {
 
     private static native long nativeInit(AssetManager mgr, String paramFile, String binFile, boolean gpu);
 
-    private static native boolean nativeRun(long netPtr, Bitmap bitmap);
+    private static native boolean nativeRun(long netPtr, Bitmap bitmap, float[] output);
 
     private static native void nativeRelease(long netPtr);
 

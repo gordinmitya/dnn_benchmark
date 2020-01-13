@@ -1,14 +1,16 @@
 package ru.gordinmitya.tflite
 
 import ru.gordinmitya.common.Model
+import ru.gordinmitya.common.classification.ClassificationModel
+import ru.gordinmitya.common.classification.MobileNet_v2
 
 class ConvertedModel private constructor(
-    val model: Model,
+    val model: ClassificationModel,
     val file: String
 ) {
     companion object {
         val mobilenet_v2 = ConvertedModel(
-            Model.mobilenet_v2,
+            MobileNet_v2,
             "mobilenet_v2.tflite"
         )
 

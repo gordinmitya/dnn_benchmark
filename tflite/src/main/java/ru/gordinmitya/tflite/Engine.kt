@@ -11,25 +11,27 @@ import org.tensorflow.lite.support.common.ops.NormalizeOp
 import org.tensorflow.lite.support.image.ImageProcessor
 import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
-import ru.gordinmitya.common.InferenceResult
-import ru.gordinmitya.common.SuccessResult
-import ru.gordinmitya.common.Timeit
+import ru.gordinmitya.common.Configuration
+import ru.gordinmitya.common.classification.Classifier
 
 
-class Engine private constructor(val context: Context) {
+class TFMobileClassifier(
+    val context: Context,
+    configuration: Configuration,
+    val convertedModel: ConvertedModel,
+    val inferenceType: TFLiteInferenceType
+) : Classifier(configuration) {
 
     val NUM_THREADS = 4
-
-    private lateinit var bitmap: Bitmap
 
     private lateinit var interpreter: Interpreter
     private var delegate: Delegate? = null
     private lateinit var inputImageBuffer: TensorImage
     private lateinit var outputProbabilityBuffer: TensorBuffer
 
-    private fun prepare(model: ConvertedModel, inferenceType: TFLiteInferenceType) {
+    override fun prepare() {
         val options = Interpreter.Options()
-        val byteBuffer = FileUtil.loadMappedFile(context, model.file)
+        val byteBuffer = FileUtil.loadMappedFile(context, convertedModel.file)
 
         delegate = when (inferenceType) {
             TFLITE_OPENGL -> GpuDelegate()
@@ -45,13 +47,10 @@ class Engine private constructor(val context: Context) {
         // {1, height, width, 3}
         interpreter.getInputTensor(imageTensorIndex).let {
             val shape = it.shape()
+            check(shape[1] == convertedModel.model.inputSize.first)
+            check(shape[2] == convertedModel.model.inputSize.second)
             val dataType = it.dataType()
             inputImageBuffer = TensorImage(dataType)
-            bitmap = Bitmap.createBitmap(
-                shape[1],
-                shape[2],
-                Bitmap.Config.ARGB_8888
-            )
         }
 
         val probabilityTensorIndex = 0
@@ -62,7 +61,7 @@ class Engine private constructor(val context: Context) {
         }
     }
 
-    private fun fire() {
+    override fun predict(bitmap: Bitmap): FloatArray {
         inputImageBuffer.load(bitmap)
         val imageProcessor = ImageProcessor.Builder()
             .add(NormalizeOp(127.5f, 127.5f))
@@ -70,44 +69,14 @@ class Engine private constructor(val context: Context) {
         inputImageBuffer = imageProcessor.process(inputImageBuffer)
 
         interpreter.run(inputImageBuffer.buffer, outputProbabilityBuffer.buffer.rewind())
+
+        check(outputProbabilityBuffer.flatSize == convertedModel.model.outputSize)
+        return outputProbabilityBuffer.floatArray
     }
 
-    private fun release() {
+    override fun release() {
         interpreter.close()
         (delegate as? NnApiDelegate)?.close()
         (delegate as? GpuDelegate)?.close()
-    }
-
-    companion object {
-        fun benchmark(
-            context: Context,
-            model: ConvertedModel,
-            inferenceType: TFLiteInferenceType,
-            loops: Int
-        ): InferenceResult {
-            val engine = Engine(context)
-            val prepareTime = Timeit.measure {
-                engine.prepare(model, inferenceType)
-            }
-            val times = LongArray(loops)
-            for (i in 0 until loops) {
-                times[i] = Timeit.measure {
-                    engine.fire()
-                }
-            }
-            engine.release()
-            return SuccessResult(
-                TFLiteFramework,
-                inferenceType,
-                model.model,
-                loops,
-
-                times.min()!!,
-                times.max()!!,
-                times.average(),
-                times[0],
-                prepareTime
-            )
-        }
     }
 }

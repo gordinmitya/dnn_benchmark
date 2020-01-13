@@ -2,6 +2,7 @@ package ru.gordinmitya.ncnn
 
 import android.content.Context
 import ru.gordinmitya.common.*
+import ru.gordinmitya.common.classification.Classifier
 
 object NCNNFramework : InferenceFramework("NCNN", "by Tencent") {
 
@@ -15,26 +16,12 @@ object NCNNFramework : InferenceFramework("NCNN", "by Tencent") {
     override val models: List<Model>
         get() = ConvertedModel.all.map { it.model }
 
-    override fun benchmark(
-        context: Context,
-        model: Model,
-        inferenceType: InferenceType,
-        loops: Int
-    ): InferenceResult {
-        val convertedModel = ConvertedModel.getByModel(model)
+    override fun createClassifier(context: Context, configuration: Configuration): Classifier {
+        val convertedModel = ConvertedModel.getByModel(configuration.model)
             ?: throw IllegalArgumentException("not supported model")
-        val inferenceType = inferenceType as? NCNNInfereceType
+        val inferenceType = configuration.inferenceType as? NCNNInfereceType
             ?: throw IllegalArgumentException("not supported inference type")
 
-        return try {
-            Engine.benchmark(context, convertedModel, inferenceType, loops)
-        } catch (e: RuntimeException) {
-            FailureResult(
-                this,
-                inferenceType,
-                model,
-                e.message ?: ""
-            )
-        }
+        return NCNNClassifier(context, configuration, convertedModel, inferenceType)
     }
 }
