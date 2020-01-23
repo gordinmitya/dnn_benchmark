@@ -10,7 +10,7 @@ class BenchmarkResult(
     val avg: Double
 ) {
     override fun toString(): String {
-        return "min=${min}ms max=${max}ms avg=${"%.2f".format(avg)}ms"
+        return "avg=${"%.2f".format(avg)}ms min=${min}ms max=${max}ms"
     }
 
     companion object {

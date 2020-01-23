@@ -1,22 +1,21 @@
 package ru.gordinmitya.common.classification
 
+import android.util.Log
 import ru.gordinmitya.common.PrecisionResult
 import ru.gordinmitya.common.ResultEvaluator
-import kotlin.math.abs
-import kotlin.math.max
 
 class ClassificationEvaluator : ResultEvaluator {
-    private var maxDiff = 0f
+    private val errors = ArrayList<Pair<String, String>>()
+    private var total = 0
 
-    fun addNext(predictions: FloatArray, gt: GT) {
-        require(predictions.size == gt.probabilities.size)
-        for (i in predictions.indices) {
-            val diff = abs(predictions[i] - gt.probabilities[i])
-            maxDiff = max(maxDiff, diff)
-        }
+    fun addNext(predictions: FloatArray, result: String, gt: GT) {
+        total += 1
+        if (gt.label != result)
+            errors.add(gt.label to result)
+        Log.d("ClassificationEvaluator", "$result vs ${gt.label}")
     }
 
     override fun summarize(): PrecisionResult {
-        return ClassificationPrecisionResult(maxDiff)
+        return ClassificationPrecisionResult(1.0 * errors.size / total)
     }
 }

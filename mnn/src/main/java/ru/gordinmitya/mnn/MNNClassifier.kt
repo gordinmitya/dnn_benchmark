@@ -18,7 +18,7 @@ class MNNClassifier(
     val inferenceType: MNNInferenceType
 ) : Classifier(configuration) {
 
-    private lateinit var net: MNNNetInstance
+    private var net: MNNNetInstance? = null
     private lateinit var session: MNNNetInstance.Session
     private lateinit var inputTensor: Tensor
     private lateinit var outputTensor: Tensor
@@ -44,7 +44,7 @@ class MNNClassifier(
             it.numThread = 4
             it.outputTensors = arrayOf(convertedModel.outputName)
         }
-        session = net.createSession(config)
+        session = net!!.createSession(config)
         inputTensor = session.getInput(null)
         outputTensor = session.getOutput(null)
         inputSize = inputTensor.dimensions
@@ -66,6 +66,6 @@ class MNNClassifier(
     }
 
     override fun release() {
-        net.release()
+        net?.release()
     }
 }

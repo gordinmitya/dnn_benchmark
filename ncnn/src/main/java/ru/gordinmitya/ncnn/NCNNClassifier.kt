@@ -13,11 +13,11 @@ class NCNNClassifier(
     val inferenceType: NCNNInfereceType
 ) : Classifier(configuration) {
 
-    private lateinit var ncnn: NCNNNative
+    private var ncnn: NCNNNative? = null
 
     override fun prepare() {
         ncnn = NCNNNative()
-        val created = ncnn.init(
+        val created = ncnn!!.init(
             context.assets,
             convertedModel.paramFile,
             convertedModel.binFile,
@@ -29,13 +29,13 @@ class NCNNClassifier(
 
     override fun predict(bitmap: Bitmap): FloatArray {
         val prediction = FloatArray(convertedModel.model.outputSize)
-        val status = ncnn.run(bitmap, prediction)
+        val status = ncnn!!.run(bitmap, prediction)
         if (!status)
             throw RuntimeException("Failed to inference with NCNN")
         return prediction
     }
 
     override fun release() {
-        ncnn.release()
+        ncnn?.release()
     }
 }

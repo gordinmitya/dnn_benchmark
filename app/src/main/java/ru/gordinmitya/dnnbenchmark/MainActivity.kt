@@ -8,9 +8,9 @@ import ru.gordinmitya.common.Benchmarker
 import ru.gordinmitya.common.Configuration
 import ru.gordinmitya.common.Task
 import ru.gordinmitya.common.classification.ClassificationEvaluator
-import ru.gordinmitya.common.classification.ClassificationModel
 import ru.gordinmitya.common.classification.ClassificationRunner
-import ru.gordinmitya.common.classification.GTSampler
+import ru.gordinmitya.common.classification.MobileNet_v2
+import ru.gordinmitya.common.classification.ModelAssets
 import ru.gordinmitya.mnn.MNNFramework
 import ru.gordinmitya.ncnn.NCNNFramework
 import ru.gordinmitya.tf_mobile.TFMobileFramework
@@ -37,10 +37,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     private val logBuilder = StringBuilder()
-    private fun log(msg: String) = textView.post {
+    private fun log(msg: String, replace: Boolean = false) {
+        if (replace) {
+            val start = logBuilder.lastIndexOf("\n", logBuilder.length - 2)
+            if (start >= 0)
+                logBuilder.delete(start + 1, logBuilder.length)
+        }
         logBuilder.append(msg)
         logBuilder.append("\n")
-        textView.text = logBuilder
+        textView.post {
+            textView.text = logBuilder
+        }
     }
 
     val loops = 48
@@ -48,9 +55,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun doit() {
         val frameworks = listOf(
-//            TFMobileFramework,
-//            TFLiteFramework,
-//            MNNFramework,
+            TFMobileFramework,
+            TFLiteFramework,
+            MNNFramework,
             NCNNFramework
         )
         val configurations = ArrayList<Configuration>()
@@ -64,26 +71,23 @@ class MainActivity : AppCompatActivity() {
             }
         }
         Thread {
-            for (i in 0 until 3) {
-                configurations
-                    .map { configuration ->
-                        val model = configuration.model as ClassificationModel
-                        val classifier =
-                            configuration.inferenceFramework.createClassifier(this, configuration)
-                        ClassificationRunner.benchmark(
-                            classifier,
-                            GTSampler(model.truths),
-                            Benchmarker(),
-                            ClassificationEvaluator(),
-                            loops
-                        )
-                    }
-                    .forEach {
-                        log(it.toString())
-                        Thread.sleep(sleep)
-                    }
-                log("\n" + "–".repeat(8) + "\n")
+            val assets = ModelAssets(this, MobileNet_v2)
+            configurations.forEach { configuration ->
+                val classifier =
+                    configuration.inferenceFramework.createClassifier(this, configuration)
+                val progressLogger = ProgressLogger(configuration, this::log)
+                val result = ClassificationRunner.benchmark(
+                    classifier,
+                    assets,
+                    Benchmarker(),
+                    ClassificationEvaluator(),
+                    loops,
+                    progressLogger
+                )
+                log(result.toString(), true)
+                Thread.sleep(sleep)
             }
+            log("\n" + "–".repeat(8) + "\n")
         }.start()
     }
 }

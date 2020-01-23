@@ -120,7 +120,8 @@ Java_ru_gordinmitya_ncnn_NCNNNative_nativeRun(JNIEnv *env, jclass type, jlong ne
 //            return JNI_FALSE;
 //        }
         auto scores = new jfloat[outputLen];
-        for (int i = 0; i < out.w; i++) {
+        // FIXME started from 1 because of "background tag" in tflite model
+        for (int i = 1; i < out.w; i++) {
             scores[i] = out[i];
         }
         env->SetFloatArrayRegion(output, 0, outputLen, scores);

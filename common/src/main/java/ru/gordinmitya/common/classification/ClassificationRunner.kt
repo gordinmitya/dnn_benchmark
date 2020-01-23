@@ -1,6 +1,7 @@
 package ru.gordinmitya.common.classification
 
 import ru.gordinmitya.common.Benchmarker
+import ru.gordinmitya.common.FailureResult
 import ru.gordinmitya.common.InferenceResult
 import ru.gordinmitya.common.SuccessResult
 import ru.gordinmitya.common.utils.Timeit
@@ -8,7 +9,7 @@ import ru.gordinmitya.common.utils.Timeit
 object ClassificationRunner {
     fun benchmark(
         classifier: Classifier,
-        sampler: GTSampler,
+        modelAssets: ModelAssets,
         benchmarker: Benchmarker,
         evaluator: ClassificationEvaluator,
         loops: Int,
@@ -22,17 +23,17 @@ object ClassificationRunner {
             progressCallback?.onPrepared(prepareTime)
             benchmarker.addPreparation((prepareTime))
             for (i in 0 until loops) {
-                val sample = sampler.next()
-                progressCallback?.onNext(sample.image, i, loops)
+                val sample = modelAssets.getGT()
+                progressCallback?.onNext(sample.image, i + 1, loops)
                 var prediction: FloatArray = floatArrayOf()
                 val time = Timeit.measure {
                     prediction = classifier.predict(sample.image)
                 }
                 // TODO decrease loops count in case of too long execution
-                val label = model.getLabelByPrediction(prediction)
+                val label = modelAssets.getLabelForPrediction(prediction)
                 progressCallback?.onResult(label, time)
                 benchmarker.addNext(time)
-                evaluator.addNext(prediction, sample)
+                evaluator.addNext(prediction, label, sample)
                 if (Thread.interrupted())
                     throw InterruptedException()
             }
@@ -41,14 +42,13 @@ object ClassificationRunner {
                 benchmarker.summarize(),
                 evaluator.summarize()
             )
-        }
-//        } catch (e: RuntimeException) {
-//            FailureResult(
-//                classifier.configuration,
-//                e.message ?: ""
-//            )
-//        }
-        finally {
+        } catch (e: RuntimeException) {
+//            throw e
+            FailureResult(
+                classifier.configuration,
+                e.message ?: ""
+            )
+        } finally {
             classifier.release()
         }
     }

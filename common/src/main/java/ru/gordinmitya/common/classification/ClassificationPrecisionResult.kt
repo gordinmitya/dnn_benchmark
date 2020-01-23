@@ -3,9 +3,9 @@ package ru.gordinmitya.common.classification
 import ru.gordinmitya.common.PrecisionResult
 
 class ClassificationPrecisionResult(
-    val diff: Float
+    val errors: Double
 ) : PrecisionResult() {
     override fun toString(): String {
-        return "max diff=$diff"
+        return "misclassified ${errors * 100}%"
     }
 }

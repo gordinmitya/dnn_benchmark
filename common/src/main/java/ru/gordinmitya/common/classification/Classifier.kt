@@ -20,6 +20,8 @@ abstract class Classifier(val configuration: Configuration) {
     /**
      * Frees all used resources.
      * Should reset the system to blank state as it was before prepare call.
+     *
+     * Note can be called even if prepare failed
      */
     abstract fun release()
 }
