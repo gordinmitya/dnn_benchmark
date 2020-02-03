@@ -8,6 +8,7 @@ import com.taobao.android.mnn.MNNNetInstance
 import com.taobao.android.mnn.MNNNetInstance.Session.Tensor
 import ru.gordinmitya.common.Configuration
 import ru.gordinmitya.common.classification.Classifier
+import ru.gordinmitya.common.utils.AssetUtil
 import java.io.File
 
 
@@ -24,20 +25,8 @@ class MNNClassifier(
     private lateinit var outputTensor: Tensor
     private lateinit var inputSize: IntArray
 
-    private fun copyFileToCache(fileName: String): File {
-        val file = File(context.cacheDir, fileName)
-        if (file.exists())
-            return file
-        context.assets.open(fileName).use { input ->
-            file.outputStream().use { output ->
-                input.copyTo(output)
-            }
-        }
-        return file
-    }
-
     override fun prepare() {
-        val file = copyFileToCache(convertedModel.fileName)
+        val file = AssetUtil.copyFileToCache(context, convertedModel.fileName)
         net = MNNNetInstance.createFromFile(file.absolutePath)
         val config = MNNNetInstance.Config().also {
             it.forwardType = inferenceType.type

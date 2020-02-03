@@ -57,4 +57,5 @@ dependencies {
     implementation project(path: ':tf_mobile')
     implementation project(path: ':tflite')
     implementation project(path: ':ncnn')
+    implementation project(path: ':pytorch')
 }

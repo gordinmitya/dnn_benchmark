@@ -13,7 +13,8 @@ object ClassificationRunner {
         benchmarker: Benchmarker,
         evaluator: ClassificationEvaluator,
         loops: Int,
-        progressCallback: ClassificationProgressCallback? = null
+        progressCallback: ClassificationProgressCallback? = null,
+        failHard: Boolean = false
     ): InferenceResult {
         return try {
             val model = classifier.configuration.model as ClassificationModel
@@ -43,7 +44,8 @@ object ClassificationRunner {
                 evaluator.summarize()
             )
         } catch (e: RuntimeException) {
-//            throw e
+            if (failHard)
+                throw e
             FailureResult(
                 classifier.configuration,
                 e.message ?: ""

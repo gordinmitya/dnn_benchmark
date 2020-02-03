@@ -48,12 +48,18 @@ class ModelAssets(val context: Context, val model: ClassificationModel) {
     }
 
     fun getLabelForPrediction(prediction: FloatArray): String {
-        require(labels.size == prediction.size)
+        // FIXME use the same model for all frameworks
+//        require(labels.size == prediction.size)
+
         var index = 0
         for (i in prediction.indices) {
             if (prediction[i] > prediction[index])
                 index = i
         }
+        // FIXME skip "background" label
+        if (prediction.size == 1000)
+            index += 1
+
         return labels[index]
     }
 }

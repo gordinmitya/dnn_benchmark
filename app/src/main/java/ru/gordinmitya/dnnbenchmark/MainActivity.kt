@@ -13,6 +13,7 @@ import ru.gordinmitya.common.classification.MobileNet_v2
 import ru.gordinmitya.common.classification.ModelAssets
 import ru.gordinmitya.mnn.MNNFramework
 import ru.gordinmitya.ncnn.NCNNFramework
+import ru.gordinmitya.tf_mobile.PytorchFramework
 import ru.gordinmitya.tf_mobile.TFMobileFramework
 import ru.gordinmitya.tflite.TFLiteFramework
 
@@ -58,7 +59,8 @@ class MainActivity : AppCompatActivity() {
             TFMobileFramework,
             TFLiteFramework,
             MNNFramework,
-            NCNNFramework
+            NCNNFramework,
+            PytorchFramework
         )
         val configurations = ArrayList<Configuration>()
         for (framework in frameworks) {
@@ -82,7 +84,8 @@ class MainActivity : AppCompatActivity() {
                     Benchmarker(),
                     ClassificationEvaluator(),
                     loops,
-                    progressLogger
+                    progressLogger,
+                    App.DEBUG
                 )
                 log(result.toString(), true)
                 Thread.sleep(sleep)

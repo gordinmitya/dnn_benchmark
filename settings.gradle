@@ -1,2 +1,2 @@
-include ':app', ':common', ':mnn', ':tf_mobile', ':tflite', ':ncnn'
+include ':app', ':common', ':mnn', ':tf_mobile', ':tflite', ':ncnn', ':pytorch'
 rootProject.name='DnnBenchmark'

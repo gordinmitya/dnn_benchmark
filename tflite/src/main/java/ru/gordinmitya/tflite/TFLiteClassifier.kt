@@ -15,7 +15,7 @@ import ru.gordinmitya.common.Configuration
 import ru.gordinmitya.common.classification.Classifier
 
 
-class TFMobileClassifier(
+class TFLiteClassifier(
     val context: Context,
     configuration: Configuration,
     val convertedModel: ConvertedModel,
