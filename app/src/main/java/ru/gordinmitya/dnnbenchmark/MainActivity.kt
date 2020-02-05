@@ -13,7 +13,7 @@ import ru.gordinmitya.common.classification.MobileNet_v2
 import ru.gordinmitya.common.classification.ModelAssets
 import ru.gordinmitya.mnn.MNNFramework
 import ru.gordinmitya.ncnn.NCNNFramework
-import ru.gordinmitya.tf_mobile.PytorchFramework
+import ru.gordinmitya.pytorch.PytorchFramework
 import ru.gordinmitya.tf_mobile.TFMobileFramework
 import ru.gordinmitya.tflite.TFLiteFramework
 
@@ -41,8 +41,10 @@ class MainActivity : AppCompatActivity() {
     private fun log(msg: String, replace: Boolean = false) {
         if (replace) {
             val start = logBuilder.lastIndexOf("\n", logBuilder.length - 2)
-            if (start >= 0)
+            if (start > 0)
                 logBuilder.delete(start + 1, logBuilder.length)
+            else
+                logBuilder.clear()
         }
         logBuilder.append(msg)
         logBuilder.append("\n")

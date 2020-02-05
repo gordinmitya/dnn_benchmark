@@ -1,4 +1,4 @@
-package ru.gordinmitya.tf_mobile
+package ru.gordinmitya.pytorch
 
 import android.content.Context
 import ru.gordinmitya.common.Configuration
@@ -6,6 +6,7 @@ import ru.gordinmitya.common.InferenceFramework
 import ru.gordinmitya.common.InferenceType
 import ru.gordinmitya.common.Model
 import ru.gordinmitya.common.classification.Classifier
+import ru.gordinmitya.pytorch.ConvertedModel
 
 object PytorchFramework : InferenceFramework("Pytorch", "by Facebook") {
     private val types = listOf(PYTORCH_CPU)

@@ -1,4 +1,4 @@
-package ru.gordinmitya.tf_mobile
+package ru.gordinmitya.pytorch
 
 import ru.gordinmitya.common.Model
 import ru.gordinmitya.common.classification.ClassificationModel

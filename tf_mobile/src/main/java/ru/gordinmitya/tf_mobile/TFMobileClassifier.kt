@@ -15,7 +15,7 @@ class TFMobileClassifier(
 
     private val CHANNELS = 3
 
-    private lateinit var tensorInterface: TensorFlowInferenceInterface
+    private var tensorInterface: TensorFlowInferenceInterface? = null
     private var intValues: IntArray = IntArray(0)
     private var floatValues: FloatArray = FloatArray(0)
     private lateinit var INPUT: String
@@ -41,7 +41,7 @@ class TFMobileClassifier(
             floatValues[i * 3 + 2] = (value and 0xFF) / 255.0f
         }
 
-        tensorInterface.feed(
+        tensorInterface!!.feed(
             INPUT,
             floatValues,
             1L,
@@ -49,14 +49,14 @@ class TFMobileClassifier(
             bitmap.width.toLong(),
             CHANNELS.toLong()
         )
-        tensorInterface.run(arrayOf(OUTPUT), false)
+        tensorInterface!!.run(arrayOf(OUTPUT), false)
         val prediction = FloatArray(convertedModel.model.outputSize)
-        tensorInterface.fetch(OUTPUT, prediction)
+        tensorInterface!!.fetch(OUTPUT, prediction)
 
         return prediction
     }
 
     override fun release() {
-        tensorInterface.close()
+        tensorInterface?.close()
     }
 }

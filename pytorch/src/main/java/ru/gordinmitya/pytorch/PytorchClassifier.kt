@@ -1,4 +1,4 @@
-package ru.gordinmitya.tf_mobile
+package ru.gordinmitya.pytorch
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -8,6 +8,7 @@ import org.pytorch.torchvision.TensorImageUtils
 import ru.gordinmitya.common.Configuration
 import ru.gordinmitya.common.classification.Classifier
 import ru.gordinmitya.common.utils.AssetUtil
+import ru.gordinmitya.pytorch.ConvertedModel
 
 class PytorchClassifier(
     val context: Context,
