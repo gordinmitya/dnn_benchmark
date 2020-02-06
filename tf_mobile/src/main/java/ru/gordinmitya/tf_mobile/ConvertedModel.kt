@@ -19,6 +19,11 @@ class ConvertedModel private constructor(
         )
 
         fun getByModel(model: Model): ConvertedModel? {
+
+            Byte.hashCode()
+
+
+
             return all.find { it.model == model }
         }
 

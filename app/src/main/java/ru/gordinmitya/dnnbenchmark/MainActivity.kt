@@ -13,6 +13,7 @@ import ru.gordinmitya.common.classification.MobileNet_v2
 import ru.gordinmitya.common.classification.ModelAssets
 import ru.gordinmitya.mnn.MNNFramework
 import ru.gordinmitya.ncnn.NCNNFramework
+import ru.gordinmitya.opencv.OpenCVFramework
 import ru.gordinmitya.pytorch.PytorchFramework
 import ru.gordinmitya.tf_mobile.TFMobileFramework
 import ru.gordinmitya.tflite.TFLiteFramework
@@ -58,11 +59,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun doit() {
         val frameworks = listOf(
-            TFMobileFramework,
-            TFLiteFramework,
-            MNNFramework,
-            NCNNFramework,
-            PytorchFramework
+            OpenCVFramework
+//            TFMobileFramework,
+//            TFLiteFramework,
+//            MNNFramework,
+//            NCNNFramework,
+//            PytorchFramework
         )
         val configurations = ArrayList<Configuration>()
         for (framework in frameworks) {

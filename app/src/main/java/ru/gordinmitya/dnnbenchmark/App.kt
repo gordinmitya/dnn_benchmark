@@ -9,7 +9,7 @@ class App : Application() {
     }
 
     companion object {
-        const val DEBUG = false
+        const val DEBUG = true
 
         lateinit var instance: Application
     }
