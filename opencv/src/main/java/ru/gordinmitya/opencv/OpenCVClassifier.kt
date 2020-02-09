@@ -4,9 +4,14 @@ import android.content.Context
 import android.graphics.Bitmap
 import org.opencv.android.OpenCVLoader
 import org.opencv.android.Utils
+import org.opencv.core.CvType
+import org.opencv.core.CvType.CV_32F
 import org.opencv.core.Mat
+import org.opencv.core.Scalar
 import org.opencv.dnn.Dnn
 import org.opencv.dnn.Net
+import org.opencv.imgproc.Imgproc
+import org.opencv.imgproc.Imgproc.cvtColor
 import ru.gordinmitya.common.Configuration
 import ru.gordinmitya.common.classification.Classifier
 import ru.gordinmitya.common.utils.AssetUtil
@@ -30,10 +35,20 @@ class OpenCVClassifier(
     override fun predict(bitmap: Bitmap): FloatArray {
         val mat = Mat()
         Utils.bitmapToMat(bitmap, mat)
-        net!!.setInput(mat, convertedModel.inputName)
-        val result = net!!.forward(convertedModel.outputName)
-
-        return FloatArray(1000)
+        cvtColor(mat, mat, Imgproc.COLOR_RGBA2RGB)
+        val blob = Dnn.blobFromImage(
+            mat,
+            0.017,
+            mat.size(),
+            Scalar(103.94, 116.78, 123.68)
+        )
+        net!!.setInput(blob, convertedModel.inputName)
+        val output = net!!.forward(convertedModel.outputName)
+        val result = FloatArray(output.size(1))
+        for (i in result.indices) {
+            result[i] = output.get(0, i)[0].toFloat()
+        }
+        return result
     }
 
     override fun release() {

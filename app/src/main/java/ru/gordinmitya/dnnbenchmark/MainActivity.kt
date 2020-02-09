@@ -59,12 +59,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun doit() {
         val frameworks = listOf(
-            OpenCVFramework
-//            TFMobileFramework,
-//            TFLiteFramework,
-//            MNNFramework,
-//            NCNNFramework,
-//            PytorchFramework
+            MNNFramework,
+            TFLiteFramework,
+            OpenCVFramework,
+            TFMobileFramework,
+            PytorchFramework,
+            NCNNFramework
         )
         val configurations = ArrayList<Configuration>()
         for (framework in frameworks) {
