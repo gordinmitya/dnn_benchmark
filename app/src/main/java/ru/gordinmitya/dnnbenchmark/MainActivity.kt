@@ -4,9 +4,7 @@ import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import ru.gordinmitya.common.Benchmarker
-import ru.gordinmitya.common.Configuration
-import ru.gordinmitya.common.Task
+import ru.gordinmitya.common.*
 import ru.gordinmitya.common.classification.ClassificationEvaluator
 import ru.gordinmitya.common.classification.ClassificationRunner
 import ru.gordinmitya.common.classification.MobileNet_v2
@@ -82,6 +80,7 @@ class MainActivity : AppCompatActivity() {
         }
         Thread {
             val assets = ModelAssets(this, MobileNet_v2)
+            val results = ArrayList<InferenceResult>()
             configurations.forEach { configuration ->
                 val classifier =
                     configuration.inferenceFramework.createClassifier(this, configuration)
@@ -95,9 +94,13 @@ class MainActivity : AppCompatActivity() {
                     progressLogger,
                     App.DEBUG
                 )
+                results.add(result)
                 log(result.toString(), true)
                 Thread.sleep(sleep)
             }
+            val device = DeviceInfo.obtain(this)
+            val measurment = Measurment(device, results)
+            ResultsSender().send(measurment)
             log("\n" + "–".repeat(8) + "\n")
         }.start()
     }
