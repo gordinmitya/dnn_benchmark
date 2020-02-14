@@ -1,0 +1,13 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="ClangTidyInspection" enabled="false" level="WARNING" enabled_by_default="false">
+      <scope name="Changed Files" level="WARNING" enabled="false" />
+      <option name="clangTidyCheckOptions">
+        <list>
+          <ClangTidyCheckOption />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>

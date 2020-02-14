@@ -11,6 +11,7 @@ import ru.gordinmitya.common.classification.ClassificationEvaluator
 import ru.gordinmitya.common.classification.ClassificationRunner
 import ru.gordinmitya.common.classification.MobileNet_v2
 import ru.gordinmitya.common.classification.ModelAssets
+import ru.gordinmitya.mace.MACEFramework
 import ru.gordinmitya.mnn.MNNFramework
 import ru.gordinmitya.ncnn.NCNNFramework
 import ru.gordinmitya.opencv.OpenCVFramework
@@ -59,6 +60,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun doit() {
         val frameworks = listOf(
+            MACEFramework,
             MNNFramework,
             TFLiteFramework,
             OpenCVFramework,

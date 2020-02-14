@@ -13,20 +13,24 @@ class TFMobileClassifier(
     val inferenceType: TFMobileInfereceType
 ) : Classifier(configuration) {
 
-    private val CHANNELS = 3
-
     private var tensorInterface: TensorFlowInferenceInterface? = null
-    private var intValues: IntArray = IntArray(0)
-    private var floatValues: FloatArray = FloatArray(0)
+    private lateinit var intValues: IntArray
+    private lateinit var floatValues: FloatArray
+
     private lateinit var INPUT: String
     private lateinit var OUTPUT: String
+    private var inputWidth = 0
+    private var inputHeight = 0
+    private var inputChannels = 0
 
     override fun prepare() {
         tensorInterface = TensorFlowInferenceInterface(context.assets, convertedModel.file)
-        val (width, height) = convertedModel.model.inputSize
-        val flattenSize = width * height
-        intValues = IntArray(flattenSize)
-        floatValues = FloatArray(flattenSize * CHANNELS)
+        inputChannels = convertedModel.model.inputChannels
+        inputWidth = convertedModel.model.inputSize.first
+        inputHeight = convertedModel.model.inputSize.second
+
+        intValues = IntArray(inputWidth * inputHeight)
+        floatValues = FloatArray(inputWidth * inputHeight * inputChannels)
         INPUT = convertedModel.inputName
         OUTPUT = convertedModel.outputName
     }
@@ -45,12 +49,14 @@ class TFMobileClassifier(
             INPUT,
             floatValues,
             1L,
-            bitmap.height.toLong(),
-            bitmap.width.toLong(),
-            CHANNELS.toLong()
+            inputWidth.toLong(),
+            inputHeight.toLong(),
+            inputChannels.toLong()
         )
         tensorInterface!!.run(arrayOf(OUTPUT), false)
-        val prediction = FloatArray(convertedModel.model.outputSize)
+        val outputSize = convertedModel.model.outputShape
+            .reduce { acc, i -> acc * i }
+        val prediction = FloatArray(outputSize)
         tensorInterface!!.fetch(OUTPUT, prediction)
 
         return prediction

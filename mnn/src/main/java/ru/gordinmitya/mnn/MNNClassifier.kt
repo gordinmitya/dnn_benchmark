@@ -7,9 +7,9 @@ import com.taobao.android.mnn.MNNImageProcess
 import com.taobao.android.mnn.MNNNetInstance
 import com.taobao.android.mnn.MNNNetInstance.Session.Tensor
 import ru.gordinmitya.common.Configuration
+import ru.gordinmitya.common.Constants
 import ru.gordinmitya.common.classification.Classifier
 import ru.gordinmitya.common.utils.AssetUtil
-import java.io.File
 
 
 class MNNClassifier(
@@ -30,7 +30,7 @@ class MNNClassifier(
         net = MNNNetInstance.createFromFile(file.absolutePath)
         val config = MNNNetInstance.Config().also {
             it.forwardType = inferenceType.type
-            it.numThread = 4
+            it.numThread = Constants.NUM_THREADS
             it.outputTensors = arrayOf(convertedModel.outputName)
         }
         session = net!!.createSession(config)

@@ -12,6 +12,7 @@ import org.tensorflow.lite.support.image.ImageProcessor
 import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
 import ru.gordinmitya.common.Configuration
+import ru.gordinmitya.common.Constants
 import ru.gordinmitya.common.classification.Classifier
 
 
@@ -21,8 +22,6 @@ class TFLiteClassifier(
     val convertedModel: ConvertedModel,
     val inferenceType: TFLiteInferenceType
 ) : Classifier(configuration) {
-
-    val NUM_THREADS = 4
 
     private lateinit var interpreter: Interpreter
     private var delegate: Delegate? = null
@@ -41,14 +40,14 @@ class TFLiteClassifier(
         delegate?.let {
             options.addDelegate(it)
         }
-        options.setNumThreads(NUM_THREADS)
+        options.setNumThreads(Constants.NUM_THREADS)
         interpreter = Interpreter(byteBuffer, options)
         val imageTensorIndex = 0
         // {1, height, width, 3}
         interpreter.getInputTensor(imageTensorIndex).let {
             val shape = it.shape()
-            check(shape[1] == convertedModel.model.inputSize.first)
-            check(shape[2] == convertedModel.model.inputSize.second)
+            val mis = convertedModel.model.inputSize
+            check(shape[1] == mis.first && shape[2] == mis.second)
             val dataType = it.dataType()
             inputImageBuffer = TensorImage(dataType)
         }
@@ -70,7 +69,9 @@ class TFLiteClassifier(
 
         interpreter.run(inputImageBuffer.buffer, outputProbabilityBuffer.buffer.rewind())
 
-        check(outputProbabilityBuffer.flatSize == convertedModel.model.outputSize)
+        val outputSize = convertedModel.model.outputShape
+            .reduce { acc, i -> acc * i }
+        check(outputProbabilityBuffer.flatSize == outputSize)
         return outputProbabilityBuffer.floatArray
     }
 

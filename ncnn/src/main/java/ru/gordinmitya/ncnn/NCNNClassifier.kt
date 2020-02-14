@@ -28,7 +28,9 @@ class NCNNClassifier(
     }
 
     override fun predict(bitmap: Bitmap): FloatArray {
-        val prediction = FloatArray(convertedModel.model.outputSize)
+        val outputSize = convertedModel.model.outputShape
+            .reduce { acc, i -> acc * i }
+        val prediction = FloatArray(outputSize)
         val status = ncnn!!.run(bitmap, prediction)
         if (!status)
             throw RuntimeException("Failed to inference with NCNN")
