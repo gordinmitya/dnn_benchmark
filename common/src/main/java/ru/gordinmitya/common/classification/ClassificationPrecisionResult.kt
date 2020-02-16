@@ -6,6 +6,6 @@ class ClassificationPrecisionResult(
     val errors: Double
 ) : PrecisionResult() {
     override fun toString(): String {
-        return "misclassified ${errors * 100}%"
+        return "error ${errors * 100}%"
     }
 }

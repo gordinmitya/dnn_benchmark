@@ -16,6 +16,7 @@ import ru.gordinmitya.mnn.MNNFramework
 import ru.gordinmitya.ncnn.NCNNFramework
 import ru.gordinmitya.opencv.OpenCVFramework
 import ru.gordinmitya.pytorch.PytorchFramework
+import ru.gordinmitya.snpe.SNPEFramework
 import ru.gordinmitya.tf_mobile.TFMobileFramework
 import ru.gordinmitya.tflite.TFLiteFramework
 
@@ -61,6 +62,7 @@ class MainActivity : AppCompatActivity() {
     private fun doit() {
         val frameworks = listOf(
             MACEFramework,
+            SNPEFramework,
             MNNFramework,
             TFLiteFramework,
             OpenCVFramework,

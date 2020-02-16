@@ -1,19 +1,22 @@
-package ru.gordinmitya.tf_mobile
+package ru.gordinmitya.snpe
 
+import android.app.Application
 import android.content.Context
 import android.graphics.Bitmap
-import org.tensorflow.contrib.android.TensorFlowInferenceInterface
+import com.qualcomm.qti.snpe.NeuralNetwork
+import com.qualcomm.qti.snpe.SNPE
 import ru.gordinmitya.common.Configuration
 import ru.gordinmitya.common.classification.Classifier
 
-class TFMobileClassifier(
+
+class SNPEClassifier(
     val context: Context,
     configuration: Configuration,
     val convertedModel: ConvertedModel,
-    val inferenceType: TFMobileInfereceType
+    val inferenceType: SNPEInfereceType
 ) : Classifier(configuration) {
 
-    private var tensorInterface: TensorFlowInferenceInterface? = null
+    private var network: NeuralNetwork? = null
     private lateinit var intValues: IntArray
     private lateinit var floatValues: FloatArray
     private lateinit var INPUT: String
@@ -24,7 +27,13 @@ class TFMobileClassifier(
     private var inputChannels = 0
 
     override fun prepare() {
-        tensorInterface = TensorFlowInferenceInterface(context.assets, convertedModel.file)
+        val application = context.applicationContext as Application
+        context.assets.open(convertedModel.file).use { inStream ->
+            network = SNPE.NeuralNetworkBuilder(application)
+                .setRuntimeOrder(inferenceType.runtime)
+                .setModel(inStream, inStream.available())
+                .build()
+        }
         inputChannels = convertedModel.model.inputChannels
         inputWidth = convertedModel.model.inputSize.first
         inputHeight = convertedModel.model.inputSize.second
@@ -36,6 +45,7 @@ class TFMobileClassifier(
     }
 
     override fun predict(bitmap: Bitmap): FloatArray {
+        require(inputWidth == bitmap.width && inputHeight == bitmap.height)
         bitmap.getPixels(intValues, 0, bitmap.width, 0, 0, bitmap.width, bitmap.height)
 
         for (i in intValues.indices) {
@@ -45,24 +55,25 @@ class TFMobileClassifier(
             floatValues[i * 3 + 2] = (value and 0xFF) / 255.0f
         }
 
-        tensorInterface!!.feed(
-            INPUT,
-            floatValues,
-            1L,
-            inputWidth.toLong(),
-            inputHeight.toLong(),
-            inputChannels.toLong()
-        )
-        tensorInterface!!.run(arrayOf(OUTPUT), false)
-        val outputSize = convertedModel.model.outputShape
+        val tensor = network!!.createFloatTensor(1, inputHeight, inputWidth, 3)
+        tensor.write(floatValues, 0, floatValues.size)
+
+        val inputsMap = hashMapOf(INPUT to tensor)
+
+        val outputMap = network!!.execute(inputsMap)
+
+        val outputTensor = outputMap[OUTPUT]!!
+        val prediction = FloatArray(outputTensor.size)
+        outputTensor.read(prediction, 0, outputTensor.size)
+
+        val modelOutputSize = convertedModel.model.outputShape
             .reduce { acc, i -> acc * i }
-        val prediction = FloatArray(outputSize)
-        tensorInterface!!.fetch(OUTPUT, prediction)
+        require(prediction.size == modelOutputSize)
 
         return prediction
     }
 
     override fun release() {
-        tensorInterface?.close()
+        network?.release()
     }
 }

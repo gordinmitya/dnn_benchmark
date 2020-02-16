@@ -14,3 +14,4 @@ opencv/src/main/jniLibs/*/*.so filter=lfs diff=lfs merge=lfs -text
 mace/src/main/assets/mace/*.data filter=lfs diff=lfs merge=lfs -text
 mace/src/main/assets/mace/*.pb filter=lfs diff=lfs merge=lfs -text
 mace/src/main/jniLibs/*/*.so filter=lfs diff=lfs merge=lfs -text
+snpe/src/main/assets/snpe/*.dlc filter=lfs diff=lfs merge=lfs -text

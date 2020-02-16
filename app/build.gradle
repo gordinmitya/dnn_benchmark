@@ -73,4 +73,5 @@ dependencies {
     implementation project(path: ':pytorch')
     implementation project(path: ':opencv')
     implementation project(path: ':mace')
+    implementation project(path: ':snpe')
 }

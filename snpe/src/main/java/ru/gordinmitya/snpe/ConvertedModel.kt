@@ -1,4 +1,4 @@
-package ru.gordinmitya.tf_mobile
+package ru.gordinmitya.snpe
 
 import ru.gordinmitya.common.Model
 import ru.gordinmitya.common.classification.ClassificationModel
@@ -13,9 +13,9 @@ class ConvertedModel private constructor(
     companion object {
         val mobilenet_v2 = ConvertedModel(
             MobileNet_v2,
-            "input",
-            "MobilenetV2/Predictions/Reshape_1",
-            "mobilenet_v2.pb"
+            "input:0",
+            "MobilenetV2/Predictions/Reshape_1:0",
+            "snpe/mobilenet_v2.dlc"
         )
 
         fun getByModel(model: Model): ConvertedModel? {
