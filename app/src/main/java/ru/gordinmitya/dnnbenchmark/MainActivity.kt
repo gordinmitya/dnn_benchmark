@@ -81,6 +81,7 @@ class MainActivity : AppCompatActivity() {
         Thread {
             val assets = ModelAssets(this, MobileNet_v2)
             val results = ArrayList<InferenceResult>()
+            Thread.sleep(1_500)
             configurations.forEach { configuration ->
                 val classifier =
                     configuration.inferenceFramework.createClassifier(this, configuration)
