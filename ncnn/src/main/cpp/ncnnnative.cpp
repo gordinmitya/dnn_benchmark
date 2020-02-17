@@ -102,8 +102,9 @@ Java_ru_gordinmitya_ncnn_NCNNNative_nativeRun(JNIEnv *env, jclass type, jlong ne
 
     // inference
     {
-        const float mean_vals[3] = {104.F, 117.F, 123.F};
-        in.substract_mean_normalize(mean_vals, nullptr);
+        const float mean_vals[3] = {103.94f, 116.78f, 123.68f};
+        const float normal_vals[3] = {0.017f, 0.017f, 0.017f};
+        in.substract_mean_normalize(mean_vals, normal_vals);
 
         ncnn::Extractor ex = net->create_extractor();
 
