@@ -81,7 +81,7 @@ class MainActivity : AppCompatActivity() {
         Thread {
             val assets = ModelAssets(this, MobileNet_v2)
             val results = ArrayList<InferenceResult>()
-            Thread.sleep(1_500)
+            Thread.sleep(sleep)
             configurations.forEach { configuration ->
                 val classifier =
                     configuration.inferenceFramework.createClassifier(this, configuration)
@@ -99,9 +99,11 @@ class MainActivity : AppCompatActivity() {
                 log(result.toString(), true)
                 Thread.sleep(sleep)
             }
+            log("sending to server…\n")
             val device = DeviceInfo.obtain(this)
             val measurment = Measurment(device, results)
-            ResultsSender().send(measurment)
+            val sentStatus = ResultsSender().send(measurment)
+            log((if (sentStatus) "sent" else "failed to send") + "\n", true)
             log("\n" + "–".repeat(8) + "\n")
         }.start()
     }

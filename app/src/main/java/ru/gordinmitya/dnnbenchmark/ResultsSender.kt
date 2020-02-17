@@ -27,7 +27,7 @@ class ResultsSender {
         val okhttp = OkHttpClient()
         try {
             okhttp.newCall(request).execute().use {
-                return it.isSuccessful && it.code == 200
+                return it.isSuccessful && it.code == 201
             }
         } catch (e: IOException) {
             return false
