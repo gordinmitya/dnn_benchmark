@@ -4,7 +4,10 @@ import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import ru.gordinmitya.common.*
+import ru.gordinmitya.common.Benchmarker
+import ru.gordinmitya.common.Configuration
+import ru.gordinmitya.common.InferenceResult
+import ru.gordinmitya.common.Task
 import ru.gordinmitya.common.classification.ClassificationEvaluator
 import ru.gordinmitya.common.classification.ClassificationRunner
 import ru.gordinmitya.common.classification.MobileNet_v2
@@ -19,10 +22,18 @@ import ru.gordinmitya.tf_mobile.TFMobileFramework
 import ru.gordinmitya.tflite.TFLiteFramework
 
 class MainActivity : AppCompatActivity() {
+    /*
+        Then launched on Firebase TestLab will be set to true.
+        After executing all benchmarks will finish activity.
+        Thanks to "com.google.intent.action.TEST_LOOP" intent action.
+     */
+    private var isGameLoop = false
 
     lateinit var textView: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        isGameLoop = intent.action == "com.google.intent.action.TEST_LOOP"
+
         super.onCreate(savedInstanceState)
         textView = TextView(this).also {
             it.movementMethod = ScrollingMovementMethod()
@@ -54,7 +65,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    val loops = 48
+    val loops = 32
     val sleep = 1_000L
 
     private fun doit() {
@@ -93,7 +104,7 @@ class MainActivity : AppCompatActivity() {
                     ClassificationEvaluator(),
                     loops,
                     progressLogger,
-                    App.DEBUG
+                    App.DEBUG && !isGameLoop
                 )
                 results.add(result)
                 log(result.toString(), true)
@@ -105,6 +116,8 @@ class MainActivity : AppCompatActivity() {
             val sentStatus = ResultsSender().send(measurment)
             log((if (sentStatus) "sent" else "failed to send") + "\n", true)
             log("\n" + "–".repeat(8) + "\n")
+            if (isGameLoop)
+                finish()
         }.start()
     }
 }

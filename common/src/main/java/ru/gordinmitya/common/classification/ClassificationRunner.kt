@@ -7,6 +7,10 @@ import ru.gordinmitya.common.SuccessResult
 import ru.gordinmitya.common.utils.Timeit
 
 object ClassificationRunner {
+    val KIKOFF_TIMEOUT = 10_000L
+    val DECREASE_LOOPS_TIMEOUT = 5_000L
+    val DECREASE_LOOPS_COUNT = 5
+
     fun benchmark(
         classifier: Classifier,
         modelAssets: ModelAssets,
@@ -17,7 +21,6 @@ object ClassificationRunner {
         failHard: Boolean = false
     ): InferenceResult {
         return try {
-            val model = classifier.configuration.model as ClassificationModel
             val prepareTime = Timeit.measure {
                 classifier.prepare()
             }
@@ -30,13 +33,16 @@ object ClassificationRunner {
                 val time = Timeit.measure {
                     prediction = classifier.predict(sample.image)
                 }
-                // TODO decrease loops count in case of too long execution
                 val label = modelAssets.getLabelForPrediction(prediction)
                 progressCallback?.onResult(label, time)
                 benchmarker.addNext(time)
                 evaluator.addNext(prediction, label, sample)
                 if (Thread.interrupted())
                     throw InterruptedException()
+                if (time >= KIKOFF_TIMEOUT)
+                    break
+                if (time >= DECREASE_LOOPS_TIMEOUT && i > DECREASE_LOOPS_COUNT)
+                    break
             }
             SuccessResult(
                 classifier.configuration,

@@ -8,12 +8,6 @@ import ru.gordinmitya.common.Constants;
 public class MACENative {
     static {
         System.loadLibrary("mace");
-        try {
-            System.loadLibrary("cdsprpc");
-            System.loadLibrary("hexagon_controller");
-        } catch (Throwable ce) {
-            Log.e("MACE", "load MACE GPU with exception=%s", ce);
-        }
         System.loadLibrary("macecore");
     }
 
