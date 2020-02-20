@@ -8,12 +8,12 @@ import ru.gordinmitya.common.Model
 import ru.gordinmitya.common.classification.Classifier
 
 object OpenCVFramework : InferenceFramework("OpenCV DNN", "by OpenCV") {
-    private val types = listOf(OPENCV_CPU)
+    private val TYPES = listOf(OPENCV_CPU)
 
-    override val inferenceTypes: List<InferenceType>
-        get() = types
-    override val models: List<Model>
-        get() = ConvertedModel.all.map { it.model }
+    override fun getInferenceTypes(): List<InferenceType> = TYPES
+
+    override fun getModels(): List<Model> =
+        ConvertedModel.all.map { it.model }.toList()
 
     override fun createClassifier(context: Context, configuration: Configuration): Classifier {
         val convertedModel = ConvertedModel.getByModel(configuration.model)

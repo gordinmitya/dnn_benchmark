@@ -14,11 +14,10 @@ object MNNFramework : InferenceFramework("MNN", "by Alibaba") {
         VULKAN,
         OPEN_GL
     )
-    override val inferenceTypes: List<InferenceType>
-        get() = TYPES
+    override fun getInferenceTypes(): List<InferenceType> = TYPES
 
-    override val models: List<Model>
-        get() = ConvertedModel.all.map { it.model }.toList()
+    override fun getModels(): List<Model> =
+        ConvertedModel.all.map { it.model }.toList()
 
     override fun createClassifier(context: Context, configuration: Configuration): Classifier {
         val convertedModel = ConvertedModel.getByModel(configuration.model)

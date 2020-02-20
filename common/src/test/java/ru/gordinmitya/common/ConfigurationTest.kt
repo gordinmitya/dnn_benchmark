@@ -9,19 +9,18 @@ import ru.gordinmitya.common.classification.Classifier
 
 internal class ConfigurationTest {
     private fun createFramework(): InferenceFramework {
-        val models = listOf(
-            object : Model("model 1", "") {},
-            object : Model("model 2", "") {}
+        val models = listOf<Model>(
+            mockk(),
+            mockk()
         )
-        val types = listOf(
-            InferenceType("type 1"),
-            InferenceType("type 2")
+        val types = listOf<InferenceType>(
+            mockk(),
+            mockk()
         )
         return object : InferenceFramework("", "") {
-            override val models: List<Model>
-                get() = models
-            override val inferenceTypes: List<InferenceType>
-                get() = types
+            override fun getInferenceTypes(): List<InferenceType> = types
+
+            override fun getModels(): List<Model> = models
 
             override fun createClassifier(
                 context: Context,
@@ -35,8 +34,8 @@ internal class ConfigurationTest {
         val framework = createFramework()
 
         assertDoesNotThrow {
-            framework.inferenceTypes
-                .zip(framework.models)
+            framework.getInferenceTypes()
+                .zip(framework.getModels())
                 .forEach {
                     Configuration(framework, it.first, it.second)
                 }
@@ -50,10 +49,10 @@ internal class ConfigurationTest {
         val framework = createFramework()
 
         assertThrows(AssertionError::class.java) {
-            Configuration(framework, framework.inferenceTypes[0], otherModel)
+            Configuration(framework, framework.getInferenceTypes()[0], otherModel)
         }
         assertThrows(AssertionError::class.java) {
-            Configuration(framework, otherInferenceType, framework.models[0])
+            Configuration(framework, otherInferenceType, framework.getModels()[0])
         }
     }
 }

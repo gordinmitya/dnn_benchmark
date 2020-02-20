@@ -89,3 +89,4 @@ libwebp
 **/ndkHelperBin
 **/.cxx
 snpe/libs/snpe-release.aar
+app/google-services.json

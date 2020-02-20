@@ -6,7 +6,7 @@ class Configuration(
     val model: Model
 ) {
     init {
-        require(inferenceType in inferenceFramework.inferenceTypes)
-        require(model in inferenceFramework.models)
+        require(inferenceType in inferenceFramework.getInferenceTypes())
+        require(model in inferenceFramework.getModels())
     }
 }

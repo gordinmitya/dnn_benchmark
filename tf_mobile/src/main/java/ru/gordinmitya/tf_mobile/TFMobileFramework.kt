@@ -8,12 +8,12 @@ import ru.gordinmitya.common.Model
 import ru.gordinmitya.common.classification.Classifier
 
 object TFMobileFramework : InferenceFramework("TFMobile", "by Google (Deprecated)") {
-    val types = listOf(TF_MOBILE_CPU)
+    val TYPES = listOf(TF_MOBILE_CPU)
 
-    override val inferenceTypes: List<InferenceType>
-        get() = types
-    override val models: List<Model>
-        get() = ConvertedModel.all.map { it.model }
+    override fun getInferenceTypes(): List<InferenceType> = TYPES
+
+    override fun getModels(): List<Model> =
+        ConvertedModel.all.map { it.model }.toList()
 
     override fun createClassifier(context: Context, configuration: Configuration): Classifier {
         val convertedModel = ConvertedModel.getByModel(configuration.model)

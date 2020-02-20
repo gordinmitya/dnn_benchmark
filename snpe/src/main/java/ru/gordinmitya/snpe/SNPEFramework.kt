@@ -8,17 +8,17 @@ import ru.gordinmitya.common.Model
 import ru.gordinmitya.common.classification.Classifier
 
 object SNPEFramework : InferenceFramework("SNPE", "by Qualcomm") {
-    val types = listOf(
+    val TYPES = listOf(
         SNPE_CPU,
         SNPE_GPU,
         SNPE_DSP,
         SNPE_GPU16
     )
 
-    override val inferenceTypes: List<InferenceType>
-        get() = types
-    override val models: List<Model>
-        get() = ConvertedModel.all.map { it.model }
+    override fun getInferenceTypes(): List<InferenceType> = TYPES
+
+    override fun getModels(): List<Model> =
+        ConvertedModel.all.map { it.model }.toList()
 
     override fun createClassifier(context: Context, configuration: Configuration): Classifier {
         val convertedModel = ConvertedModel.getByModel(configuration.model)

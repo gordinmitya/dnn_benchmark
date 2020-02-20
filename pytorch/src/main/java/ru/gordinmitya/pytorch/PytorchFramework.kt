@@ -9,12 +9,12 @@ import ru.gordinmitya.common.classification.Classifier
 import ru.gordinmitya.pytorch.ConvertedModel
 
 object PytorchFramework : InferenceFramework("Pytorch", "by Facebook") {
-    private val types = listOf(PYTORCH_CPU)
+    private val TYPES = listOf(PYTORCH_CPU)
 
-    override val inferenceTypes: List<InferenceType>
-        get() = types
-    override val models: List<Model>
-        get() = ConvertedModel.all.map { it.model }
+    override fun getInferenceTypes(): List<InferenceType> = TYPES
+
+    override fun getModels(): List<Model> =
+        ConvertedModel.all.map { it.model }.toList()
 
     override fun createClassifier(context: Context, configuration: Configuration): Classifier {
         val convertedModel = ConvertedModel.getByModel(configuration.model)

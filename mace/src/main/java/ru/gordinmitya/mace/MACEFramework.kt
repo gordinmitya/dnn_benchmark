@@ -13,11 +13,11 @@ object MACEFramework : InferenceFramework("MACE", "by Xiaomi") {
         OPEN_CL
 //        HEXAGON
     )
-    override val inferenceTypes: List<InferenceType>
-        get() = TYPES
 
-    override val models: List<Model>
-        get() = ConvertedModel.all.map { it.model }.toList()
+    override fun getInferenceTypes(): List<InferenceType> = TYPES
+
+    override fun getModels(): List<Model> =
+        ConvertedModel.all.map { it.model }.toList()
 
     override fun createClassifier(context: Context, configuration: Configuration): Classifier {
         val convertedModel = ConvertedModel.getByModel(configuration.model)

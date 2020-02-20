@@ -27,10 +27,10 @@ android {
         }
     }
 
+    // to be sure put in main module build.gradle file as well
     aaptOptions {
         noCompress "tflite"
     }
-
 }
 
 dependencies {
