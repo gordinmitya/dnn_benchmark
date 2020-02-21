@@ -126,7 +126,7 @@ Java_ru_gordinmitya_ncnn_NCNNNative_nativeRun(JNIEnv *env, jclass type, jlong ne
             scores[i] = out[i];
         }
         env->SetFloatArrayRegion(output, 0, outputLen, scores);
-        delete scores;
+        delete[] scores;
     }
 
     return JNI_TRUE;

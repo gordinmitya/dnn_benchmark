@@ -4,13 +4,20 @@ import com.google.firebase.firestore.FieldValue
 import ru.gordinmitya.common.FailureResult
 import ru.gordinmitya.common.InferenceResult
 import ru.gordinmitya.common.SuccessResult
+import ru.gordinmitya.common.classification.ClassificationPrecisionResult
 import ru.gordinmitya.dnnbenchmark.DeviceInfo
 
 class Measurement private constructor() {
     companion object {
         fun create(device: DeviceInfo, results: List<InferenceResult>): Any =
             mapOf(
-                "deviceInfo" to device,
+                "deviceInfo" to mapOf(
+                    "uuid" to device.uuid,
+                    "os" to device.os,
+                    "model" to device.model,
+                    "marketName" to device.marketName,
+                    "marketName" to device.manufacturer
+                ),
                 "timestamp" to FieldValue.serverTimestamp(),
                 "results" to results.map {
                     val node: HashMap<String, Any> = hashMapOf(
@@ -21,8 +28,20 @@ class Measurement private constructor() {
                         )
                     )
                     if (it is SuccessResult) {
-                        node["benchmarkResult"] = it.benchmarkResult
-                        node["precisionResult"] = it.precisionResult
+                        node["benchmarkResult"] = mapOf(
+                            "min" to it.benchmarkResult.min,
+                            "max" to it.benchmarkResult.max,
+                            "avg" to it.benchmarkResult.avg,
+                            "firstRun" to it.benchmarkResult.firstRun,
+                            "preparation" to it.benchmarkResult.preparation,
+                            "loops" to it.benchmarkResult.loops
+                        )
+                        if (it.precisionResult is ClassificationPrecisionResult) {
+                            val res = it.precisionResult as ClassificationPrecisionResult
+                            node["precisionResult"] = mapOf(
+                                "errors" to res.errors
+                            )
+                        }
                     } else {
                         node["error"] = (it as FailureResult).message
                     }

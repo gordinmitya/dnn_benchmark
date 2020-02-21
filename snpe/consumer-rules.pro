@@ -1,0 +1,2 @@
+-keep class com.qualcomm.**
+-keepclassmembers class com.qualcomm.** { *; }

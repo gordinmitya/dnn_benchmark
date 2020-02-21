@@ -6,7 +6,6 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 
-
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
@@ -14,7 +13,7 @@ android {
         applicationId "ru.gordinmitya.dnnbenchmark"
         minSdkVersion 24
         targetSdkVersion 29
-        versionCode 2
+        versionCode 3
         versionName "0.1." + versionCode
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -31,13 +30,13 @@ android {
 
     buildTypes {
         debug {
-            manifestPlaceholders = [enableCrashReporting:"false"]
-            ext.enableCrashlytics=false
         }
         release {
-            manifestPlaceholders = [enableCrashReporting:"true"]
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            firebaseCrashlytics {
+                nativeSymbolUploadEnabled true
+            }
         }
     }
 
@@ -65,8 +64,9 @@ dependencies {
     implementation 'com.jaredrummler:android-device-names:1.1.9'
 
     implementation 'com.google.firebase:firebase-analytics:17.2.2'
-    implementation 'com.google.firebase:firebase-crashlytics:17.0.0-beta01'
     implementation 'com.google.firebase:firebase-auth:19.2.0'
+    implementation 'com.google.firebase:firebase-crashlytics:17.0.0-beta01'
+    implementation 'com.google.firebase:firebase-crashlytics-ndk:17.0.0-beta01'
     implementation 'com.google.firebase:firebase-common-ktx:19.3.0'
     implementation 'com.google.firebase:firebase-firestore-ktx:21.4.0'
 
