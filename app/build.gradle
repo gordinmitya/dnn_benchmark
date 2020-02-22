@@ -28,10 +28,20 @@ android {
         }
     }
 
+    signingConfigs {
+        release {
+            storeFile file('../dnn_benchmark.jks')
+            keyAlias = 'key0'
+            storePassword = System.getenv('JKS_STORE_PASS')
+            keyPassword = System.getenv('JKS_KEY_PASS')
+        }
+    }
+
     buildTypes {
         debug {
         }
         release {
+            signingConfig signingConfigs.release
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             firebaseCrashlytics {

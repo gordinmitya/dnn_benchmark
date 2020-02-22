@@ -90,3 +90,5 @@ libwebp
 **/.cxx
 snpe/libs/snpe-release.aar
 app/google-services.json
+google-play-api-key.json
+dnn_benchmark.jks
