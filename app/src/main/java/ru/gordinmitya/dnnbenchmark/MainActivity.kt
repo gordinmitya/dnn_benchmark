@@ -117,7 +117,7 @@ class MainActivity : AppCompatActivity() {
                     App.DEBUG && !isGameLoop
                 )
                 results.add(result)
-                log(result.toString(), true)
+                log(result.toString())
                 delay(sleep)
             }
             log("\n" + "–".repeat(8) + "\n")

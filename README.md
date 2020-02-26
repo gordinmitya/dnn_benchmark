@@ -58,3 +58,9 @@ Qualcomm prohibits redestribution of their libraries, so you have to register th
 
 * SNPE DSP produces wrong results;
 * smth wrong with NCNN – produces wrong results;
+
+## License Summary
+
+Project itself and code inside `ru.gordinmitya.*` packages are under MIT licanse as stated in [LICENSE](./LICENSE) file.
+
+Code inside other packages (eg `org.opencv.*`) or some C plus plus code may be under other licenses.
