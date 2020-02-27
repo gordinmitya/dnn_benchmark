@@ -1,5 +1,6 @@
 package ru.gordinmitya.snpe
 
+import android.app.Application
 import android.content.Context
 import ru.gordinmitya.common.Configuration
 import ru.gordinmitya.common.InferenceFramework
@@ -7,15 +8,21 @@ import ru.gordinmitya.common.InferenceType
 import ru.gordinmitya.common.Model
 import ru.gordinmitya.common.classification.Classifier
 
-object SNPEFramework : InferenceFramework("SNPE", "by Qualcomm") {
-    val TYPES = listOf(
-        SNPE_CPU,
-        SNPE_GPU,
-        SNPE_DSP,
-        SNPE_GPU16
-    )
+class SNPEFramework(context: Context) : InferenceFramework("SNPE", "by Qualcomm") {
+    private val types: List<SNPEInferenceType>
 
-    override fun getInferenceTypes(): List<InferenceType> = TYPES
+    init {
+        val app = context.applicationContext as Application
+        types = listOf(
+            SNPE_CPU(app),
+            SNPE_GPU(app),
+            SNPE_GPU16(app),
+            SNPE_DSP(app)
+//            SNPE_AIP(app)
+        )
+    }
+
+    override fun getInferenceTypes(): List<InferenceType> = types
 
     override fun getModels(): List<Model> =
         ConvertedModel.all.map { it.model }.toList()
@@ -23,7 +30,7 @@ object SNPEFramework : InferenceFramework("SNPE", "by Qualcomm") {
     override fun createClassifier(context: Context, configuration: Configuration): Classifier {
         val convertedModel = ConvertedModel.getByModel(configuration.model)
             ?: throw IllegalArgumentException("not supported model")
-        val inferenceType = configuration.inferenceType as? SNPEInfereceType
+        val inferenceType = configuration.inferenceType as? SNPEInferenceType
             ?: throw IllegalArgumentException("not supported inference type")
 
         return SNPEClassifier(context, configuration, convertedModel, inferenceType)

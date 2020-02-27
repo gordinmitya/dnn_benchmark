@@ -13,6 +13,15 @@ sealed class InferenceResult : Parcelable {
 }
 
 @Parcelize
+class NotSupportedResult(
+    override val configuration: ConfigurationEntity
+) : InferenceResult() {
+    override fun toString(): String {
+        return "${super.toString()} RUNTIME NOT SUPPORTED"
+    }
+}
+
+@Parcelize
 class SuccessResult(
     override val configuration: ConfigurationEntity,
     val benchmarkResult: BenchmarkResult,
@@ -26,7 +35,8 @@ class SuccessResult(
 @Parcelize
 class FailureResult(
     override val configuration: ConfigurationEntity,
-    val message: String
+    val message: String,
+    val error: Boolean = true
 ) : InferenceResult() {
     override fun toString(): String {
         return "${super.toString()} FAILED $message"

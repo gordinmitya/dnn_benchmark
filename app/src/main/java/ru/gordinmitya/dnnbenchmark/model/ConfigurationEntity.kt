@@ -9,23 +9,25 @@ import ru.gordinmitya.dnnbenchmark.App
 class ConfigurationEntity(
     val framework: String,
     val inferenceType: String,
+    val isSupported: Boolean,
     val model: String
 ) : Parcelable {
 
     constructor(configuration: Configuration) : this(
         framework = configuration.inferenceFramework.name,
         inferenceType = configuration.inferenceType.name,
+        isSupported = configuration.inferenceType.isSupported,
         model = configuration.model.name
     )
 
     fun toConfiguration(): Configuration {
-        val framework = App.frameworks.first {
+        val framework = App.instance.frameworks.first {
             it.name == framework
         }
         val type = framework.getInferenceTypes().first {
             it.name == inferenceType
         }
-        val model = App.models.first {
+        val model = App.instance.models.first {
             it.name == model
         }
         return Configuration(framework, type, model)

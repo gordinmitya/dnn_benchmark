@@ -13,6 +13,8 @@ import kotlinx.coroutines.tasks.await
 import ru.gordinmitya.common.Configuration
 import ru.gordinmitya.common.Task
 import ru.gordinmitya.dnnbenchmark.benchmark.InferenceResult
+import ru.gordinmitya.dnnbenchmark.benchmark.NotSupportedResult
+import ru.gordinmitya.dnnbenchmark.model.ConfigurationEntity
 import ru.gordinmitya.dnnbenchmark.model.DeviceInfo
 import ru.gordinmitya.dnnbenchmark.model.Measurement
 
@@ -66,7 +68,7 @@ class MainActivity : AppCompatActivity() {
     @ObsoleteCoroutinesApi
     private fun doit() {
         val configurations = ArrayList<Configuration>()
-        for (framework in App.frameworks) {
+        for (framework in App.instance.frameworks) {
             for (model in framework.getModels()) {
                 if (model.task != Task.CLASSIFICATION) continue
                 for (type in framework.getInferenceTypes()) {
@@ -80,6 +82,10 @@ class MainActivity : AppCompatActivity() {
             val results = ArrayList<InferenceResult>()
             delay(sleep)
             configurations.forEach { configuration ->
+                if (!configuration.inferenceType.isSupported) {
+                    results.add(NotSupportedResult(ConfigurationEntity(configuration)))
+                    return@forEach
+                }
                 val result = WorkerService.execute(activity, configuration, isGameLoop)
                 results.add(result)
                 log(result.toString())

@@ -3,6 +3,7 @@ package ru.gordinmitya.snpe
 import android.app.Application
 import android.content.Context
 import android.graphics.Bitmap
+import com.qualcomm.qti.snpe.FloatTensor
 import com.qualcomm.qti.snpe.NeuralNetwork
 import com.qualcomm.qti.snpe.SNPE
 import ru.gordinmitya.common.Configuration
@@ -13,7 +14,7 @@ class SNPEClassifier(
     val context: Context,
     configuration: Configuration,
     val convertedModel: ConvertedModel,
-    val inferenceType: SNPEInfereceType
+    val inferenceType: SNPEInferenceType
 ) : Classifier(configuration) {
 
     private var network: NeuralNetwork? = null
@@ -21,6 +22,7 @@ class SNPEClassifier(
     private lateinit var floatValues: FloatArray
     private lateinit var INPUT: String
     private lateinit var OUTPUT: String
+    private lateinit var inputsMap: HashMap<String, FloatTensor>
 
     private var inputWidth = 0
     private var inputHeight = 0
@@ -42,6 +44,9 @@ class SNPEClassifier(
         floatValues = FloatArray(inputWidth * inputHeight * inputChannels)
         INPUT = convertedModel.inputName
         OUTPUT = convertedModel.outputName
+
+        val inputTensor = network!!.createFloatTensor(1, inputHeight, inputWidth, 3)
+        inputsMap = hashMapOf(INPUT to inputTensor)
     }
 
     override fun predict(bitmap: Bitmap): FloatArray {
@@ -55,10 +60,7 @@ class SNPEClassifier(
             floatValues[i * 3 + 2] = (value and 0xFF) / 255.0f
         }
 
-        val tensor = network!!.createFloatTensor(1, inputHeight, inputWidth, 3)
-        tensor.write(floatValues, 0, floatValues.size)
-
-        val inputsMap = hashMapOf(INPUT to tensor)
+        inputsMap[INPUT]!!.write(floatValues, 0, floatValues.size)
 
         val outputMap = network!!.execute(inputsMap)
 
