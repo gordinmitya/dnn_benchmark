@@ -64,3 +64,7 @@ Qualcomm prohibits redestribution of their libraries, so you have to register th
 Project itself and code inside `ru.gordinmitya.*` packages are under MIT licanse as stated in [LICENSE](./LICENSE) file.
 
 Code inside other packages (eg `org.opencv.*`) or some C plus plus code may be under other licenses.
+
+## RANDOM
+
+ImageNet samples were taken from [Kaggle](https://www.kaggle.com/dromosys/imagenet-fastai-sample#n01518878_27837.JPEG).
