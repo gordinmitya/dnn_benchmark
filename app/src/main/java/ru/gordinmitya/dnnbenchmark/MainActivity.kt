@@ -17,6 +17,8 @@ import ru.gordinmitya.dnnbenchmark.benchmark.NotSupportedResult
 import ru.gordinmitya.dnnbenchmark.model.ConfigurationEntity
 import ru.gordinmitya.dnnbenchmark.model.DeviceInfo
 import ru.gordinmitya.dnnbenchmark.model.Measurement
+import ru.gordinmitya.dnnbenchmark.service.WorkerService
+import ru.gordinmitya.dnnbenchmark.utils.PermissionHelper
 
 class MainActivity : AppCompatActivity() {
     val TAG = "MainActivity"
@@ -46,6 +48,17 @@ class MainActivity : AppCompatActivity() {
 
         doit()
     }
+
+    override fun onStart() {
+        super.onStart()
+        PermissionHelper.request(this)
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) = PermissionHelper.onRequestPermissionsResult(this, requestCode, permissions, grantResults)
 
     private val logBuilder = StringBuilder()
     private fun log(msg: String, replace: Boolean = false) {

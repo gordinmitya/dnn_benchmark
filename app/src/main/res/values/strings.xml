@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">DnnBench</string>
-    <string name="toast_send_log_fail">Turn on internet and/or VPN!</string>
+    <string name="notification_title">DnnBenchmark is working</string>
 </resources>

@@ -4,6 +4,7 @@
     package="ru.gordinmitya.dnnbenchmark">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:name=".App"
@@ -26,7 +27,7 @@
             </intent-filter>
         </activity>
         <service
-            android:name=".WorkerService"
+            android:name=".service.WorkerService"
             android:process=":worker" />
     </application>
 
