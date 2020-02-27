@@ -10,23 +10,11 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
-import ru.gordinmitya.common.Benchmarker
 import ru.gordinmitya.common.Configuration
-import ru.gordinmitya.common.InferenceResult
 import ru.gordinmitya.common.Task
-import ru.gordinmitya.common.classification.ClassificationEvaluator
-import ru.gordinmitya.common.classification.ClassificationRunner
-import ru.gordinmitya.common.classification.MobileNet_v2
-import ru.gordinmitya.common.classification.ModelAssets
+import ru.gordinmitya.dnnbenchmark.benchmark.InferenceResult
+import ru.gordinmitya.dnnbenchmark.model.DeviceInfo
 import ru.gordinmitya.dnnbenchmark.model.Measurement
-import ru.gordinmitya.mace.MACEFramework
-import ru.gordinmitya.mnn.MNNFramework
-import ru.gordinmitya.ncnn.NCNNFramework
-import ru.gordinmitya.opencv.OpenCVFramework
-import ru.gordinmitya.pytorch.PytorchFramework
-import ru.gordinmitya.snpe.SNPEFramework
-import ru.gordinmitya.tf_mobile.TFMobileFramework
-import ru.gordinmitya.tflite.TFLiteFramework
 
 class MainActivity : AppCompatActivity() {
     val TAG = "MainActivity"
@@ -93,8 +81,8 @@ class MainActivity : AppCompatActivity() {
             delay(sleep)
             configurations.forEach { configuration ->
                 val result = WorkerService.execute(activity, configuration, isGameLoop)
-//                results.add(result)
-                log(result)
+                results.add(result)
+                log(result.toString())
                 delay(sleep)
             }
             log("\n" + "–".repeat(8) + "\n")
@@ -115,7 +103,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             val device = DeviceInfo.obtain(userUid, activity)
-            val measurement = Measurement.create(device, results)
+            val measurement = Measurement(device, results)
 
             try {
                 Firebase.firestore

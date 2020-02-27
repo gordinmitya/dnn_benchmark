@@ -1,4 +1,4 @@
-package ru.gordinmitya.dnnbenchmark
+package ru.gordinmitya.dnnbenchmark.model
 
 import android.content.Context
 import com.jaredrummler.android.device.DeviceName

@@ -1,4 +1,4 @@
-package ru.gordinmitya.common.utils
+package ru.gordinmitya.dnnbenchmark.utils
 
 import java.util.concurrent.TimeUnit
 

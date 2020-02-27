@@ -1,7 +1,9 @@
-package ru.gordinmitya.common.classification
+package ru.gordinmitya.dnnbenchmark.classification
 
-import ru.gordinmitya.common.PrecisionResult
+import kotlinx.android.parcel.Parcelize
+import ru.gordinmitya.dnnbenchmark.benchmark.PrecisionResult
 
+@Parcelize
 class ClassificationPrecisionResult(
     val errors: Double
 ) : PrecisionResult() {

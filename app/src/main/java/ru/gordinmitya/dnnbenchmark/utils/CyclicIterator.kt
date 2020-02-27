@@ -1,4 +1,4 @@
-package ru.gordinmitya.common.utils
+package ru.gordinmitya.dnnbenchmark.utils
 
 class CyclicIterator<T>(val source: Collection<T>) : Iterator<T> {
     val isEmpty = source.isNotEmpty()

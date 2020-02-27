@@ -1,4 +1,6 @@
-package ru.gordinmitya.common
+package ru.gordinmitya.dnnbenchmark.benchmark
+
+import ru.gordinmitya.dnnbenchmark.benchmark.PrecisionResult
 
 
 interface ResultEvaluator {

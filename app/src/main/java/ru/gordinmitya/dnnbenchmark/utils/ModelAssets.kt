@@ -1,9 +1,10 @@
-package ru.gordinmitya.common.classification
+package ru.gordinmitya.dnnbenchmark.utils
 
 import android.content.Context
 import android.graphics.BitmapFactory
 import android.util.Log
-import ru.gordinmitya.common.utils.CyclicIterator
+import ru.gordinmitya.common.classification.ClassificationModel
+import ru.gordinmitya.dnnbenchmark.classification.GT
 import java.io.File
 
 class ModelAssets(val context: Context, val model: ClassificationModel) {

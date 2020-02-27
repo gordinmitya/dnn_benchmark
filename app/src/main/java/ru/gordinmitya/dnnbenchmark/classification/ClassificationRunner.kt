@@ -1,10 +1,13 @@
-package ru.gordinmitya.common.classification
+package ru.gordinmitya.dnnbenchmark.classification
 
-import ru.gordinmitya.common.Benchmarker
-import ru.gordinmitya.common.FailureResult
-import ru.gordinmitya.common.InferenceResult
-import ru.gordinmitya.common.SuccessResult
-import ru.gordinmitya.common.utils.Timeit
+import ru.gordinmitya.common.classification.Classifier
+import ru.gordinmitya.dnnbenchmark.benchmark.Benchmarker
+import ru.gordinmitya.dnnbenchmark.benchmark.FailureResult
+import ru.gordinmitya.dnnbenchmark.benchmark.InferenceResult
+import ru.gordinmitya.dnnbenchmark.benchmark.SuccessResult
+import ru.gordinmitya.dnnbenchmark.model.ConfigurationEntity
+import ru.gordinmitya.dnnbenchmark.utils.ModelAssets
+import ru.gordinmitya.dnnbenchmark.utils.Timeit
 
 object ClassificationRunner {
     val KIKOFF_TIMEOUT = 10_000L
@@ -45,7 +48,7 @@ object ClassificationRunner {
                     break
             }
             SuccessResult(
-                classifier.configuration,
+                ConfigurationEntity(classifier.configuration),
                 benchmarker.summarize(),
                 evaluator.summarize()
             )
@@ -53,7 +56,7 @@ object ClassificationRunner {
             if (failHard)
                 throw e
             FailureResult(
-                classifier.configuration,
+                ConfigurationEntity(classifier.configuration),
                 e.message ?: ""
             )
         } finally {

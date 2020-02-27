@@ -1,4 +1,4 @@
-package ru.gordinmitya.common
+package ru.gordinmitya.dnnbenchmark.benchmark
 
 class Benchmarker {
     private var prepareTime = 0L

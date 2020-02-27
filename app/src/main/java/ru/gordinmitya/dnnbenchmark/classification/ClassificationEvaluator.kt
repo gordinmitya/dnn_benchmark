@@ -1,10 +1,11 @@
-package ru.gordinmitya.common.classification
+package ru.gordinmitya.dnnbenchmark.classification
 
 import android.util.Log
-import ru.gordinmitya.common.PrecisionResult
-import ru.gordinmitya.common.ResultEvaluator
+import ru.gordinmitya.dnnbenchmark.benchmark.PrecisionResult
+import ru.gordinmitya.dnnbenchmark.benchmark.ResultEvaluator
 
-class ClassificationEvaluator : ResultEvaluator {
+class ClassificationEvaluator :
+    ResultEvaluator {
     private val errors = ArrayList<Pair<String, String>>()
     private var total = 0
 
@@ -16,6 +17,8 @@ class ClassificationEvaluator : ResultEvaluator {
     }
 
     override fun summarize(): PrecisionResult {
-        return ClassificationPrecisionResult(1.0 * errors.size / total)
+        return ClassificationPrecisionResult(
+            1.0 * errors.size / total
+        )
     }
 }

@@ -6,21 +6,23 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.IBinder
-import ru.gordinmitya.common.Benchmarker
 import ru.gordinmitya.common.Configuration
-import ru.gordinmitya.common.classification.ClassificationEvaluator
 import ru.gordinmitya.common.classification.ClassificationModel
-import ru.gordinmitya.common.classification.ClassificationRunner
-import ru.gordinmitya.common.classification.ModelAssets
+import ru.gordinmitya.dnnbenchmark.benchmark.Benchmarker
+import ru.gordinmitya.dnnbenchmark.benchmark.InferenceResult
+import ru.gordinmitya.dnnbenchmark.classification.ClassificationEvaluator
+import ru.gordinmitya.dnnbenchmark.classification.ClassificationRunner
 import ru.gordinmitya.dnnbenchmark.model.ConfigurationEntity
+import ru.gordinmitya.dnnbenchmark.utils.ModelAssets
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 
-class ResultBroadcastReceiver(private val cont: Continuation<String>) : BroadcastReceiver() {
+class ResultBroadcastReceiver(private val cont: Continuation<InferenceResult>) :
+    BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        val payload = intent.getStringExtra(WorkerService.DATA_KEY)
+        val payload = intent.getParcelableExtra<InferenceResult>(WorkerService.DATA_KEY)
         cont.resume(payload)
         context.unregisterReceiver(this)
     }
@@ -40,7 +42,10 @@ class WorkerService : Service() {
             .toConfiguration()
         val isGameLoop = intent.getBooleanExtra(GAME_LOOP_KEY, false)
 
-        val assets = ModelAssets(this, configuration.model as ClassificationModel)
+        val assets = ModelAssets(
+            this,
+            configuration.model as ClassificationModel
+        )
         val classifier =
             configuration.inferenceFramework.createClassifier(this, configuration)
         val progressLogger = ProgressLogger(configuration) { str, replace ->
@@ -58,7 +63,7 @@ class WorkerService : Service() {
         )
 
         val resIntent = Intent(RESULT_ACTION).also {
-            it.putExtra(DATA_KEY, result.toString())
+            it.putExtra(DATA_KEY, result)
         }
         sendBroadcast(resIntent)
         stopSelf()
@@ -67,7 +72,7 @@ class WorkerService : Service() {
     }
 
     companion object {
-        private const val RESULT_ACTION = "WORKER_SERVICE_RESULT"
+        private const val RESULT_ACTION = BuildConfig.APPLICATION_ID + "WORKER_SERVICE_RESULT"
         const val CONFIGURATION_KEY = "CONFIGURATION_KEY"
         const val DATA_KEY = "DATA_KEY"
         const val GAME_LOOP_KEY = "GAME_LOOP_KEY"
@@ -78,7 +83,7 @@ class WorkerService : Service() {
             context: Context,
             configuration: Configuration,
             isGameLoop: Boolean
-        ): String {
+        ): InferenceResult {
             return suspendCoroutine { continuation ->
                 val receiver = ResultBroadcastReceiver(continuation)
                 context.registerReceiver(receiver, resultIntentFilter)

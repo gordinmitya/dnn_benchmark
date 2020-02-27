@@ -1,4 +1,4 @@
-package ru.gordinmitya.common.classification
+package ru.gordinmitya.dnnbenchmark.classification
 
 import android.graphics.Bitmap
 

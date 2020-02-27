@@ -2,7 +2,7 @@ package ru.gordinmitya.dnnbenchmark
 
 import android.graphics.Bitmap
 import ru.gordinmitya.common.Configuration
-import ru.gordinmitya.common.classification.ClassificationProgressCallback
+import ru.gordinmitya.dnnbenchmark.classification.ClassificationProgressCallback
 
 class ProgressLogger(configuration: Configuration, val loggerDelegate: (String, Boolean) -> Unit) :
     ClassificationProgressCallback {
