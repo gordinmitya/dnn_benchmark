@@ -36,8 +36,6 @@ jobs:
           JKS_STORE_PASS: ${{ secrets.JKS_STORE_PASS }}
           JKS_KEY_PASS: ${{ secrets.JKS_KEY_PASS }}
         run: fastlane beta
-      - name: Upload native symbols
-        run: ./gradlew app:uploadCrashlyticsSymbolFile
       - name: Extract apk from aab
         run: java -jar bundletool.jar build-apks --bundle=./app/build/outputs/bundle/release/app-release.aab --output=./ --mode=universal
       - name: Store apk as artifact
