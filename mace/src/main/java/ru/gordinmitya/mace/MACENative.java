@@ -48,7 +48,7 @@ public class MACENative {
             float[] inputData
     );
 
-    private static native long release(
+    private static native void release(
             long maceContextPtr
     );
 

@@ -44,10 +44,10 @@ class MNNClassifier(
         require(bitmap.height == inputSize[3])
 
         val config = MNNImageProcess.Config().also {
-            it.mean = floatArrayOf(103.94f, 116.78f, 123.68f)
-            it.normal = floatArrayOf(0.017f, 0.017f, 0.017f)
+            it.mean = floatArrayOf(127.5f, 127.5f, 127.5f)
+            it.normal = floatArrayOf(1/127.5f, 1/127.5f, 1/127.5f)
             it.source = MNNImageProcess.Format.RGBA
-            it.source = MNNImageProcess.Format.RGB
+            it.dest = MNNImageProcess.Format.RGB
         }
         MNNImageProcess.convertBitmap(bitmap, inputTensor, config, Matrix())
         session.run()
