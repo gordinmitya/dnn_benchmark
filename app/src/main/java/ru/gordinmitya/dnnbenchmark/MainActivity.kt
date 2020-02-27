@@ -73,23 +73,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    val loops = 32
     val sleep = 1_000L
 
     @ObsoleteCoroutinesApi
     private fun doit() {
-        val frameworks = listOf(
-            MACEFramework,
-            SNPEFramework,
-            MNNFramework,
-            TFLiteFramework,
-            OpenCVFramework,
-            TFMobileFramework,
-            PytorchFramework,
-            NCNNFramework
-        )
         val configurations = ArrayList<Configuration>()
-        for (framework in frameworks) {
+        for (framework in App.frameworks) {
             for (model in framework.getModels()) {
                 if (model.task != Task.CLASSIFICATION) continue
                 for (type in framework.getInferenceTypes()) {
@@ -100,27 +89,17 @@ class MainActivity : AppCompatActivity() {
         }
         GlobalScope.launch(newSingleThreadContext("WorkerThread")) {
             val activity = this@MainActivity
-            val assets = ModelAssets(activity, MobileNet_v2)
             val results = ArrayList<InferenceResult>()
             delay(sleep)
             configurations.forEach { configuration ->
-                val classifier =
-                    configuration.inferenceFramework.createClassifier(activity, configuration)
-                val progressLogger = ProgressLogger(configuration, activity::log)
-                val result = ClassificationRunner.benchmark(
-                    classifier,
-                    assets,
-                    Benchmarker(),
-                    ClassificationEvaluator(),
-                    loops,
-                    progressLogger,
-                    App.DEBUG && !isGameLoop
-                )
-                results.add(result)
-                log(result.toString())
+                val result = WorkerService.execute(activity, configuration, isGameLoop)
+//                results.add(result)
+                log(result)
                 delay(sleep)
             }
             log("\n" + "–".repeat(8) + "\n")
+
+            if (App.DEBUG) return@launch
 
             log("sending to server…")
             val userUid: String
