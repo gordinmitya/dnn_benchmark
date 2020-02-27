@@ -13,7 +13,7 @@ android {
         applicationId "ru.gordinmitya.dnnbenchmark"
         minSdkVersion 24
         targetSdkVersion 29
-        versionCode 4
+        versionCode 5
         versionName "0.1." + versionCode
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
