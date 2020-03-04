@@ -1,5 +1,7 @@
 # Deep Neural Networks Benchmark for Android
 
+Available on [Google Play](https://play.google.com/store/apps/details?id=ru.gordinmitya.dnnbenchmark).
+
 ## Road map
 
 Frameworks:	
