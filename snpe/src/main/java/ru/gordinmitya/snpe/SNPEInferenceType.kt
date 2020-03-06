@@ -11,8 +11,9 @@ sealed class SNPEInferenceType(
     val runtime: NeuralNetwork.Runtime
 ) : InferenceType(
     name,
-    SNPE.NeuralNetworkBuilder(application)
-        .isRuntimeSupported(runtime)
+    true
+//    SNPE.NeuralNetworkBuilder(application)
+//        .isRuntimeSupported(runtime)
 )
 
 class SNPE_CPU(application: Application) : SNPEInferenceType(
