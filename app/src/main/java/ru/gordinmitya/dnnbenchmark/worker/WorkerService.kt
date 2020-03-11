@@ -21,27 +21,30 @@ class WorkerService : Service() {
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        val configuration = intent
-            .getParcelableExtra<ConfigurationEntity>(CONFIGURATION_KEY)!!
-            .toConfiguration()
-        val isGameLoop = intent.getBooleanExtra(GAME_LOOP_KEY, false)
-        val failHard = App.DEBUG && !isGameLoop
+        val resIntent = Intent(RESULT_ACTION)
+        try {
+            val configuration = intent
+                .getParcelableExtra<ConfigurationEntity>(CONFIGURATION_KEY)!!
+                .toConfiguration()
+            val isGameLoop = intent.getBooleanExtra(GAME_LOOP_KEY, false)
+            val failHard = App.DEBUG && !isGameLoop
 
-        val result = when (configuration.model.task) {
-            Task.CLASSIFICATION -> ClassificationRunner(
-                this,
-                configuration,
-                failHard = failHard
-            ).benchmark()
-            Task.SEGMENTATION -> SegmentationRunner(
-                this,
-                configuration,
-                failHard = failHard
-            ).benchmark()
-        }
+            val result = when (configuration.model.task) {
+                Task.CLASSIFICATION -> ClassificationRunner(
+                    this,
+                    configuration,
+                    failHard = failHard
+                ).benchmark()
+                Task.SEGMENTATION -> SegmentationRunner(
+                    this,
+                    configuration,
+                    failHard = failHard
+                ).benchmark()
+            }
 
-        val resIntent = Intent(RESULT_ACTION).also {
-            it.putExtra(DATA_KEY, result)
+            resIntent.putExtra(DATA_KEY, result)
+        } catch (e: Throwable) {
+            resIntent.putExtra(ERROR_KEY, e)
         }
         sendBroadcast(resIntent)
         stopSelf()
@@ -53,6 +56,7 @@ class WorkerService : Service() {
         private const val RESULT_ACTION = BuildConfig.APPLICATION_ID + "WORKER_SERVICE_RESULT"
         const val CONFIGURATION_KEY = "CONFIGURATION_KEY"
         const val DATA_KEY = "DATA_KEY"
+        const val ERROR_KEY = "ERROR_KEY"
         const val GAME_LOOP_KEY = "GAME_LOOP_KEY"
 
         val resultIntentFilter = IntentFilter(RESULT_ACTION)

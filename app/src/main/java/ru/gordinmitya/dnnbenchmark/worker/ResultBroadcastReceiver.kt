@@ -6,11 +6,16 @@ import android.content.Intent
 import ru.gordinmitya.dnnbenchmark.benchmark.InferenceResult
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 class ResultBroadcastReceiver(private val cont: Continuation<InferenceResult>) :
     BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        val payload = intent.getParcelableExtra<InferenceResult>(WorkerService.DATA_KEY)
+        val exception = intent.getSerializableExtra(WorkerService.ERROR_KEY) as Throwable?
+        if (exception != null)
+            cont.resumeWithException(exception)
+
+        val payload = intent.getParcelableExtra<InferenceResult>(WorkerService.DATA_KEY)!!
         cont.resume(payload)
         context.unregisterReceiver(this)
     }
