@@ -13,7 +13,6 @@ import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
 import ru.gordinmitya.common.Configuration
 import ru.gordinmitya.common.Constants
-import ru.gordinmitya.common.segmentation.MaskUtils
 import ru.gordinmitya.common.segmentation.SegmentationModel
 import ru.gordinmitya.common.segmentation.Segmentator
 
@@ -61,7 +60,7 @@ class TFLiteSegmentator(
         }
     }
 
-    override fun predict(input: Bitmap): Bitmap {
+    override fun predict(input: Bitmap): FloatArray {
         inputImageBuffer.load(input)
         val imageProcessor = ImageProcessor.Builder()
             .add(NormalizeOp(127.5f, 127.5f))
@@ -69,9 +68,8 @@ class TFLiteSegmentator(
         inputImageBuffer = imageProcessor.process(inputImageBuffer)
 
         interpreter!!.run(inputImageBuffer.buffer, outputBuffer.buffer.rewind())
-        val output = outputBuffer.floatArray
 
-        return MaskUtils.convertMaskToBitmap(output, convertedModel.model)
+        return outputBuffer.floatArray
     }
 
     override fun release() {

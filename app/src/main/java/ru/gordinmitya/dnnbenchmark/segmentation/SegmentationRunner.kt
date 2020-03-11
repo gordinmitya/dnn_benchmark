@@ -3,6 +3,7 @@ package ru.gordinmitya.dnnbenchmark.segmentation
 import android.content.Context
 import android.graphics.Bitmap
 import ru.gordinmitya.common.Configuration
+import ru.gordinmitya.common.segmentation.MaskUtils
 import ru.gordinmitya.common.segmentation.SegmentationFramework
 import ru.gordinmitya.common.segmentation.SegmentationModel
 import ru.gordinmitya.common.segmentation.Segmentator
@@ -26,13 +27,14 @@ class SegmentationRunner(
     val DECREASE_LOOPS_TIMEOUT = 5_000L
     val DECREASE_LOOPS_COUNT = 5
 
+    private val model: SegmentationModel
     private val benchmarker: Benchmarker
     private val evaluator: SegmentationEvaluator
     private val segmentator: Segmentator
     private val samples: CyclicIterator<String>
 
     init {
-        val model = configuration.model as SegmentationModel
+        model = configuration.model as SegmentationModel
 
         benchmarker = Benchmarker()
         evaluator = SegmentationEvaluator()
@@ -54,13 +56,16 @@ class SegmentationRunner(
 //            progressCallback?.onPrepared(prepareTime)
             benchmarker.addPreparation((prepareTime))
             for (i in 0 until loops) {
-                var image = ModelAssets.loadImage(context, samples.next())
+                val imagePath = samples.next()
+                var image = ModelAssets.loadImage(context, imagePath)
                 // TODO use other images for segmentation testing
                 image = Bitmap.createScaledBitmap(image, 257, 257, true)
 //                progressCallback?.onNext(sample.image, i + 1, loops)
+                var output: FloatArray = floatArrayOf()
                 val time = Timeit.measure {
-                    segmentator.predict(image)
+                    output = segmentator.predict(image)
                 }
+                val segmentation = MaskUtils.convertMaskToBitmap(output, model)
 //                progressCallback?.onResult(label, time)
                 benchmarker.addNext(time)
 //                evaluator.addNext(prediction, label, sample)

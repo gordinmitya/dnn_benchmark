@@ -8,7 +8,6 @@ import com.taobao.android.mnn.MNNNetInstance
 import com.taobao.android.mnn.MNNNetInstance.Session.Tensor
 import ru.gordinmitya.common.Configuration
 import ru.gordinmitya.common.Constants
-import ru.gordinmitya.common.segmentation.MaskUtils
 import ru.gordinmitya.common.segmentation.SegmentationModel
 import ru.gordinmitya.common.segmentation.Segmentator
 import ru.gordinmitya.common.utils.AssetUtil
@@ -41,7 +40,7 @@ class MNNSegmentator(
         inputSize = inputTensor.dimensions
     }
 
-    override fun predict(input: Bitmap): Bitmap {
+    override fun predict(input: Bitmap): FloatArray {
         require(input.width == inputSize[2])
         require(input.height == inputSize[3])
 
@@ -53,9 +52,7 @@ class MNNSegmentator(
         }
         MNNImageProcess.convertBitmap(input, inputTensor, config, Matrix())
         session.run()
-        val output = outputTensor.floatData
-
-        return MaskUtils.convertMaskToBitmap(output, convertedModel.model)
+        return outputTensor.floatData
     }
 
     override fun release() {
