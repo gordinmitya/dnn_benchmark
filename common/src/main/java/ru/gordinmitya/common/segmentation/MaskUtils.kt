@@ -1,11 +1,10 @@
 package ru.gordinmitya.common.segmentation
 
 import android.graphics.Bitmap
-import java.nio.ByteBuffer
 
 object MaskUtils {
-    fun convertBytebufferMaskToBitmap(
-        inputBuffer: ByteBuffer,
+    fun convertMaskToBitmap(
+        array: FloatArray,
         model: SegmentationModel
     ): Bitmap {
         val (width, height) = model.inputSize
@@ -14,7 +13,6 @@ object MaskUtils {
         val maskBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
 
         val itemsFound = HashSet<Int>()
-        inputBuffer.rewind()
 
         for (y in 0 until height) {
             for (x in 0 until width) {
@@ -22,8 +20,7 @@ object MaskUtils {
                 var bit = 0
 
                 for (c in 0 until numClasses) {
-                    val value = inputBuffer
-                        .getFloat((y * width * numClasses + x * numClasses + c) * 4)
+                    val value = array[y * width * numClasses + x * numClasses + c]
                     if (c == 0 || value > maxVal) {
                         maxVal = value
                         bit = c

@@ -8,17 +8,18 @@ import com.taobao.android.mnn.MNNNetInstance
 import com.taobao.android.mnn.MNNNetInstance.Session.Tensor
 import ru.gordinmitya.common.Configuration
 import ru.gordinmitya.common.Constants
-import ru.gordinmitya.common.classification.ClassificationModel
-import ru.gordinmitya.common.classification.Classifier
+import ru.gordinmitya.common.segmentation.MaskUtils
+import ru.gordinmitya.common.segmentation.SegmentationModel
+import ru.gordinmitya.common.segmentation.Segmentator
 import ru.gordinmitya.common.utils.AssetUtil
 
 
-class MNNClassifier(
+class MNNSegmentator(
     val context: Context,
     configuration: Configuration,
-    val convertedModel: ConvertedModel<ClassificationModel>,
+    val convertedModel: ConvertedModel<SegmentationModel>,
     val inferenceType: MNNInferenceType
-) : Classifier(configuration) {
+) : Segmentator(configuration) {
 
     private var net: MNNNetInstance? = null
     private lateinit var session: MNNNetInstance.Session
@@ -40,19 +41,21 @@ class MNNClassifier(
         inputSize = inputTensor.dimensions
     }
 
-    override fun predict(input: Bitmap): FloatArray {
+    override fun predict(input: Bitmap): Bitmap {
         require(input.width == inputSize[2])
         require(input.height == inputSize[3])
 
         val config = MNNImageProcess.Config().also {
             it.mean = floatArrayOf(127.5f, 127.5f, 127.5f)
-            it.normal = floatArrayOf(1/127.5f, 1/127.5f, 1/127.5f)
+            it.normal = floatArrayOf(1 / 127.5f, 1 / 127.5f, 1 / 127.5f)
             it.source = MNNImageProcess.Format.RGBA
             it.dest = MNNImageProcess.Format.RGB
         }
         MNNImageProcess.convertBitmap(input, inputTensor, config, Matrix())
         session.run()
-        return outputTensor.floatData
+        val output = outputTensor.floatData
+
+        return MaskUtils.convertMaskToBitmap(output, convertedModel.model)
     }
 
     override fun release() {

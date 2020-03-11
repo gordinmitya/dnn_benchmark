@@ -16,7 +16,7 @@ class ConvertedModel<T> private constructor(
 
         val deeplab_v3 = ConvertedModel(
             DeepLabModel,
-            "tflite/deeplabv3.tflite"
+            "tflite/deeplab_v3.tflite"
         )
 
         fun <T : Model> getByModel(model: Model): ConvertedModel<T>? {

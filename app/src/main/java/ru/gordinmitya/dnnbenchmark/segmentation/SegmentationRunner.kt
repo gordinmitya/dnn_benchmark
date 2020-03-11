@@ -1,6 +1,7 @@
 package ru.gordinmitya.dnnbenchmark.segmentation
 
 import android.content.Context
+import android.graphics.Bitmap
 import ru.gordinmitya.common.Configuration
 import ru.gordinmitya.common.segmentation.SegmentationFramework
 import ru.gordinmitya.common.segmentation.SegmentationModel
@@ -53,7 +54,9 @@ class SegmentationRunner(
 //            progressCallback?.onPrepared(prepareTime)
             benchmarker.addPreparation((prepareTime))
             for (i in 0 until loops) {
-                val image = ModelAssets.loadImage(context, samples.next())
+                var image = ModelAssets.loadImage(context, samples.next())
+                // TODO use other images for segmentation testing
+                image = Bitmap.createScaledBitmap(image, 257, 257, true)
 //                progressCallback?.onNext(sample.image, i + 1, loops)
                 val time = Timeit.measure {
                     segmentator.predict(image)

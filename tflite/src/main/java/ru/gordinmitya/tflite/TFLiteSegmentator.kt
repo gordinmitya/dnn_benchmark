@@ -62,7 +62,6 @@ class TFLiteSegmentator(
     }
 
     override fun predict(input: Bitmap): Bitmap {
-        val input = Bitmap.createScaledBitmap(input, 257, 257, true)
         inputImageBuffer.load(input)
         val imageProcessor = ImageProcessor.Builder()
             .add(NormalizeOp(127.5f, 127.5f))
@@ -70,8 +69,9 @@ class TFLiteSegmentator(
         inputImageBuffer = imageProcessor.process(inputImageBuffer)
 
         interpreter!!.run(inputImageBuffer.buffer, outputBuffer.buffer.rewind())
+        val output = outputBuffer.floatArray
 
-        return MaskUtils.convertBytebufferMaskToBitmap(outputBuffer.buffer, convertedModel.model)
+        return MaskUtils.convertMaskToBitmap(output, convertedModel.model)
     }
 
     override fun release() {
