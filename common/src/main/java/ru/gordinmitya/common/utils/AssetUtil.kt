@@ -4,7 +4,7 @@ import android.content.Context
 import java.io.File
 
 object AssetUtil {
-    public fun copyFileToCache(context: Context, fileName: String): File {
+    fun copyFileToCache(context: Context, fileName: String): File {
         val file = File(context.cacheDir, fileName)
         if (file.parentFile?.exists() != true) {
             file.parentFile?.mkdirs()

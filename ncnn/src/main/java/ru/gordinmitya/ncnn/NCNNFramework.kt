@@ -1,10 +1,14 @@
 package ru.gordinmitya.ncnn
 
 import android.content.Context
-import ru.gordinmitya.common.*
+import ru.gordinmitya.common.Configuration
+import ru.gordinmitya.common.InferenceFramework
+import ru.gordinmitya.common.InferenceType
+import ru.gordinmitya.common.Model
+import ru.gordinmitya.common.classification.ClassificationFramework
 import ru.gordinmitya.common.classification.Classifier
 
-object NCNNFramework : InferenceFramework("NCNN", "by Tencent") {
+class NCNNFramework : InferenceFramework("NCNN", "by Tencent"), ClassificationFramework {
 
     val TYPES = arrayListOf(
         NCNN_CPU,

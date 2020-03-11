@@ -5,10 +5,11 @@ import ru.gordinmitya.common.Configuration
 import ru.gordinmitya.common.InferenceFramework
 import ru.gordinmitya.common.InferenceType
 import ru.gordinmitya.common.Model
+import ru.gordinmitya.common.classification.ClassificationFramework
+import ru.gordinmitya.common.classification.ClassificationModel
 import ru.gordinmitya.common.classification.Classifier
-import ru.gordinmitya.pytorch.ConvertedModel
 
-object PytorchFramework : InferenceFramework("Pytorch", "by Facebook") {
+class PytorchFramework : InferenceFramework("Pytorch", "by Facebook"), ClassificationFramework {
     private val TYPES = listOf(PYTORCH_CPU)
 
     override fun getInferenceTypes(): List<InferenceType> = TYPES

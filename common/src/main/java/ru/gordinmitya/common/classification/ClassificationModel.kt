@@ -15,9 +15,11 @@ open class ClassificationModel(
     override fun toString(): String = "$name (classification) $description"
 }
 
-object MobileNet_v2 : ClassificationModel(
+// https://www.tensorflow.org/lite/guide/hosted_models
+// search for Mobilenet_V2_1.0_224
+object MobileNetModel : ClassificationModel(
     "mobilenet_v2",
-    "made by Google",
+    "From tensorflow hosted models",
     224 to 224,
     3,
     intArrayOf(1, 1001),

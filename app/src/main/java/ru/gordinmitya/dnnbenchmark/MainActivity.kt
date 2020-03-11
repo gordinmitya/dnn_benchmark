@@ -12,11 +12,15 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
 import ru.gordinmitya.common.Configuration
 import ru.gordinmitya.common.Task
+import ru.gordinmitya.common.classification.MobileNetModel
 import ru.gordinmitya.dnnbenchmark.benchmark.InferenceResult
 import ru.gordinmitya.dnnbenchmark.benchmark.NotSupportedResult
 import ru.gordinmitya.dnnbenchmark.model.ConfigurationEntity
 import ru.gordinmitya.dnnbenchmark.model.DeviceInfo
 import ru.gordinmitya.dnnbenchmark.model.Measurement
+import ru.gordinmitya.dnnbenchmark.utils.ModelAssets
+import ru.gordinmitya.dnnbenchmark.worker.WorkerService
+import ru.gordinmitya.tflite.TFLiteFramework
 
 class MainActivity : AppCompatActivity() {
     val TAG = "MainActivity"
@@ -70,7 +74,7 @@ class MainActivity : AppCompatActivity() {
         val configurations = ArrayList<Configuration>()
         for (framework in App.instance.frameworks) {
             for (model in framework.getModels()) {
-                if (model.task != Task.CLASSIFICATION) continue
+                if (model.task != Task.SEGMENTATION) continue
                 for (type in framework.getInferenceTypes()) {
                     val configuration = Configuration(framework, type, model)
                     configurations.add(configuration)
@@ -86,6 +90,7 @@ class MainActivity : AppCompatActivity() {
                     results.add(NotSupportedResult(ConfigurationEntity(configuration)))
                     return@forEach
                 }
+
                 val result = WorkerService.execute(activity, configuration, isGameLoop)
                 results.add(result)
                 log(result.toString())

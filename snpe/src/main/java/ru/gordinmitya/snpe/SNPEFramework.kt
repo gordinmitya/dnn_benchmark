@@ -2,13 +2,13 @@ package ru.gordinmitya.snpe
 
 import android.app.Application
 import android.content.Context
-import ru.gordinmitya.common.Configuration
-import ru.gordinmitya.common.InferenceFramework
-import ru.gordinmitya.common.InferenceType
-import ru.gordinmitya.common.Model
+import ru.gordinmitya.common.*
+import ru.gordinmitya.common.classification.ClassificationFramework
+import ru.gordinmitya.common.classification.ClassificationModel
 import ru.gordinmitya.common.classification.Classifier
 
-class SNPEFramework(context: Context) : InferenceFramework("SNPE", "by Qualcomm") {
+class SNPEFramework(context: Context) : InferenceFramework("SNPE", "by Qualcomm"),
+    ClassificationFramework {
     private val types: List<SNPEInferenceType>
 
     init {

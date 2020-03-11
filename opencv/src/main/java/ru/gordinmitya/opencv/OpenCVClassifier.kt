@@ -4,8 +4,6 @@ import android.content.Context
 import android.graphics.Bitmap
 import org.opencv.android.OpenCVLoader
 import org.opencv.android.Utils
-import org.opencv.core.CvType
-import org.opencv.core.CvType.CV_32F
 import org.opencv.core.Mat
 import org.opencv.core.Scalar
 import org.opencv.dnn.Dnn
@@ -32,9 +30,9 @@ class OpenCVClassifier(
         net = Dnn.readNetFromTensorflow(file.path)
     }
 
-    override fun predict(bitmap: Bitmap): FloatArray {
+    override fun predict(input: Bitmap): FloatArray {
         val mat = Mat()
-        Utils.bitmapToMat(bitmap, mat)
+        Utils.bitmapToMat(input, mat)
         cvtColor(mat, mat, Imgproc.COLOR_RGBA2RGB)
         val blob = Dnn.blobFromImage(
             mat,

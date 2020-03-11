@@ -1,5 +1,6 @@
 package ru.gordinmitya.common
 
 enum class Task {
-    CLASSIFICATION
+    CLASSIFICATION,
+    SEGMENTATION
 }

@@ -1,19 +1,19 @@
 package ru.gordinmitya.mnn
 
 import android.content.Context
-import ru.gordinmitya.common.Configuration
-import ru.gordinmitya.common.InferenceFramework
-import ru.gordinmitya.common.InferenceType
-import ru.gordinmitya.common.Model
+import ru.gordinmitya.common.*
+import ru.gordinmitya.common.classification.ClassificationFramework
+import ru.gordinmitya.common.classification.ClassificationModel
 import ru.gordinmitya.common.classification.Classifier
 
-object MNNFramework : InferenceFramework("MNN", "by Alibaba") {
+class MNNFramework : InferenceFramework("MNN", "by Alibaba"), ClassificationFramework {
     private val TYPES = arrayListOf(
         CPU,
         OPEN_CL,
         VULKAN,
         OPEN_GL
     )
+
     override fun getInferenceTypes(): List<InferenceType> = TYPES
 
     override fun getModels(): List<Model> =

@@ -1,37 +1,21 @@
-package ru.gordinmitya.dnnbenchmark
+package ru.gordinmitya.dnnbenchmark.worker
 
 import android.app.Service
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.IBinder
 import ru.gordinmitya.common.Configuration
-import ru.gordinmitya.common.classification.ClassificationModel
-import ru.gordinmitya.dnnbenchmark.benchmark.Benchmarker
+import ru.gordinmitya.common.Task
+import ru.gordinmitya.dnnbenchmark.App
+import ru.gordinmitya.dnnbenchmark.BuildConfig
 import ru.gordinmitya.dnnbenchmark.benchmark.InferenceResult
-import ru.gordinmitya.dnnbenchmark.classification.ClassificationEvaluator
 import ru.gordinmitya.dnnbenchmark.classification.ClassificationRunner
 import ru.gordinmitya.dnnbenchmark.model.ConfigurationEntity
-import ru.gordinmitya.dnnbenchmark.utils.ModelAssets
-import kotlin.coroutines.Continuation
-import kotlin.coroutines.resume
+import ru.gordinmitya.dnnbenchmark.segmentation.SegmentationRunner
 import kotlin.coroutines.suspendCoroutine
 
-
-class ResultBroadcastReceiver(private val cont: Continuation<InferenceResult>) :
-    BroadcastReceiver() {
-    override fun onReceive(context: Context, intent: Intent) {
-        val payload = intent.getParcelableExtra<InferenceResult>(WorkerService.DATA_KEY)
-        cont.resume(payload)
-        context.unregisterReceiver(this)
-    }
-}
-
-
 class WorkerService : Service() {
-    val loops = 64
-
     override fun onBind(intent: Intent?): IBinder? {
         return null
     }
@@ -41,26 +25,20 @@ class WorkerService : Service() {
             .getParcelableExtra<ConfigurationEntity>(CONFIGURATION_KEY)!!
             .toConfiguration()
         val isGameLoop = intent.getBooleanExtra(GAME_LOOP_KEY, false)
+        val failHard = App.DEBUG && !isGameLoop
 
-        val assets = ModelAssets(
-            this,
-            configuration.model as ClassificationModel
-        )
-        val classifier =
-            configuration.inferenceFramework.createClassifier(this, configuration)
-        val progressLogger = ProgressLogger(configuration) { str, replace ->
-
+        val result = when (configuration.model.task) {
+            Task.CLASSIFICATION -> ClassificationRunner(
+                this,
+                configuration,
+                failHard = failHard
+            ).benchmark()
+            Task.SEGMENTATION -> SegmentationRunner(
+                this,
+                configuration,
+                failHard = failHard
+            ).benchmark()
         }
-
-        val result = ClassificationRunner.benchmark(
-            classifier,
-            assets,
-            Benchmarker(),
-            ClassificationEvaluator(),
-            loops,
-            progressLogger,
-            App.DEBUG && !isGameLoop
-        )
 
         val resIntent = Intent(RESULT_ACTION).also {
             it.putExtra(DATA_KEY, result)
@@ -85,8 +63,14 @@ class WorkerService : Service() {
             isGameLoop: Boolean
         ): InferenceResult {
             return suspendCoroutine { continuation ->
-                val receiver = ResultBroadcastReceiver(continuation)
-                context.registerReceiver(receiver, resultIntentFilter)
+                val receiver =
+                    ResultBroadcastReceiver(
+                        continuation
+                    )
+                context.registerReceiver(
+                    receiver,
+                    resultIntentFilter
+                )
 
                 val intent = Intent(context, WorkerService::class.java).also {
                     it.putExtra(CONFIGURATION_KEY, ConfigurationEntity(configuration))

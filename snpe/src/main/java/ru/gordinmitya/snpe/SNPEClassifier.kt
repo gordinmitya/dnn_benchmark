@@ -49,9 +49,9 @@ class SNPEClassifier(
         inputsMap = hashMapOf(INPUT to inputTensor)
     }
 
-    override fun predict(bitmap: Bitmap): FloatArray {
-        require(inputWidth == bitmap.width && inputHeight == bitmap.height)
-        bitmap.getPixels(intValues, 0, bitmap.width, 0, 0, bitmap.width, bitmap.height)
+    override fun predict(input: Bitmap): FloatArray {
+        require(inputWidth == input.width && inputHeight == input.height)
+        input.getPixels(intValues, 0, input.width, 0, 0, input.width, input.height)
 
         for (i in intValues.indices) {
             val value = intValues[i]

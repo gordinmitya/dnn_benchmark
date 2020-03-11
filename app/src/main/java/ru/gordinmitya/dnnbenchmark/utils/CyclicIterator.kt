@@ -14,3 +14,7 @@ class CyclicIterator<T>(val source: Collection<T>) : Iterator<T> {
         return iterator.next()
     }
 }
+
+fun <T> List<T>.toCyclicIterator(): CyclicIterator<T> {
+    return CyclicIterator(this)
+}

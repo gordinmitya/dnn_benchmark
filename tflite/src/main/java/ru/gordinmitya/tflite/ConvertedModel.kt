@@ -1,25 +1,34 @@
 package ru.gordinmitya.tflite
 
 import ru.gordinmitya.common.Model
-import ru.gordinmitya.common.classification.ClassificationModel
-import ru.gordinmitya.common.classification.MobileNet_v2
+import ru.gordinmitya.common.classification.MobileNetModel
+import ru.gordinmitya.common.segmentation.DeepLabModel
 
-class ConvertedModel private constructor(
-    val model: ClassificationModel,
+class ConvertedModel<T> private constructor(
+    val model: T,
     val file: String
 ) {
     companion object {
         val mobilenet_v2 = ConvertedModel(
-            MobileNet_v2,
-            "mobilenet_v2.tflite"
+            MobileNetModel,
+            "tflite/mobilenet_v2.tflite"
         )
 
-        fun getByModel(model: Model): ConvertedModel? {
-            return all.find { it.model == model }
+        val deeplab_v3 = ConvertedModel(
+            DeepLabModel,
+            "tflite/deeplabv3.tflite"
+        )
+
+        fun <T : Model> getByModel(model: Model): ConvertedModel<T>? {
+            @Suppress("UNCHECKED_CAST")
+            return all.find {
+                it.model == model
+            } as ConvertedModel<T>?
         }
 
         val all = arrayListOf(
-            mobilenet_v2
+            mobilenet_v2,
+            deeplab_v3
         )
     }
 }

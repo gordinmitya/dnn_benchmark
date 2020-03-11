@@ -1,13 +1,13 @@
 package ru.gordinmitya.tf_mobile
 
 import android.content.Context
-import ru.gordinmitya.common.Configuration
-import ru.gordinmitya.common.InferenceFramework
-import ru.gordinmitya.common.InferenceType
-import ru.gordinmitya.common.Model
+import ru.gordinmitya.common.*
+import ru.gordinmitya.common.classification.ClassificationFramework
+import ru.gordinmitya.common.classification.ClassificationModel
 import ru.gordinmitya.common.classification.Classifier
 
-object TFMobileFramework : InferenceFramework("TFMobile", "by Google (Deprecated)") {
+class TFMobileFramework : InferenceFramework("TFMobile", "by Google (Deprecated)"),
+    ClassificationFramework {
     val TYPES = listOf(TF_MOBILE_CPU)
 
     override fun getInferenceTypes(): List<InferenceType> = TYPES

@@ -2,7 +2,7 @@ package ru.gordinmitya.snpe
 
 import ru.gordinmitya.common.Model
 import ru.gordinmitya.common.classification.ClassificationModel
-import ru.gordinmitya.common.classification.MobileNet_v2
+import ru.gordinmitya.common.classification.MobileNetModel
 
 class ConvertedModel private constructor(
     val model: ClassificationModel,
@@ -12,7 +12,7 @@ class ConvertedModel private constructor(
 ) {
     companion object {
         val mobilenet_v2 = ConvertedModel(
-            MobileNet_v2,
+            MobileNetModel,
             "input:0",
             "MobilenetV2/Predictions/Reshape_1:0",
             "snpe/mobilenet_v2.dlc"

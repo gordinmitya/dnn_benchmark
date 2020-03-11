@@ -1,7 +1,10 @@
 package ru.gordinmitya.common
 
 import android.content.Context
+import ru.gordinmitya.common.classification.ClassificationModel
 import ru.gordinmitya.common.classification.Classifier
+import ru.gordinmitya.common.segmentation.SegmentationModel
+import ru.gordinmitya.common.segmentation.Segmentator
 
 abstract class InferenceFramework(
     val name: String,
@@ -9,5 +12,4 @@ abstract class InferenceFramework(
 ) {
     abstract fun getModels(): List<Model>
     abstract fun getInferenceTypes(): List<InferenceType>
-    abstract fun createClassifier(context: Context, configuration: Configuration): Classifier
 }

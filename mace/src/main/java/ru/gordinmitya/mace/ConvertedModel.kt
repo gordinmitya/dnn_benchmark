@@ -1,7 +1,7 @@
 package ru.gordinmitya.mace
 
 import ru.gordinmitya.common.Model
-import ru.gordinmitya.common.classification.MobileNet_v2
+import ru.gordinmitya.common.classification.MobileNetModel
 
 class ConvertedModel private constructor(
     val model: Model,
@@ -12,7 +12,7 @@ class ConvertedModel private constructor(
 ) {
     companion object {
         val mobilenet_v2 = ConvertedModel(
-            MobileNet_v2,
+            MobileNetModel,
             "input",
             "MobilenetV2/Predictions/Reshape_1",
             "mace/mobilenet_v2.pb",

@@ -27,11 +27,11 @@ class NCNNClassifier(
             throw RuntimeException("Failed to initialize NCNN")
     }
 
-    override fun predict(bitmap: Bitmap): FloatArray {
+    override fun predict(input: Bitmap): FloatArray {
         val outputSize = convertedModel.model.outputShape
             .reduce { acc, i -> acc * i }
         val prediction = FloatArray(outputSize)
-        val status = ncnn!!.run(bitmap, prediction)
+        val status = ncnn!!.run(input, prediction)
         if (!status)
             throw RuntimeException("Failed to inference with NCNN")
         return prediction

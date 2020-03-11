@@ -8,7 +8,6 @@ import org.pytorch.torchvision.TensorImageUtils
 import ru.gordinmitya.common.Configuration
 import ru.gordinmitya.common.classification.Classifier
 import ru.gordinmitya.common.utils.AssetUtil
-import ru.gordinmitya.pytorch.ConvertedModel
 
 class PytorchClassifier(
     val context: Context,
@@ -21,16 +20,16 @@ class PytorchClassifier(
 
     override fun prepare() {
         val file = AssetUtil.copyFileToCache(context, convertedModel.file)
-        module = Module.load(file.path);
+        module = Module.load(file.path)
     }
 
-    override fun predict(bitmap: Bitmap): FloatArray {
+    override fun predict(input: Bitmap): FloatArray {
         val inputTensor = TensorImageUtils.bitmapToFloat32Tensor(
-            bitmap,
+            input,
             TensorImageUtils.TORCHVISION_NORM_MEAN_RGB,
             TensorImageUtils.TORCHVISION_NORM_STD_RGB
         )
-        val outputTensor = module!!.forward(IValue.from(inputTensor)).toTensor();
+        val outputTensor = module!!.forward(IValue.from(inputTensor)).toTensor()
 
         return outputTensor.dataAsFloatArray
     }

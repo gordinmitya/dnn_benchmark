@@ -1,6 +1,7 @@
 package ru.gordinmitya.dnnbenchmark.utils
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
 import ru.gordinmitya.common.classification.ClassificationModel
@@ -18,49 +19,59 @@ class ModelAssets(val context: Context, val model: ClassificationModel) {
             .bufferedReader()
             .readLines()
 
-        samples = context.assets
-            .list(model.samplesDir)
-            ?.filter { !it.contains('.') }
-            ?.mapNotNull {
-                if (it in labels)
+        samples = getImagesInSubFolders(context, model.samplesDir)
+            .mapNotNull {
+                if (it.first in labels)
                     it
                 else {
                     Log.w("ModelAssets", "$it is not an label for this dataset!")
                     null
                 }
             }
-            ?.flatMap { tag ->
-                val folder = File(model.samplesDir, tag).path
-                val images = context.assets
-                    .list(File(model.samplesDir, tag).path)
-                    ?.map { "$folder/$it" } ?: emptyList()
-                Array(images.size) { tag }.zip(images)
-            } ?: emptyList()
 
         iterator = CyclicIterator(samples)
     }
 
     fun getGT(): GT {
         val (label, file) = iterator.next()
-        val bitmap = context.assets.open(file).use {
-            BitmapFactory.decodeStream(it)
-        }
+        val bitmap = loadImage(context, file)
         return GT(bitmap, label)
     }
 
     fun getLabelForPrediction(prediction: FloatArray): String {
-        // FIXME use the same model for all frameworks
-//        require(labels.size == prediction.size)
+        require(labels.size == prediction.size)
 
         var index = 0
         for (i in prediction.indices) {
             if (prediction[i] > prediction[index])
                 index = i
         }
-        // FIXME skip "background" label
+        // FIXME use the same model for all frameworks
+        // skip "background" label
         if (prediction.size == 1000)
             index += 1
 
         return labels[index]
+    }
+
+    companion object {
+        fun getImagesInSubFolders(context: Context, folder: String): List<Pair<String, String>> {
+            return context.assets
+                .list(folder)
+                ?.filter { !it.contains('.') }
+                ?.flatMap { tag ->
+                    val dir = File(folder, tag).path
+                    val images = context.assets
+                        .list(File(folder, tag).path)
+                        ?.map { "$dir/$it" } ?: emptyList()
+                    Array(images.size) { tag }.zip(images)
+                } ?: emptyList()
+        }
+
+        fun loadImage(context: Context, path: String): Bitmap {
+            return context.assets.open(path).use {
+                BitmapFactory.decodeStream(it)
+            }
+        }
     }
 }

@@ -13,21 +13,21 @@ import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
 import ru.gordinmitya.common.Configuration
 import ru.gordinmitya.common.Constants
-import ru.gordinmitya.common.classification.ClassificationModel
-import ru.gordinmitya.common.classification.Classifier
+import ru.gordinmitya.common.segmentation.MaskUtils
+import ru.gordinmitya.common.segmentation.SegmentationModel
+import ru.gordinmitya.common.segmentation.Segmentator
 
-
-class TFLiteClassifier(
+class TFLiteSegmentator(
     val context: Context,
     configuration: Configuration,
-    val convertedModel: ConvertedModel<ClassificationModel>,
+    val convertedModel: ConvertedModel<SegmentationModel>,
     val inferenceType: TFLiteInferenceType
-) : Classifier(configuration) {
+) : Segmentator(configuration) {
 
     private var interpreter: Interpreter? = null
     private var delegate: Delegate? = null
     private lateinit var inputImageBuffer: TensorImage
-    private lateinit var outputProbabilityBuffer: TensorBuffer
+    private lateinit var outputBuffer: TensorBuffer
 
     override fun prepare() {
         val options = Interpreter.Options()
@@ -55,25 +55,23 @@ class TFLiteClassifier(
 
         val probabilityTensorIndex = 0
         interpreter!!.getOutputTensor(probabilityTensorIndex).let {
-            val shape = it.shape() // {1, NUM_CLASSES}
+            val shape = it.shape()
             val dataType = it.dataType()
-            outputProbabilityBuffer = TensorBuffer.createFixedSize(shape, dataType)
+            outputBuffer = TensorBuffer.createFixedSize(shape, dataType)
         }
     }
 
-    override fun predict(input: Bitmap): FloatArray {
+    override fun predict(input: Bitmap): Bitmap {
+        val input = Bitmap.createScaledBitmap(input, 257, 257, true)
         inputImageBuffer.load(input)
         val imageProcessor = ImageProcessor.Builder()
             .add(NormalizeOp(127.5f, 127.5f))
             .build()
         inputImageBuffer = imageProcessor.process(inputImageBuffer)
 
-        interpreter!!.run(inputImageBuffer.buffer, outputProbabilityBuffer.buffer.rewind())
+        interpreter!!.run(inputImageBuffer.buffer, outputBuffer.buffer.rewind())
 
-        val outputSize = convertedModel.model.outputShape
-            .reduce { acc, i -> acc * i }
-        check(outputProbabilityBuffer.flatSize == outputSize)
-        return outputProbabilityBuffer.floatArray
+        return MaskUtils.convertBytebufferMaskToBitmap(outputBuffer.buffer, convertedModel.model)
     }
 
     override fun release() {
