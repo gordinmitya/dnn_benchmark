@@ -32,7 +32,6 @@ class MNNClassifier(
         val config = MNNNetInstance.Config().also {
             it.forwardType = inferenceType.type
             it.numThread = Constants.NUM_THREADS
-            it.outputTensors = arrayOf(convertedModel.outputName)
         }
         session = net!!.createSession(config)
         inputTensor = session.getInput(null)

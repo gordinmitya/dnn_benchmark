@@ -1,10 +1,7 @@
 package ru.gordinmitya.mnn
 
 import android.content.Context
-import ru.gordinmitya.common.Configuration
-import ru.gordinmitya.common.InferenceFramework
-import ru.gordinmitya.common.InferenceType
-import ru.gordinmitya.common.Model
+import ru.gordinmitya.common.*
 import ru.gordinmitya.common.classification.ClassificationFramework
 import ru.gordinmitya.common.classification.ClassificationModel
 import ru.gordinmitya.common.classification.Classifier
@@ -43,4 +40,6 @@ class MNNFramework : InferenceFramework("MNN", "by Alibaba"), ClassificationFram
 
         return MNNSegmentator(context, configuration, convertedModel, inferenceType)
     }
+
+    override fun getDataOrder(): DataOrder = DataOrder.NCWH
 }

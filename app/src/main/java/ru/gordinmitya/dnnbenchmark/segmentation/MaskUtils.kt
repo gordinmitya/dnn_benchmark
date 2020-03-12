@@ -1,14 +1,20 @@
-package ru.gordinmitya.common.segmentation
+package ru.gordinmitya.dnnbenchmark.segmentation
 
 import android.graphics.Bitmap
+import ru.gordinmitya.common.DataOrder
+import ru.gordinmitya.common.segmentation.SegmentationModel
 
 object MaskUtils {
     fun convertMaskToBitmap(
         array: FloatArray,
-        model: SegmentationModel
+        model: SegmentationModel,
+        dataOrder: DataOrder
     ): Bitmap {
-        val (width, height) = model.inputSize
-        val numClasses = model.outputClasses
+        val (width, height) = model.outputShape
+        val classes = model.outputClasses
+
+        require(array.size == width * height * classes)
+
         val colors = model.colors
         val maskBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
 
@@ -19,8 +25,12 @@ object MaskUtils {
                 var maxVal = 0f
                 var bit = 0
 
-                for (c in 0 until numClasses) {
-                    val value = array[y * width * numClasses + x * numClasses + c]
+                for (c in 0 until classes) {
+                    val ind = when (dataOrder) {
+                        DataOrder.NHWC -> y * height * classes + x * classes + c
+                        DataOrder.NCWH -> width * height * c + y * height + x
+                    }
+                    val value = array[ind]
                     if (c == 0 || value > maxVal) {
                         maxVal = value
                         bit = c

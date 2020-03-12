@@ -6,19 +6,16 @@ import ru.gordinmitya.common.segmentation.DeepLabModel
 
 class ConvertedModel<T> private constructor(
     val model: T,
-    val outputName: String,
     val fileName: String
 ) {
     companion object {
         val mobilenet_v2 = ConvertedModel(
             MobileNetModel,
-            "MobilenetV2/Predictions/Reshape_1",
             "mnn/mobilenet_v2.mnn"
         )
 
         val deeplab_v3 = ConvertedModel(
             DeepLabModel,
-            "ResizeBilinear_3",
             "mnn/deeplab_v3.mnn"
         )
 

@@ -3,7 +3,6 @@ package ru.gordinmitya.dnnbenchmark.segmentation
 import android.content.Context
 import android.graphics.Bitmap
 import ru.gordinmitya.common.Configuration
-import ru.gordinmitya.common.segmentation.MaskUtils
 import ru.gordinmitya.common.segmentation.SegmentationFramework
 import ru.gordinmitya.common.segmentation.SegmentationModel
 import ru.gordinmitya.common.segmentation.Segmentator
@@ -27,6 +26,7 @@ class SegmentationRunner(
     val DECREASE_LOOPS_TIMEOUT = 5_000L
     val DECREASE_LOOPS_COUNT = 5
 
+    private val framework: SegmentationFramework
     private val model: SegmentationModel
     private val benchmarker: Benchmarker
     private val evaluator: SegmentationEvaluator
@@ -34,6 +34,7 @@ class SegmentationRunner(
     private val samples: CyclicIterator<String>
 
     init {
+        framework = configuration.inferenceFramework as SegmentationFramework
         model = configuration.model as SegmentationModel
 
         benchmarker = Benchmarker()
@@ -44,7 +45,6 @@ class SegmentationRunner(
             }
             .toCyclicIterator()
 
-        val framework = configuration.inferenceFramework as SegmentationFramework
         segmentator = framework.createSegmentator(context, configuration)
     }
 
@@ -65,7 +65,8 @@ class SegmentationRunner(
                 val time = Timeit.measure {
                     output = segmentator.predict(image)
                 }
-                val segmentation = MaskUtils.convertMaskToBitmap(output, model)
+                val segmentation =
+                    MaskUtils.convertMaskToBitmap(output, model, framework.getDataOrder())
 //                progressCallback?.onResult(label, time)
                 benchmarker.addNext(time)
 //                evaluator.addNext(prediction, label, sample)

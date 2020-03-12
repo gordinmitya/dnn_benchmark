@@ -1,10 +1,7 @@
 package ru.gordinmitya.tflite
 
 import android.content.Context
-import ru.gordinmitya.common.Configuration
-import ru.gordinmitya.common.InferenceFramework
-import ru.gordinmitya.common.InferenceType
-import ru.gordinmitya.common.Model
+import ru.gordinmitya.common.*
 import ru.gordinmitya.common.classification.ClassificationFramework
 import ru.gordinmitya.common.classification.ClassificationModel
 import ru.gordinmitya.common.classification.Classifier
@@ -47,4 +44,6 @@ class TFLiteFramework : InferenceFramework("TFLite", "by Google"),
 
         return TFLiteSegmentator(context, configuration, convertedModel, inferenceType)
     }
+
+    override fun getDataOrder(): DataOrder = DataOrder.NHWC
 }
