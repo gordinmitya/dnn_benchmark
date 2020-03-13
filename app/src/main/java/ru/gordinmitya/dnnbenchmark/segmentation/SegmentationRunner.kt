@@ -56,17 +56,35 @@ class SegmentationRunner(
 //            progressCallback?.onPrepared(prepareTime)
             benchmarker.addPreparation((prepareTime))
             for (i in 0 until loops) {
+                // load sample
                 val imagePath = samples.next()
                 var image = ModelAssets.loadImage(context, imagePath)
-                // TODO use other images for segmentation testing
+                val originalImageSize = image.width to image.height
                 image = Bitmap.createScaledBitmap(image, 257, 257, true)
+
 //                progressCallback?.onNext(sample.image, i + 1, loops)
                 var output: FloatArray = floatArrayOf()
                 val time = Timeit.measure {
                     output = segmentator.predict(image)
                 }
-                val segmentation =
+
+                // postprocessing
+                var segmentation =
                     MaskUtils.convertMaskToBitmap(output, model, framework.getDataOrder())
+                segmentation = Bitmap.createScaledBitmap(
+                    segmentation,
+                    originalImageSize.first,
+                    originalImageSize.second,
+                    true
+                )
+
+                // FIXME refactor
+                val gtPath = imagePath
+                    .replace("VOC", "VOC_GT")
+                    .replace(".jpg", ".png")
+                val gt = ModelAssets.loadImage(context, gtPath)
+                evaluator.addNext(segmentation, gt)
+
 //                progressCallback?.onResult(label, time)
                 benchmarker.addNext(time)
 //                evaluator.addNext(prediction, label, sample)

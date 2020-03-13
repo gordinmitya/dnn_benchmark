@@ -8,6 +8,6 @@ class ClassificationPrecisionResult(
     val errors: Double
 ) : PrecisionResult() {
     override fun toString(): String {
-        return "error ${errors * 100}%"
+        return "err ${"%.1f".format(errors * 100)}%"
     }
 }

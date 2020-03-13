@@ -1,6 +1,7 @@
 package ru.gordinmitya.common.segmentation
 
 import android.graphics.Color
+import android.util.Log
 import ru.gordinmitya.common.Model
 import ru.gordinmitya.common.Task
 import kotlin.random.Random
@@ -19,25 +20,7 @@ open class SegmentationModel(
     inputSize, inputChannels,
     intArrayOf(inputSize.first, inputSize.second, outputClasses)
 ) {
-    override fun toString(): String = "$name (classification) $description"
-
-    companion object {
-        private fun getRandomRGBInt(random: Random) = (255 * random.nextFloat()).toInt()
-        fun generateColors(size: Int): IntArray {
-            val random = Random(System.currentTimeMillis())
-            val colors = IntArray(size)
-            colors[0] = Color.TRANSPARENT
-            for (i in 1 until size) {
-                colors[i] = Color.argb(
-                    (128),
-                    getRandomRGBInt(random),
-                    getRandomRGBInt(random),
-                    getRandomRGBInt(random)
-                )
-            }
-            return colors
-        }
-    }
+    override fun toString(): String = "$name (segmentation) $description"
 }
 
 // https://www.tensorflow.org/lite/models/segmentation/overview
@@ -52,6 +35,28 @@ object DeepLabModel : SegmentationModel(
         "car", "cat", "chair", "cow", "dining table", "dog", "horse", "motorbike",
         "person", "potted plant", "sheep", "sofa", "train", "tv"
     ),
-    generateColors(21),
-    "ImageNet/"
+    intArrayOf(
+        0,
+        -2133513366,
+        -2140500538,
+        -2137541320,
+        -2138610828,
+        -2137235995,
+        -2141188538,
+        -2146389943,
+        -2132438607,
+        -2131264292,
+        -2140152552,
+        -2132529199,
+        -2143394679,
+        -2135360066,
+        -2134373907,
+        -2146292326,
+        -2141384524,
+        -2143296444,
+        -2146416403,
+        -2139263617,
+        -2139156123
+    ),
+    "PascalVOC/"
 )

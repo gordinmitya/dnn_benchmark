@@ -6,13 +6,9 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.IBinder
 import ru.gordinmitya.common.Configuration
-import ru.gordinmitya.common.Task
-import ru.gordinmitya.dnnbenchmark.App
 import ru.gordinmitya.dnnbenchmark.BuildConfig
 import ru.gordinmitya.dnnbenchmark.benchmark.InferenceResult
-import ru.gordinmitya.dnnbenchmark.classification.ClassificationRunner
 import ru.gordinmitya.dnnbenchmark.model.ConfigurationEntity
-import ru.gordinmitya.dnnbenchmark.segmentation.SegmentationRunner
 import kotlin.coroutines.suspendCoroutine
 
 class WorkerService : Service() {
@@ -27,25 +23,14 @@ class WorkerService : Service() {
                 .getParcelableExtra<ConfigurationEntity>(CONFIGURATION_KEY)!!
                 .toConfiguration()
             val isGameLoop = intent.getBooleanExtra(GAME_LOOP_KEY, false)
-            val failHard = App.DEBUG && !isGameLoop
 
-            val result = when (configuration.model.task) {
-                Task.CLASSIFICATION -> ClassificationRunner(
-                    this,
-                    configuration,
-                    failHard = failHard
-                ).benchmark()
-                Task.SEGMENTATION -> SegmentationRunner(
-                    this,
-                    configuration,
-                    failHard = failHard
-                ).benchmark()
-            }
+            val result = Worker.execute(this, configuration, isGameLoop)
 
             resIntent.putExtra(DATA_KEY, result)
         } catch (e: Throwable) {
             resIntent.putExtra(ERROR_KEY, e)
         }
+
         sendBroadcast(resIntent)
         stopSelf()
 
@@ -59,29 +44,27 @@ class WorkerService : Service() {
         const val ERROR_KEY = "ERROR_KEY"
         const val GAME_LOOP_KEY = "GAME_LOOP_KEY"
 
-        val resultIntentFilter = IntentFilter(RESULT_ACTION)
+        private val resultIntentFilter = IntentFilter(RESULT_ACTION)
 
         suspend fun execute(
             context: Context,
             configuration: Configuration,
             isGameLoop: Boolean
-        ): InferenceResult {
-            return suspendCoroutine { continuation ->
-                val receiver =
-                    ResultBroadcastReceiver(
-                        continuation
-                    )
-                context.registerReceiver(
-                    receiver,
-                    resultIntentFilter
+        ): InferenceResult = suspendCoroutine { continuation ->
+            val receiver =
+                ResultBroadcastReceiver(
+                    continuation
                 )
+            context.registerReceiver(
+                receiver,
+                resultIntentFilter
+            )
 
-                val intent = Intent(context, WorkerService::class.java).also {
-                    it.putExtra(CONFIGURATION_KEY, ConfigurationEntity(configuration))
-                    it.putExtra(GAME_LOOP_KEY, isGameLoop)
-                }
-                context.startService(intent)
+            val intent = Intent(context, WorkerService::class.java).also {
+                it.putExtra(CONFIGURATION_KEY, ConfigurationEntity(configuration))
+                it.putExtra(GAME_LOOP_KEY, isGameLoop)
             }
+            context.startService(intent)
         }
     }
 }

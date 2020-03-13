@@ -8,19 +8,18 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import ru.gordinmitya.common.Configuration
-import ru.gordinmitya.common.Task
-import ru.gordinmitya.common.classification.MobileNetModel
 import ru.gordinmitya.dnnbenchmark.benchmark.InferenceResult
 import ru.gordinmitya.dnnbenchmark.benchmark.NotSupportedResult
 import ru.gordinmitya.dnnbenchmark.model.ConfigurationEntity
 import ru.gordinmitya.dnnbenchmark.model.DeviceInfo
 import ru.gordinmitya.dnnbenchmark.model.Measurement
-import ru.gordinmitya.dnnbenchmark.utils.ModelAssets
 import ru.gordinmitya.dnnbenchmark.worker.WorkerService
-import ru.gordinmitya.tflite.TFLiteFramework
+import ru.gordinmitya.dnnbenchmark.worker.WorkerThread
 
 class MainActivity : AppCompatActivity() {
     val TAG = "MainActivity"
@@ -69,68 +68,69 @@ class MainActivity : AppCompatActivity() {
 
     val sleep = 1_000L
 
-    @ObsoleteCoroutinesApi
-    private fun doit() {
+    private fun doit() = GlobalScope.launch {
         val configurations = ArrayList<Configuration>()
-        for (framework in App.instance.frameworks) {
-            for (model in framework.getModels()) {
-                if (model.task != Task.SEGMENTATION) continue
+        for (model in App.instance.models) {
+            for (framework in App.instance.frameworks) {
+                if (!framework.getModels().contains(model)) continue
                 for (type in framework.getInferenceTypes()) {
                     val configuration = Configuration(framework, type, model)
                     configurations.add(configuration)
                 }
             }
         }
-        GlobalScope.launch(newSingleThreadContext("WorkerThread")) {
-            val activity = this@MainActivity
-            val results = ArrayList<InferenceResult>()
+
+        val activity = this@MainActivity
+        val results = ArrayList<InferenceResult>()
+        delay(sleep)
+        configurations.forEach { configuration ->
+            if (!configuration.inferenceType.isSupported) {
+                results.add(NotSupportedResult(ConfigurationEntity(configuration)))
+                return@forEach
+            }
+
+            val result = if (App.DEBUG)
+                WorkerThread.execute(activity, configuration, isGameLoop)
+            else
+                WorkerService.execute(activity, configuration, isGameLoop)
+            results.add(result)
+            log(result.toString())
             delay(sleep)
-            configurations.forEach { configuration ->
-                if (!configuration.inferenceType.isSupported) {
-                    results.add(NotSupportedResult(ConfigurationEntity(configuration)))
-                    return@forEach
-                }
-
-                val result = WorkerService.execute(activity, configuration, isGameLoop)
-                results.add(result)
-                log(result.toString())
-                delay(sleep)
-            }
-            log("\n" + "–".repeat(8) + "\n")
-
-            if (App.DEBUG) return@launch
-
-            log("sending to server…")
-            val userUid: String
-            try {
-                val auth = FirebaseAuth.getInstance()
-                val authResult = auth.signInAnonymously().await()
-                userUid = authResult.user!!.uid
-            } catch (e: Exception) {
-                Log.e(TAG, "signInAnonymously:failure", e)
-                log("Firebase authentication failed.")
-                log("Unable to send data.")
-                return@launch
-            }
-
-            val device = DeviceInfo.obtain(userUid, activity)
-            val measurement = Measurement(device, results)
-
-            try {
-                Firebase.firestore
-                    .collection("measurements")
-                    .add(measurement)
-                    .await()
-                log("Data has been sent.", true)
-            } catch (e: Exception) {
-                Log.e(TAG, "firestore:failure", e)
-                log("Failed to send data.\n MSG: ${e.message}")
-                return@launch
-            }
-        }.invokeOnCompletion {
-            log("\n" + "–".repeat(8) + "\n")
-            if (isGameLoop)
-                finish()
         }
+        log("\n" + "–".repeat(8) + "\n")
+
+        if (App.DEBUG) return@launch
+
+        log("sending to server…")
+        val userUid: String
+        try {
+            val auth = FirebaseAuth.getInstance()
+            val authResult = auth.signInAnonymously().await()
+            userUid = authResult.user!!.uid
+        } catch (e: Exception) {
+            Log.e(TAG, "signInAnonymously:failure", e)
+            log("Firebase authentication failed.")
+            log("Unable to send data.")
+            return@launch
+        }
+
+        val device = DeviceInfo.obtain(userUid, activity)
+        val measurement = Measurement(device, results)
+
+        try {
+            Firebase.firestore
+                .collection("measurements")
+                .add(measurement)
+                .await()
+            log("Data has been sent.", true)
+        } catch (e: Exception) {
+            Log.e(TAG, "firestore:failure", e)
+            log("Failed to send data.\n MSG: ${e.message}")
+            return@launch
+        }
+    }.invokeOnCompletion {
+        log("\nThat's all folks!")
+        if (isGameLoop)
+            finish()
     }
 }

@@ -16,7 +16,7 @@ import ru.gordinmitya.tflite.TFLiteFramework
 
 class App : Application() {
     lateinit var frameworks: List<InferenceFramework>
-    val models: List<Model> = listOf(MobileNetModel, DeepLabModel)
+    val models = listOf(DeepLabModel, MobileNetModel)
 
     override fun onCreate() {
         super.onCreate()

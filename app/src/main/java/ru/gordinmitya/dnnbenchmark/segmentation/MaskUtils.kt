@@ -1,8 +1,11 @@
 package ru.gordinmitya.dnnbenchmark.segmentation
 
 import android.graphics.Bitmap
+import android.graphics.Color
+import android.util.Log
 import ru.gordinmitya.common.DataOrder
 import ru.gordinmitya.common.segmentation.SegmentationModel
+import kotlin.random.Random
 
 object MaskUtils {
     fun convertMaskToBitmap(
@@ -43,5 +46,23 @@ object MaskUtils {
         }
 
         return maskBitmap
+    }
+
+    fun getRandomRGBInt(random: Random) = (255 * random.nextFloat()).toInt()
+
+    fun generateColors(size: Int): IntArray {
+        val random = Random(System.currentTimeMillis())
+        val colors = IntArray(size)
+        colors[0] = Color.TRANSPARENT
+        for (i in 1 until size) {
+            colors[i] = Color.argb(
+                (128),
+                getRandomRGBInt(random),
+                getRandomRGBInt(random),
+                getRandomRGBInt(random)
+            )
+        }
+        Log.d("COLORS", colors.contentToString())
+        return colors
     }
 }

@@ -13,8 +13,8 @@ android {
         applicationId "ru.gordinmitya.dnnbenchmark"
         minSdkVersion 24
         targetSdkVersion 29
-        versionCode 7
-        versionName "0.1." + versionCode
+        versionCode 8
+        versionName "0.2." + versionCode
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         ndk {
@@ -25,6 +25,15 @@ android {
             cmake {
                 arguments "-DANDROID_ARM_NEON=TRUE", "-DANDROID_PLATFORM=android-21", "-DANDROID_STL=c++_shared"
             }
+        }
+
+        compileOptions {
+            sourceCompatibility JavaVersion.VERSION_1_8
+            targetCompatibility JavaVersion.VERSION_1_8
+        }
+
+        kotlinOptions {
+            jvmTarget = "1.8"
         }
     }
 
