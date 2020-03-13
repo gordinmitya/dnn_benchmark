@@ -36,10 +36,10 @@ jobs:
           JKS_STORE_PASS: ${{ secrets.JKS_STORE_PASS }}
           JKS_KEY_PASS: ${{ secrets.JKS_KEY_PASS }}
         run: fastlane beta
-      - name: Extract apk from aab
-        run: java -jar bundletool.jar build-apks --bundle=./app/build/outputs/bundle/release/app-release.aab --output=./ --mode=universal
-      - name: Store apk as artifact
-        uses: actions/upload-artifact@v1
-        with:
-          name: DnnBenchmark.apk
-          path: ./universal.apk
+#      - name: Extract apk from aab
+#        run: java -jar bundletool.jar build-apks --bundle=./app/build/outputs/bundle/release/app-release.aab --output=./ --mode=universal
+#      - name: Store apk as artifact
+#        uses: actions/upload-artifact@v1
+#        with:
+#          name: DnnBenchmark.apk
+#          path: ./universal.apk
