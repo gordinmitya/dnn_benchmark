@@ -27,7 +27,7 @@ Features:
 Models:
 
 - [x] [MobileNet v2](https://www.tensorflow.org/lite/models/image_classification/overview)
-- [ ] [Deeplab v3](https://www.tensorflow.org/lite/models/segmentation/overview)
+- [x] [Deeplab v3](https://www.tensorflow.org/lite/models/segmentation/overview)
 - [ ] [Bert Question and Answer](https://www.tensorflow.org/lite/models/bert_qa/overview)
 
 > All models are floating point,
