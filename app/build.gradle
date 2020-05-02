@@ -13,7 +13,7 @@ android {
         applicationId "ru.gordinmitya.dnnbenchmark"
         minSdkVersion 24
         targetSdkVersion 29
-        versionCode 8
+        versionCode 9
         versionName "0.2." + versionCode
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -52,6 +52,7 @@ android {
         release {
             signingConfig signingConfigs.release
             minifyEnabled true
+            useProguard false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             firebaseCrashlytics {
                 nativeSymbolUploadEnabled true
