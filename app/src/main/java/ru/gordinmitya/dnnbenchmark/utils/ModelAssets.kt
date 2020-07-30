@@ -39,8 +39,6 @@ class ModelAssets(val context: Context, val model: ClassificationModel) {
     }
 
     fun getLabelForPrediction(prediction: FloatArray): String {
-        require(labels.size == prediction.size)
-
         var index = 0
         for (i in prediction.indices) {
             if (prediction[i] > prediction[index])

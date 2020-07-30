@@ -10,7 +10,7 @@ Frameworks:
 - [x] NCNN Tencent [ver. 20200727](https://github.com/Tencent/ncnn/releases/tag/20200727)
 - [x] TFLite Google [ver. 2.3.0](https://bintray.com/google/tensorflow/tensorflow-lite/)
 - [x] TFMobile Google
-- [x] Pytorch Facebook
+- [x] Pytorch Facebook [ver. 1.5.0](https://github.com/pytorch/pytorch/tree/master/android)
 - [x] OpenCV DNN
 - [x] Mace Xiaomi
 - [x] SNPE Qualcomm
