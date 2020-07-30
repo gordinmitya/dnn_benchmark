@@ -9,9 +9,9 @@ Frameworks:
 - [x] MNN Alibaba [ver. 1.0.2](https://github.com/alibaba/MNN/releases/tag/1.0.2)
 - [x] NCNN Tencent [ver. 20200727](https://github.com/Tencent/ncnn/releases/tag/20200727)
 - [x] TFLite Google [ver. 2.3.0](https://bintray.com/google/tensorflow/tensorflow-lite/)
-- [x] TFMobile Google
+- [x] TFMobile Google [ver. 1.13.1](https://mvnrepository.com/artifact/org.tensorflow/tensorflow-android)
 - [x] Pytorch Facebook [ver. 1.5.0](https://github.com/pytorch/pytorch/tree/master/android)
-- [x] OpenCV DNN
+- [x] OpenCV DNN [ver. 4.2.0](https://sourceforge.net/p/opencvlibrary/activity/)
 - [x] Mace Xiaomi
 - [x] SNPE Qualcomm
 - [ ] HiAI (Huawei)
