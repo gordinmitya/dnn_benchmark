@@ -8,7 +8,7 @@ Frameworks:
 
 - [x] MNN Alibaba [ver. 1.0.2](https://github.com/alibaba/MNN/releases/tag/1.0.2)
 - [x] NCNN Tencent [ver. 20200727](https://github.com/Tencent/ncnn/releases/tag/20200727)
-- [x] TFLite Google
+- [x] TFLite Google [ver. 2.3.0](https://bintray.com/google/tensorflow/tensorflow-lite/)
 - [x] TFMobile Google
 - [x] Pytorch Facebook
 - [x] OpenCV DNN
