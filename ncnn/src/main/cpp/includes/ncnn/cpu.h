@@ -15,6 +15,8 @@
 #ifndef NCNN_CPU_H
 #define NCNN_CPU_H
 
+#include <stddef.h>
+
 namespace ncnn {
 
 // test optional cpu features
@@ -24,6 +26,9 @@ int cpu_support_arm_neon();
 int cpu_support_arm_vfpv4();
 // asimdhp = aarch64 asimd half precision
 int cpu_support_arm_asimdhp();
+
+// avx2 = x86_64 avx2 + fma + f16c
+int cpu_support_x86_avx2();
 
 // cpu info
 int get_cpu_count();
@@ -39,12 +44,23 @@ int get_cpu_count();
 int get_cpu_powersave();
 int set_cpu_powersave(int powersave);
 
+// convenient wrapper
+size_t get_cpu_thread_affinity_mask(int powersave);
+
+// set explicit thread affinity
+int set_cpu_thread_affinity(size_t thread_affinity_mask);
+
 // misc function wrapper for openmp routines
 int get_omp_num_threads();
 void set_omp_num_threads(int num_threads);
 
 int get_omp_dynamic();
 void set_omp_dynamic(int dynamic);
+
+int get_omp_thread_num();
+
+int get_kmp_blocktime();
+void set_kmp_blocktime(int time_ms);
 
 } // namespace ncnn
 
