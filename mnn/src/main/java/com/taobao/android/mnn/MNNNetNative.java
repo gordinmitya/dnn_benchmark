@@ -5,16 +5,28 @@ import android.util.Log;
 
 
 public class MNNNetNative {
+    public static final boolean LOADED_CL;
+    public static final boolean LOADED_GL;
+    public static final boolean LOADED_VULKAN;
+
+    private static boolean loadGpuLibrary(String name) {
+        try {
+            System.loadLibrary(name);
+            return true;
+        } catch (Throwable ce) {
+            Log.w("MNNNetNative", "load MNN " + name + " GPU so exception=%s", ce);
+            return false;
+        }
+    }
+
     // load libraries
     static {
         System.loadLibrary("MNN");
-        try {
-            System.loadLibrary("MNN_CL");
-            System.loadLibrary("MNN_GL");
-            System.loadLibrary("MNN_Vulkan");
-        } catch (Throwable ce) {
-            Log.w("MNNNetNative", "load MNN GPU so exception=%s", ce);
-        }
+
+        LOADED_CL = loadGpuLibrary("MNN_CL");
+        LOADED_GL = loadGpuLibrary("MNN_GL");
+        LOADED_VULKAN = loadGpuLibrary("MNN_Vulkan");
+
         System.loadLibrary("mnncore");
     }
 

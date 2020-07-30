@@ -6,8 +6,8 @@ Available on [Google Play](https://play.google.com/store/apps/details?id=ru.gord
 
 Frameworks:	
 
-- [x] MNN Alibaba
-- [x] NCNN Tencent ([ver. 20200727](https://github.com/Tencent/ncnn/releases/tag/20200727))
+- [x] MNN Alibaba [ver. 1.0.2](https://github.com/alibaba/MNN/releases/tag/1.0.2)
+- [x] NCNN Tencent [ver. 20200727](https://github.com/Tencent/ncnn/releases/tag/20200727)
 - [x] TFLite Google
 - [x] TFMobile Google
 - [x] Pytorch Facebook
