@@ -26,7 +26,7 @@
             </intent-filter>
         </activity>
         <service
-            android:name=".worker.WorkerService"
+            android:name=".worker.WorkerProcess"
             android:process=":worker" />
     </application>
 

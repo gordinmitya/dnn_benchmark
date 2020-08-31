@@ -11,7 +11,7 @@ import ru.gordinmitya.dnnbenchmark.benchmark.InferenceResult
 import ru.gordinmitya.dnnbenchmark.model.ConfigurationEntity
 import kotlin.coroutines.suspendCoroutine
 
-class WorkerService : Service() {
+class WorkerProcess : Service() {
     override fun onBind(intent: Intent?): IBinder? {
         return null
     }
@@ -60,7 +60,7 @@ class WorkerService : Service() {
                 resultIntentFilter
             )
 
-            val intent = Intent(context, WorkerService::class.java).also {
+            val intent = Intent(context, WorkerProcess::class.java).also {
                 it.putExtra(CONFIGURATION_KEY, ConfigurationEntity(configuration))
                 it.putExtra(GAME_LOOP_KEY, isGameLoop)
             }
