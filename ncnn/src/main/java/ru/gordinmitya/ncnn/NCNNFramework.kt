@@ -9,13 +9,12 @@ import ru.gordinmitya.common.classification.ClassificationFramework
 import ru.gordinmitya.common.classification.Classifier
 
 class NCNNFramework : InferenceFramework("NCNN", "by Tencent"), ClassificationFramework {
-
-    val TYPES = arrayListOf(
+    private val types = arrayListOf(
         NCNN_CPU,
         NCNN_VULKAN
     )
 
-    override fun getInferenceTypes(): List<InferenceType> = TYPES
+    override fun getInferenceTypes(): List<InferenceType> = types
 
     override fun getModels(): List<Model> =
         ConvertedModel.all.map { it.model }.toList()
