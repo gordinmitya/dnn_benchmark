@@ -7,20 +7,14 @@ import ru.gordinmitya.common.classification.ClassificationFramework
 import ru.gordinmitya.common.classification.ClassificationModel
 import ru.gordinmitya.common.classification.Classifier
 
-class SNPEFramework(context: Context) : InferenceFramework("SNPE", "by Qualcomm"),
+class SNPEFramework : InferenceFramework("SNPE", "by Qualcomm"),
     ClassificationFramework {
-    private val types: List<SNPEInferenceType>
-
-    init {
-        val app = context.applicationContext as Application
-        types = listOf(
-            SNPE_CPU(app),
-            SNPE_GPU(app),
-            SNPE_GPU16(app),
-            SNPE_DSP(app)
-//            SNPE_AIP(app)
-        )
-    }
+    private val types: List<SNPEInferenceType> = listOf(
+        SNPE_CPU(),
+        SNPE_GPU(),
+        SNPE_GPU16(),
+        SNPE_DSP()
+    )
 
     override fun getInferenceTypes(): List<InferenceType> = types
 

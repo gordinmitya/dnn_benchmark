@@ -25,7 +25,7 @@ class App : Application() {
             MNNFramework(),
             TFLiteFramework(),
             MACEFramework(),
-            SNPEFramework(this),
+            SNPEFramework(),
             OpenCVFramework(),
             TFMobileFramework(),
             PytorchFramework(),
@@ -35,7 +35,7 @@ class App : Application() {
 
     companion object {
         @Suppress("SimplifyBooleanWithConstants")
-        val DEBUG = false && BuildConfig.DEBUG
+        val DEBUG = true && BuildConfig.DEBUG
 
         lateinit var instance: App
     }

@@ -6,32 +6,37 @@ import com.qualcomm.qti.snpe.SNPE
 import ru.gordinmitya.common.InferenceType
 
 sealed class SNPEInferenceType(
-    application: Application,
     name: String,
     val runtime: NeuralNetwork.Runtime
 ) : InferenceType(
     name,
     true
-//    SNPE.NeuralNetworkBuilder(application)
-//        .isRuntimeSupported(runtime)
 )
 
-class SNPE_CPU(application: Application) : SNPEInferenceType(
-    application, "CPU", NeuralNetwork.Runtime.CPU
+/*
+ in order to check if inference type is actually available
+ there's a function
+     SNPE.NeuralNetworkBuilder(application).isRuntimeSupported(runtime)
+ but instead of actually return false on unsupported devices it just freeze application!
+ */
+
+
+class SNPE_CPU : SNPEInferenceType(
+    "CPU", NeuralNetwork.Runtime.CPU
 )
 
-class SNPE_GPU(application: Application) : SNPEInferenceType(
-    application, "GPU", NeuralNetwork.Runtime.GPU
+class SNPE_GPU : SNPEInferenceType(
+    "GPU", NeuralNetwork.Runtime.GPU
 )
 
-class SNPE_GPU16(application: Application) : SNPEInferenceType(
-    application, "GPU16", NeuralNetwork.Runtime.GPU_FLOAT16
+class SNPE_GPU16 : SNPEInferenceType(
+    "GPU16", NeuralNetwork.Runtime.GPU_FLOAT16
 )
 
-class SNPE_DSP(application: Application) : SNPEInferenceType(
-    application, "DSP", NeuralNetwork.Runtime.DSP
+class SNPE_DSP : SNPEInferenceType(
+    "DSP", NeuralNetwork.Runtime.DSP
 )
 
-class SNPE_AIP(application: Application) : SNPEInferenceType(
-    application, "AIP", NeuralNetwork.Runtime.AIP
+class SNPE_AIP : SNPEInferenceType(
+    "AIP", NeuralNetwork.Runtime.AIP
 )
