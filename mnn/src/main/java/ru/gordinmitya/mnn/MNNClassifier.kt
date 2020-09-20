@@ -44,8 +44,8 @@ class MNNClassifier(
         require(input.height == inputSize[3])
 
         val config = MNNImageProcess.Config().also {
-            it.mean = floatArrayOf(127.5f, 127.5f, 127.5f)
-            it.normal = floatArrayOf(1/127.5f, 1/127.5f, 1/127.5f)
+            it.mean = NormalizeHelper.convertMean(convertedModel.model.mean)
+            it.normal = NormalizeHelper.convertStd2Normal(convertedModel.model.mean)
             it.source = MNNImageProcess.Format.RGBA
             it.dest = MNNImageProcess.Format.RGB
         }

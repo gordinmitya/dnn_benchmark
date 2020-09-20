@@ -26,8 +26,8 @@ class PytorchClassifier(
     override fun predict(input: Bitmap): FloatArray {
         val inputTensor = TensorImageUtils.bitmapToFloat32Tensor(
             input,
-            TensorImageUtils.TORCHVISION_NORM_MEAN_RGB,
-            TensorImageUtils.TORCHVISION_NORM_STD_RGB
+            convertedModel.model.mean,
+            convertedModel.model.std,
         )
         val outputTensor = module!!.forward(IValue.from(inputTensor)).toTensor()
 

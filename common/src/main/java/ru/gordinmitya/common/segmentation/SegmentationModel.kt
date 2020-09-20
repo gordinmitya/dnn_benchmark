@@ -9,6 +9,8 @@ import kotlin.random.Random
 open class SegmentationModel(
     name: String,
     description: String,
+    mean: FloatArray,
+    std: FloatArray,
     inputSize: Pair<Int, Int>,
     inputChannels: Int,
     val outputClasses: Int,
@@ -16,7 +18,9 @@ open class SegmentationModel(
     val colors: IntArray,
     val samplesDir: String
 ) : Model(
-    name, description, Task.SEGMENTATION,
+    name, description,
+    mean, std,
+    Task.SEGMENTATION,
     inputSize, inputChannels,
     intArrayOf(inputSize.first, inputSize.second, outputClasses)
 ) {
@@ -27,6 +31,8 @@ open class SegmentationModel(
 object DeepLabModel : SegmentationModel(
     "deeplab_v3",
     "From tensorflow hosted models",
+    floatArrayOf(0.5f, 0.5f, 0.5f),
+    floatArrayOf(0.5f, 0.5f, 0.5f),
     257 to 257,
     3,
     21,

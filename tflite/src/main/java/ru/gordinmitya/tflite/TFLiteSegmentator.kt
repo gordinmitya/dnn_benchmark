@@ -63,7 +63,7 @@ class TFLiteSegmentator(
     override fun predict(input: Bitmap): FloatArray {
         inputImageBuffer.load(input)
         val imageProcessor = ImageProcessor.Builder()
-            .add(NormalizeOp(127.5f, 127.5f))
+            .add(NormalizeHelper.toOp(convertedModel.model.mean, convertedModel.model.std))
             .build()
         inputImageBuffer = imageProcessor.process(inputImageBuffer)
 
