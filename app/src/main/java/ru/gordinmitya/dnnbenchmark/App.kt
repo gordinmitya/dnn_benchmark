@@ -16,7 +16,10 @@ import ru.gordinmitya.tflite.TFLiteFramework
 
 class App : Application() {
     lateinit var frameworks: List<InferenceFramework>
-    val models = listOf(DeepLabModel, MobileNetModel)
+    val models = listOf(
+        MobileNetModel,
+        DeepLabModel
+    )
 
     override fun onCreate() {
         super.onCreate()
@@ -24,12 +27,12 @@ class App : Application() {
         frameworks = listOf(
             MNNFramework(),
             TFLiteFramework(),
-            MACEFramework(),
-            SNPEFramework(),
+//            MACEFramework(),
+//            SNPEFramework(),
             OpenCVFramework(),
-            TFMobileFramework(),
+//            TFMobileFramework(),
             PytorchFramework(),
-            NCNNFramework()
+//            NCNNFramework()
         )
     }
 
