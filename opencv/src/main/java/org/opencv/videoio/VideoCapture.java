@@ -62,14 +62,18 @@ public class VideoCapture {
      *      or image sequence (eg. {@code img_%02d.jpg}, which will read samples like {@code img_00.jpg, img_01.jpg, img_02.jpg, ...})
      *   </li>
      *   <li>
-     *      or URL of video stream (eg. {@code protocol://host:port/script_name?script_params|auth}).
+     *      or URL of video stream (eg. {@code protocol://host:port/script_name?script_params|auth})
+     *   </li>
+     *   <li>
+     *      or GStreamer pipeline string in gst-launch tool format in case if GStreamer is used as backend
      *       Note that each video stream or IP camera feed has its own URL scheme. Please refer to the
      *       documentation of source stream to know the right URL.
      *     @param apiPreference preferred Capture API backends to use. Can be used to enforce a specific reader
      *     implementation if multiple are available: e.g. cv::CAP_FFMPEG or cv::CAP_IMAGES or cv::CAP_DSHOW.
-     *     SEE: The list of supported API backends cv::VideoCaptureAPIs
      *   </li>
      * </ul>
+     *
+     *     SEE: cv::VideoCaptureAPIs
      */
     public VideoCapture(String filename, int apiPreference) {
         nativeObj = VideoCapture_0(filename, apiPreference);
@@ -88,13 +92,17 @@ public class VideoCapture {
      *      or image sequence (eg. {@code img_%02d.jpg}, which will read samples like {@code img_00.jpg, img_01.jpg, img_02.jpg, ...})
      *   </li>
      *   <li>
-     *      or URL of video stream (eg. {@code protocol://host:port/script_name?script_params|auth}).
+     *      or URL of video stream (eg. {@code protocol://host:port/script_name?script_params|auth})
+     *   </li>
+     *   <li>
+     *      or GStreamer pipeline string in gst-launch tool format in case if GStreamer is used as backend
      *       Note that each video stream or IP camera feed has its own URL scheme. Please refer to the
      *       documentation of source stream to know the right URL.
      *     implementation if multiple are available: e.g. cv::CAP_FFMPEG or cv::CAP_IMAGES or cv::CAP_DSHOW.
-     *     SEE: The list of supported API backends cv::VideoCaptureAPIs
      *   </li>
      * </ul>
+     *
+     *     SEE: cv::VideoCaptureAPIs
      */
     public VideoCapture(String filename) {
         nativeObj = VideoCapture_1(filename);
@@ -114,7 +122,7 @@ public class VideoCapture {
      *     @param apiPreference preferred Capture API backends to use. Can be used to enforce a specific reader
      *     implementation if multiple are available: e.g. cv::CAP_DSHOW or cv::CAP_MSMF or cv::CAP_V4L.
      *
-     *     SEE: The list of supported API backends cv::VideoCaptureAPIs
+     *     SEE: cv::VideoCaptureAPIs
      */
     public VideoCapture(int index, int apiPreference) {
         nativeObj = VideoCapture_2(index, apiPreference);
@@ -128,7 +136,7 @@ public class VideoCapture {
      *     (to backward compatibility usage of camera_id + domain_offset (CAP_*) is valid when apiPreference is CAP_ANY)
      *     implementation if multiple are available: e.g. cv::CAP_DSHOW or cv::CAP_MSMF or cv::CAP_V4L.
      *
-     *     SEE: The list of supported API backends cv::VideoCaptureAPIs
+     *     SEE: cv::VideoCaptureAPIs
      */
     public VideoCapture(int index) {
         nativeObj = VideoCapture_3(index);

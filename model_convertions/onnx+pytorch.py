@@ -13,8 +13,10 @@ normalize = transforms.Normalize(
 
 MODEL_NAME = 'mobilenet_v2'
 
-def save_onnx(model, example):
-    torch.onnx.export(model, example, MODEL_NAME + ".onnx")
+def save_simplify_onnx(model, example):
+    # save
+    torch.onnx.export(model, example, MODEL_NAME + ".onnx", input_names=["input"], output_names=["473"])
+    # simplify
     model = onnx.load(MODEL_NAME + '.onnx')
     model_simp, check = simplify(model)
     assert check, "Simplified ONNX model could not be validated"
@@ -30,4 +32,4 @@ if __name__ == "__main__":
     example = torch.rand(1, 3, 224, 224)
 
     save_pt(model, example)
-    save_onnx(model, example)
+    save_simplify_onnx(model, example)

@@ -186,8 +186,9 @@ public class Imgcodecs {
      *     [Vector](http://www.gdal.org/ogr_formats.html).
      *   </li>
      *   <li>
-     *    If EXIF information are embedded in the image file, the EXIF orientation will be taken into account
-     *     and thus the image will be rotated accordingly except if the flag REF: IMREAD_IGNORE_ORIENTATION is passed.
+     *    If EXIF information is embedded in the image file, the EXIF orientation will be taken into account
+     *     and thus the image will be rotated accordingly except if the flags REF: IMREAD_IGNORE_ORIENTATION
+     *     or REF: IMREAD_UNCHANGED are passed.
      *   </li>
      *   <li>
      *    Use the IMREAD_UNCHANGED flag to keep the floating point values from PFM image.
@@ -288,8 +289,9 @@ public class Imgcodecs {
      *     [Vector](http://www.gdal.org/ogr_formats.html).
      *   </li>
      *   <li>
-     *    If EXIF information are embedded in the image file, the EXIF orientation will be taken into account
-     *     and thus the image will be rotated accordingly except if the flag REF: IMREAD_IGNORE_ORIENTATION is passed.
+     *    If EXIF information is embedded in the image file, the EXIF orientation will be taken into account
+     *     and thus the image will be rotated accordingly except if the flags REF: IMREAD_IGNORE_ORIENTATION
+     *     or REF: IMREAD_UNCHANGED are passed.
      *   </li>
      *   <li>
      *    Use the IMREAD_UNCHANGED flag to keep the floating point values from PFM image.
@@ -443,17 +445,20 @@ public class Imgcodecs {
      * 8-bit (or 16-bit) 4-channel image BGRA, where the alpha channel goes last. Fully transparent pixels
      * should have alpha set to 0, fully opaque pixels should have alpha set to 255/65535 (see the code sample below).
      *   </li>
+     *   <li>
+     *  Multiple images (vector of Mat) can be saved in TIFF format (see the code sample below).
+     *   </li>
      * </ul>
      *
      * If the format, depth or channel order is different, use
      * Mat::convertTo and cv::cvtColor to convert it before saving. Or, use the universal FileStorage I/O
      * functions to save the image to XML or YAML format.
      *
-     * The sample below shows how to create a BGRA image and save it to a PNG file. It also demonstrates how to set custom
-     * compression parameters:
+     * The sample below shows how to create a BGRA image, how to set custom compression parameters and save it to a PNG file.
+     * It also demonstrates how to save multiple images in a TIFF file:
      * INCLUDE: snippets/imgcodecs_imwrite.cpp
      * @param filename Name of the file.
-     * @param img Image to be saved.
+     * @param img (Mat or vector of Mat) Image or Images to be saved.
      * @param params Format-specific parameters encoded as pairs (paramId_1, paramValue_1, paramId_2, paramValue_2, ... .) see cv::ImwriteFlags
      * @return automatically generated
      */
@@ -484,17 +489,20 @@ public class Imgcodecs {
      * 8-bit (or 16-bit) 4-channel image BGRA, where the alpha channel goes last. Fully transparent pixels
      * should have alpha set to 0, fully opaque pixels should have alpha set to 255/65535 (see the code sample below).
      *   </li>
+     *   <li>
+     *  Multiple images (vector of Mat) can be saved in TIFF format (see the code sample below).
+     *   </li>
      * </ul>
      *
      * If the format, depth or channel order is different, use
      * Mat::convertTo and cv::cvtColor to convert it before saving. Or, use the universal FileStorage I/O
      * functions to save the image to XML or YAML format.
      *
-     * The sample below shows how to create a BGRA image and save it to a PNG file. It also demonstrates how to set custom
-     * compression parameters:
+     * The sample below shows how to create a BGRA image, how to set custom compression parameters and save it to a PNG file.
+     * It also demonstrates how to save multiple images in a TIFF file:
      * INCLUDE: snippets/imgcodecs_imwrite.cpp
      * @param filename Name of the file.
-     * @param img Image to be saved.
+     * @param img (Mat or vector of Mat) Image or Images to be saved.
      * @return automatically generated
      */
     public static boolean imwrite(String filename, Mat img) {

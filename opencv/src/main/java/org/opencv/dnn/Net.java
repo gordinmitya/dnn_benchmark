@@ -555,6 +555,21 @@ public class Net {
 
 
     //
+    // C++:  void cv::dnn::Net::setInputShape(String inputName, MatShape shape)
+    //
+
+    /**
+     * Specify shape of network input.
+     * @param inputName automatically generated
+     * @param shape automatically generated
+     */
+    public void setInputShape(String inputName, MatOfInt shape) {
+        Mat shape_mat = shape;
+        setInputShape_0(nativeObj, inputName, shape_mat.nativeObj);
+    }
+
+
+    //
     // C++:  void cv::dnn::Net::setInputsNames(vector_String inputBlobNames)
     //
 
@@ -731,6 +746,9 @@ public class Net {
     private static native void setInput_1(long nativeObj, long blob_nativeObj, String name, double scalefactor);
     private static native void setInput_2(long nativeObj, long blob_nativeObj, String name);
     private static native void setInput_3(long nativeObj, long blob_nativeObj);
+
+    // C++:  void cv::dnn::Net::setInputShape(String inputName, MatShape shape)
+    private static native void setInputShape_0(long nativeObj, String inputName, long shape_mat_nativeObj);
 
     // C++:  void cv::dnn::Net::setInputsNames(vector_String inputBlobNames)
     private static native void setInputsNames_0(long nativeObj, List<String> inputBlobNames);

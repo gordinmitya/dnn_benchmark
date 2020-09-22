@@ -109,7 +109,8 @@ public class Imgproc {
             HOUGH_STANDARD = 0,
             HOUGH_PROBABILISTIC = 1,
             HOUGH_MULTI_SCALE = 2,
-            HOUGH_GRADIENT = 3;
+            HOUGH_GRADIENT = 3,
+            HOUGH_GRADIENT_ALT = 4;
 
 
     // C++: enum ConnectedComponentsAlgorithmsTypes
@@ -158,7 +159,8 @@ public class Imgproc {
             COLORMAP_CIVIDIS = 17,
             COLORMAP_TWILIGHT = 18,
             COLORMAP_TWILIGHT_SHIFTED = 19,
-            COLORMAP_TURBO = 20;
+            COLORMAP_TURBO = 20,
+            COLORMAP_DEEPGREEN = 21;
 
 
     // C++: enum HistCompMethods
@@ -1998,9 +2000,9 @@ public class Imgproc {
      *
      * @param image the 8-bit single-channel image to be labeled
      * @param labels destination labeled image
-     * @param stats statistics output for each label, including the background label, see below for
-     * available statistics. Statistics are accessed via stats(label, COLUMN) where COLUMN is one of
-     * #ConnectedComponentsTypes. The data type is CV_32S.
+     * @param stats statistics output for each label, including the background label.
+     * Statistics are accessed via stats(label, COLUMN) where COLUMN is one of
+     * #ConnectedComponentsTypes, selecting the statistic. The data type is CV_32S.
      * @param centroids centroid output for each label, including the background label. Centroids are
      * accessed via centroids(label, 0) for x and centroids(label, 1) for y. The data type CV_64F.
      * @param connectivity 8 or 4 for 8-way or 4-way connectivity respectively
@@ -2021,9 +2023,9 @@ public class Imgproc {
      *
      * @param image the 8-bit single-channel image to be labeled
      * @param labels destination labeled image
-     * @param stats statistics output for each label, including the background label, see below for
-     * available statistics. Statistics are accessed via stats(label, COLUMN) where COLUMN is one of
-     * #ConnectedComponentsTypes. The data type is CV_32S.
+     * @param stats statistics output for each label, including the background label.
+     * Statistics are accessed via stats(label, COLUMN) where COLUMN is one of
+     * #ConnectedComponentsTypes, selecting the statistic. The data type is CV_32S.
      * @param centroids centroid output for each label, including the background label. Centroids are
      * accessed via centroids(label, 0) for x and centroids(label, 1) for y. The data type CV_64F.
      * @param connectivity 8 or 4 for 8-way or 4-way connectivity respectively
@@ -2038,9 +2040,9 @@ public class Imgproc {
      *
      * @param image the 8-bit single-channel image to be labeled
      * @param labels destination labeled image
-     * @param stats statistics output for each label, including the background label, see below for
-     * available statistics. Statistics are accessed via stats(label, COLUMN) where COLUMN is one of
-     * #ConnectedComponentsTypes. The data type is CV_32S.
+     * @param stats statistics output for each label, including the background label.
+     * Statistics are accessed via stats(label, COLUMN) where COLUMN is one of
+     * #ConnectedComponentsTypes, selecting the statistic. The data type is CV_32S.
      * @param centroids centroid output for each label, including the background label. Centroids are
      * accessed via centroids(label, 0) for x and centroids(label, 1) for y. The data type CV_64F.
      * @param connectivity 8 or 4 for 8-way or 4-way connectivity respectively
@@ -2054,9 +2056,9 @@ public class Imgproc {
      *
      * @param image the 8-bit single-channel image to be labeled
      * @param labels destination labeled image
-     * @param stats statistics output for each label, including the background label, see below for
-     * available statistics. Statistics are accessed via stats(label, COLUMN) where COLUMN is one of
-     * #ConnectedComponentsTypes. The data type is CV_32S.
+     * @param stats statistics output for each label, including the background label.
+     * Statistics are accessed via stats(label, COLUMN) where COLUMN is one of
+     * #ConnectedComponentsTypes, selecting the statistic. The data type is CV_32S.
      * @param centroids centroid output for each label, including the background label. Centroids are
      * accessed via centroids(label, 0) for x and centroids(label, 1) for y. The data type CV_64F.
      * @return automatically generated
@@ -2724,7 +2726,7 @@ public class Imgproc {
      * respectively (see #getGaussianKernel for details); to fully control the result regardless of
      * possible future modifications of all this semantics, it is recommended to specify all of ksize,
      * sigmaX, and sigmaY.
-     * @param borderType pixel extrapolation method, see #BorderTypes
+     * @param borderType pixel extrapolation method, see #BorderTypes. #BORDER_WRAP is not supported.
      *
      * SEE:  sepFilter2D, filter2D, blur, boxFilter, bilateralFilter, medianBlur
      */
@@ -2794,28 +2796,37 @@ public class Imgproc {
      *
      * <b>Note:</b> Usually the function detects the centers of circles well. However, it may fail to find correct
      * radii. You can assist to the function by specifying the radius range ( minRadius and maxRadius ) if
-     * you know it. Or, you may set maxRadius to a negative number to return centers only without radius
-     * search, and find the correct radius using an additional procedure.
+     * you know it. Or, in the case of #HOUGH_GRADIENT method you may set maxRadius to a negative number
+     * to return centers only without radius search, and find the correct radius using an additional procedure.
+     *
+     * It also helps to smooth image a bit unless it's already soft. For example,
+     * GaussianBlur() with 7x7 kernel and 1.5x1.5 sigma or similar blurring may help.
      *
      * @param image 8-bit, single-channel, grayscale input image.
      * @param circles Output vector of found circles. Each vector is encoded as  3 or 4 element
      * floating-point vector \((x, y, radius)\) or \((x, y, radius, votes)\) .
-     * @param method Detection method, see #HoughModes. Currently, the only implemented method is #HOUGH_GRADIENT
+     * @param method Detection method, see #HoughModes. The available methods are #HOUGH_GRADIENT and #HOUGH_GRADIENT_ALT.
      * @param dp Inverse ratio of the accumulator resolution to the image resolution. For example, if
      * dp=1 , the accumulator has the same resolution as the input image. If dp=2 , the accumulator has
-     * half as big width and height.
+     * half as big width and height. For #HOUGH_GRADIENT_ALT the recommended value is dp=1.5,
+     * unless some small very circles need to be detected.
      * @param minDist Minimum distance between the centers of the detected circles. If the parameter is
      * too small, multiple neighbor circles may be falsely detected in addition to a true one. If it is
      * too large, some circles may be missed.
-     * @param param1 First method-specific parameter. In case of #HOUGH_GRADIENT , it is the higher
-     * threshold of the two passed to the Canny edge detector (the lower one is twice smaller).
-     * @param param2 Second method-specific parameter. In case of #HOUGH_GRADIENT , it is the
+     * @param param1 First method-specific parameter. In case of #HOUGH_GRADIENT and #HOUGH_GRADIENT_ALT,
+     * it is the higher threshold of the two passed to the Canny edge detector (the lower one is twice smaller).
+     * Note that #HOUGH_GRADIENT_ALT uses #Scharr algorithm to compute image derivatives, so the threshold value
+     * shough normally be higher, such as 300 or normally exposed and contrasty images.
+     * @param param2 Second method-specific parameter. In case of #HOUGH_GRADIENT, it is the
      * accumulator threshold for the circle centers at the detection stage. The smaller it is, the more
      * false circles may be detected. Circles, corresponding to the larger accumulator values, will be
-     * returned first.
+     * returned first. In the case of #HOUGH_GRADIENT_ALT algorithm, this is the circle "perfectness" measure.
+     * The closer it to 1, the better shaped circles algorithm selects. In most cases 0.9 should be fine.
+     * If you want get better detection of small circles, you may decrease it to 0.85, 0.8 or even less.
+     * But then also try to limit the search range [minRadius, maxRadius] to avoid many false circles.
      * @param minRadius Minimum circle radius.
-     * @param maxRadius Maximum circle radius. If &lt;= 0, uses the maximum image dimension. If &lt; 0, returns
-     * centers without finding the radius.
+     * @param maxRadius Maximum circle radius. If &lt;= 0, uses the maximum image dimension. If &lt; 0, #HOUGH_GRADIENT returns
+     * centers without finding the radius. #HOUGH_GRADIENT_ALT always computes circle radiuses.
      *
      * SEE: fitEllipse, minEnclosingCircle
      */
@@ -2833,27 +2844,36 @@ public class Imgproc {
      *
      * <b>Note:</b> Usually the function detects the centers of circles well. However, it may fail to find correct
      * radii. You can assist to the function by specifying the radius range ( minRadius and maxRadius ) if
-     * you know it. Or, you may set maxRadius to a negative number to return centers only without radius
-     * search, and find the correct radius using an additional procedure.
+     * you know it. Or, in the case of #HOUGH_GRADIENT method you may set maxRadius to a negative number
+     * to return centers only without radius search, and find the correct radius using an additional procedure.
+     *
+     * It also helps to smooth image a bit unless it's already soft. For example,
+     * GaussianBlur() with 7x7 kernel and 1.5x1.5 sigma or similar blurring may help.
      *
      * @param image 8-bit, single-channel, grayscale input image.
      * @param circles Output vector of found circles. Each vector is encoded as  3 or 4 element
      * floating-point vector \((x, y, radius)\) or \((x, y, radius, votes)\) .
-     * @param method Detection method, see #HoughModes. Currently, the only implemented method is #HOUGH_GRADIENT
+     * @param method Detection method, see #HoughModes. The available methods are #HOUGH_GRADIENT and #HOUGH_GRADIENT_ALT.
      * @param dp Inverse ratio of the accumulator resolution to the image resolution. For example, if
      * dp=1 , the accumulator has the same resolution as the input image. If dp=2 , the accumulator has
-     * half as big width and height.
+     * half as big width and height. For #HOUGH_GRADIENT_ALT the recommended value is dp=1.5,
+     * unless some small very circles need to be detected.
      * @param minDist Minimum distance between the centers of the detected circles. If the parameter is
      * too small, multiple neighbor circles may be falsely detected in addition to a true one. If it is
      * too large, some circles may be missed.
-     * @param param1 First method-specific parameter. In case of #HOUGH_GRADIENT , it is the higher
-     * threshold of the two passed to the Canny edge detector (the lower one is twice smaller).
-     * @param param2 Second method-specific parameter. In case of #HOUGH_GRADIENT , it is the
+     * @param param1 First method-specific parameter. In case of #HOUGH_GRADIENT and #HOUGH_GRADIENT_ALT,
+     * it is the higher threshold of the two passed to the Canny edge detector (the lower one is twice smaller).
+     * Note that #HOUGH_GRADIENT_ALT uses #Scharr algorithm to compute image derivatives, so the threshold value
+     * shough normally be higher, such as 300 or normally exposed and contrasty images.
+     * @param param2 Second method-specific parameter. In case of #HOUGH_GRADIENT, it is the
      * accumulator threshold for the circle centers at the detection stage. The smaller it is, the more
      * false circles may be detected. Circles, corresponding to the larger accumulator values, will be
-     * returned first.
+     * returned first. In the case of #HOUGH_GRADIENT_ALT algorithm, this is the circle "perfectness" measure.
+     * The closer it to 1, the better shaped circles algorithm selects. In most cases 0.9 should be fine.
+     * If you want get better detection of small circles, you may decrease it to 0.85, 0.8 or even less.
+     * But then also try to limit the search range [minRadius, maxRadius] to avoid many false circles.
      * @param minRadius Minimum circle radius.
-     * centers without finding the radius.
+     * centers without finding the radius. #HOUGH_GRADIENT_ALT always computes circle radiuses.
      *
      * SEE: fitEllipse, minEnclosingCircle
      */
@@ -2871,26 +2891,35 @@ public class Imgproc {
      *
      * <b>Note:</b> Usually the function detects the centers of circles well. However, it may fail to find correct
      * radii. You can assist to the function by specifying the radius range ( minRadius and maxRadius ) if
-     * you know it. Or, you may set maxRadius to a negative number to return centers only without radius
-     * search, and find the correct radius using an additional procedure.
+     * you know it. Or, in the case of #HOUGH_GRADIENT method you may set maxRadius to a negative number
+     * to return centers only without radius search, and find the correct radius using an additional procedure.
+     *
+     * It also helps to smooth image a bit unless it's already soft. For example,
+     * GaussianBlur() with 7x7 kernel and 1.5x1.5 sigma or similar blurring may help.
      *
      * @param image 8-bit, single-channel, grayscale input image.
      * @param circles Output vector of found circles. Each vector is encoded as  3 or 4 element
      * floating-point vector \((x, y, radius)\) or \((x, y, radius, votes)\) .
-     * @param method Detection method, see #HoughModes. Currently, the only implemented method is #HOUGH_GRADIENT
+     * @param method Detection method, see #HoughModes. The available methods are #HOUGH_GRADIENT and #HOUGH_GRADIENT_ALT.
      * @param dp Inverse ratio of the accumulator resolution to the image resolution. For example, if
      * dp=1 , the accumulator has the same resolution as the input image. If dp=2 , the accumulator has
-     * half as big width and height.
+     * half as big width and height. For #HOUGH_GRADIENT_ALT the recommended value is dp=1.5,
+     * unless some small very circles need to be detected.
      * @param minDist Minimum distance between the centers of the detected circles. If the parameter is
      * too small, multiple neighbor circles may be falsely detected in addition to a true one. If it is
      * too large, some circles may be missed.
-     * @param param1 First method-specific parameter. In case of #HOUGH_GRADIENT , it is the higher
-     * threshold of the two passed to the Canny edge detector (the lower one is twice smaller).
-     * @param param2 Second method-specific parameter. In case of #HOUGH_GRADIENT , it is the
+     * @param param1 First method-specific parameter. In case of #HOUGH_GRADIENT and #HOUGH_GRADIENT_ALT,
+     * it is the higher threshold of the two passed to the Canny edge detector (the lower one is twice smaller).
+     * Note that #HOUGH_GRADIENT_ALT uses #Scharr algorithm to compute image derivatives, so the threshold value
+     * shough normally be higher, such as 300 or normally exposed and contrasty images.
+     * @param param2 Second method-specific parameter. In case of #HOUGH_GRADIENT, it is the
      * accumulator threshold for the circle centers at the detection stage. The smaller it is, the more
      * false circles may be detected. Circles, corresponding to the larger accumulator values, will be
-     * returned first.
-     * centers without finding the radius.
+     * returned first. In the case of #HOUGH_GRADIENT_ALT algorithm, this is the circle "perfectness" measure.
+     * The closer it to 1, the better shaped circles algorithm selects. In most cases 0.9 should be fine.
+     * If you want get better detection of small circles, you may decrease it to 0.85, 0.8 or even less.
+     * But then also try to limit the search range [minRadius, maxRadius] to avoid many false circles.
+     * centers without finding the radius. #HOUGH_GRADIENT_ALT always computes circle radiuses.
      *
      * SEE: fitEllipse, minEnclosingCircle
      */
@@ -2908,25 +2937,34 @@ public class Imgproc {
      *
      * <b>Note:</b> Usually the function detects the centers of circles well. However, it may fail to find correct
      * radii. You can assist to the function by specifying the radius range ( minRadius and maxRadius ) if
-     * you know it. Or, you may set maxRadius to a negative number to return centers only without radius
-     * search, and find the correct radius using an additional procedure.
+     * you know it. Or, in the case of #HOUGH_GRADIENT method you may set maxRadius to a negative number
+     * to return centers only without radius search, and find the correct radius using an additional procedure.
+     *
+     * It also helps to smooth image a bit unless it's already soft. For example,
+     * GaussianBlur() with 7x7 kernel and 1.5x1.5 sigma or similar blurring may help.
      *
      * @param image 8-bit, single-channel, grayscale input image.
      * @param circles Output vector of found circles. Each vector is encoded as  3 or 4 element
      * floating-point vector \((x, y, radius)\) or \((x, y, radius, votes)\) .
-     * @param method Detection method, see #HoughModes. Currently, the only implemented method is #HOUGH_GRADIENT
+     * @param method Detection method, see #HoughModes. The available methods are #HOUGH_GRADIENT and #HOUGH_GRADIENT_ALT.
      * @param dp Inverse ratio of the accumulator resolution to the image resolution. For example, if
      * dp=1 , the accumulator has the same resolution as the input image. If dp=2 , the accumulator has
-     * half as big width and height.
+     * half as big width and height. For #HOUGH_GRADIENT_ALT the recommended value is dp=1.5,
+     * unless some small very circles need to be detected.
      * @param minDist Minimum distance between the centers of the detected circles. If the parameter is
      * too small, multiple neighbor circles may be falsely detected in addition to a true one. If it is
      * too large, some circles may be missed.
-     * @param param1 First method-specific parameter. In case of #HOUGH_GRADIENT , it is the higher
-     * threshold of the two passed to the Canny edge detector (the lower one is twice smaller).
+     * @param param1 First method-specific parameter. In case of #HOUGH_GRADIENT and #HOUGH_GRADIENT_ALT,
+     * it is the higher threshold of the two passed to the Canny edge detector (the lower one is twice smaller).
+     * Note that #HOUGH_GRADIENT_ALT uses #Scharr algorithm to compute image derivatives, so the threshold value
+     * shough normally be higher, such as 300 or normally exposed and contrasty images.
      * accumulator threshold for the circle centers at the detection stage. The smaller it is, the more
      * false circles may be detected. Circles, corresponding to the larger accumulator values, will be
-     * returned first.
-     * centers without finding the radius.
+     * returned first. In the case of #HOUGH_GRADIENT_ALT algorithm, this is the circle "perfectness" measure.
+     * The closer it to 1, the better shaped circles algorithm selects. In most cases 0.9 should be fine.
+     * If you want get better detection of small circles, you may decrease it to 0.85, 0.8 or even less.
+     * But then also try to limit the search range [minRadius, maxRadius] to avoid many false circles.
+     * centers without finding the radius. #HOUGH_GRADIENT_ALT always computes circle radiuses.
      *
      * SEE: fitEllipse, minEnclosingCircle
      */
@@ -2944,24 +2982,33 @@ public class Imgproc {
      *
      * <b>Note:</b> Usually the function detects the centers of circles well. However, it may fail to find correct
      * radii. You can assist to the function by specifying the radius range ( minRadius and maxRadius ) if
-     * you know it. Or, you may set maxRadius to a negative number to return centers only without radius
-     * search, and find the correct radius using an additional procedure.
+     * you know it. Or, in the case of #HOUGH_GRADIENT method you may set maxRadius to a negative number
+     * to return centers only without radius search, and find the correct radius using an additional procedure.
+     *
+     * It also helps to smooth image a bit unless it's already soft. For example,
+     * GaussianBlur() with 7x7 kernel and 1.5x1.5 sigma or similar blurring may help.
      *
      * @param image 8-bit, single-channel, grayscale input image.
      * @param circles Output vector of found circles. Each vector is encoded as  3 or 4 element
      * floating-point vector \((x, y, radius)\) or \((x, y, radius, votes)\) .
-     * @param method Detection method, see #HoughModes. Currently, the only implemented method is #HOUGH_GRADIENT
+     * @param method Detection method, see #HoughModes. The available methods are #HOUGH_GRADIENT and #HOUGH_GRADIENT_ALT.
      * @param dp Inverse ratio of the accumulator resolution to the image resolution. For example, if
      * dp=1 , the accumulator has the same resolution as the input image. If dp=2 , the accumulator has
-     * half as big width and height.
+     * half as big width and height. For #HOUGH_GRADIENT_ALT the recommended value is dp=1.5,
+     * unless some small very circles need to be detected.
      * @param minDist Minimum distance between the centers of the detected circles. If the parameter is
      * too small, multiple neighbor circles may be falsely detected in addition to a true one. If it is
      * too large, some circles may be missed.
-     * threshold of the two passed to the Canny edge detector (the lower one is twice smaller).
+     * it is the higher threshold of the two passed to the Canny edge detector (the lower one is twice smaller).
+     * Note that #HOUGH_GRADIENT_ALT uses #Scharr algorithm to compute image derivatives, so the threshold value
+     * shough normally be higher, such as 300 or normally exposed and contrasty images.
      * accumulator threshold for the circle centers at the detection stage. The smaller it is, the more
      * false circles may be detected. Circles, corresponding to the larger accumulator values, will be
-     * returned first.
-     * centers without finding the radius.
+     * returned first. In the case of #HOUGH_GRADIENT_ALT algorithm, this is the circle "perfectness" measure.
+     * The closer it to 1, the better shaped circles algorithm selects. In most cases 0.9 should be fine.
+     * If you want get better detection of small circles, you may decrease it to 0.85, 0.8 or even less.
+     * But then also try to limit the search range [minRadius, maxRadius] to avoid many false circles.
+     * centers without finding the radius. #HOUGH_GRADIENT_ALT always computes circle radiuses.
      *
      * SEE: fitEllipse, minEnclosingCircle
      */
@@ -3282,7 +3329,7 @@ public class Imgproc {
      * @param scale Optional scale factor for the computed Laplacian values. By default, no scaling is
      * applied. See #getDerivKernels for details.
      * @param delta Optional delta value that is added to the results prior to storing them in dst .
-     * @param borderType Pixel extrapolation method, see #BorderTypes
+     * @param borderType Pixel extrapolation method, see #BorderTypes. #BORDER_WRAP is not supported.
      * SEE:  Sobel, Scharr
      */
     public static void Laplacian(Mat src, Mat dst, int ddepth, int ksize, double scale, double delta, int borderType) {
@@ -3416,7 +3463,7 @@ public class Imgproc {
      * @param scale optional scale factor for the computed derivative values; by default, no scaling is
      * applied (see #getDerivKernels for details).
      * @param delta optional delta value that is added to the results prior to storing them in dst.
-     * @param borderType pixel extrapolation method, see #BorderTypes
+     * @param borderType pixel extrapolation method, see #BorderTypes. #BORDER_WRAP is not supported.
      * SEE:  cartToPolar
      */
     public static void Scharr(Mat src, Mat dst, int ddepth, int dx, int dy, double scale, double delta, int borderType) {
@@ -3543,7 +3590,7 @@ public class Imgproc {
      * @param scale optional scale factor for the computed derivative values; by default, no scaling is
      * applied (see #getDerivKernels for details).
      * @param delta optional delta value that is added to the results prior to storing them in dst.
-     * @param borderType pixel extrapolation method, see #BorderTypes
+     * @param borderType pixel extrapolation method, see #BorderTypes. #BORDER_WRAP is not supported.
      * SEE:  Scharr, Laplacian, sepFilter2D, filter2D, GaussianBlur, cartToPolar
      */
     public static void Sobel(Mat src, Mat dst, int ddepth, int dx, int dy, int ksize, double scale, double delta, int borderType) {
@@ -4183,7 +4230,7 @@ public class Imgproc {
      *
      * \(\texttt{K} =  \frac{1}{\texttt{ksize.width*ksize.height}} \begin{bmatrix} 1 &amp; 1 &amp; 1 &amp;  \cdots &amp; 1 &amp; 1  \\ 1 &amp; 1 &amp; 1 &amp;  \cdots &amp; 1 &amp; 1  \\ \hdotsfor{6} \\ 1 &amp; 1 &amp; 1 &amp;  \cdots &amp; 1 &amp; 1  \\ \end{bmatrix}\)
      *
-     * The call {@code blur(src, dst, ksize, anchor, borderType)} is equivalent to `boxFilter(src, dst, src.type(),
+     * The call {@code blur(src, dst, ksize, anchor, borderType)} is equivalent to `boxFilter(src, dst, src.type(), ksize,
      * anchor, true, borderType)`.
      *
      * @param src input image; it can have any number of channels, which are processed independently, but
@@ -4192,7 +4239,7 @@ public class Imgproc {
      * @param ksize blurring kernel size.
      * @param anchor anchor point; default value Point(-1,-1) means that the anchor is at the kernel
      * center.
-     * @param borderType border mode used to extrapolate pixels outside of the image, see #BorderTypes
+     * @param borderType border mode used to extrapolate pixels outside of the image, see #BorderTypes. #BORDER_WRAP is not supported.
      * SEE:  boxFilter, bilateralFilter, GaussianBlur, medianBlur
      */
     public static void blur(Mat src, Mat dst, Size ksize, Point anchor, int borderType) {
@@ -4206,7 +4253,7 @@ public class Imgproc {
      *
      * \(\texttt{K} =  \frac{1}{\texttt{ksize.width*ksize.height}} \begin{bmatrix} 1 &amp; 1 &amp; 1 &amp;  \cdots &amp; 1 &amp; 1  \\ 1 &amp; 1 &amp; 1 &amp;  \cdots &amp; 1 &amp; 1  \\ \hdotsfor{6} \\ 1 &amp; 1 &amp; 1 &amp;  \cdots &amp; 1 &amp; 1  \\ \end{bmatrix}\)
      *
-     * The call {@code blur(src, dst, ksize, anchor, borderType)} is equivalent to `boxFilter(src, dst, src.type(),
+     * The call {@code blur(src, dst, ksize, anchor, borderType)} is equivalent to `boxFilter(src, dst, src.type(), ksize,
      * anchor, true, borderType)`.
      *
      * @param src input image; it can have any number of channels, which are processed independently, but
@@ -4228,7 +4275,7 @@ public class Imgproc {
      *
      * \(\texttt{K} =  \frac{1}{\texttt{ksize.width*ksize.height}} \begin{bmatrix} 1 &amp; 1 &amp; 1 &amp;  \cdots &amp; 1 &amp; 1  \\ 1 &amp; 1 &amp; 1 &amp;  \cdots &amp; 1 &amp; 1  \\ \hdotsfor{6} \\ 1 &amp; 1 &amp; 1 &amp;  \cdots &amp; 1 &amp; 1  \\ \end{bmatrix}\)
      *
-     * The call {@code blur(src, dst, ksize, anchor, borderType)} is equivalent to `boxFilter(src, dst, src.type(),
+     * The call {@code blur(src, dst, ksize, anchor, borderType)} is equivalent to `boxFilter(src, dst, src.type(), ksize,
      * anchor, true, borderType)`.
      *
      * @param src input image; it can have any number of channels, which are processed independently, but
@@ -4256,7 +4303,7 @@ public class Imgproc {
      *
      * where
      *
-     * \(\alpha = \fork{\frac{1}{\texttt{ksize.width*ksize.height}}}{when \texttt{normalize=true}}{1}{otherwise}\)
+     * \(\alpha = \begin{cases} \frac{1}{\texttt{ksize.width*ksize.height}} &amp; \texttt{when } \texttt{normalize=true}  \\1 &amp; \texttt{otherwise}\end{cases}\)
      *
      * Unnormalized box filter is useful for computing various integral characteristics over each pixel
      * neighborhood, such as covariance matrices of image derivatives (used in dense optical flow
@@ -4269,7 +4316,7 @@ public class Imgproc {
      * @param anchor anchor point; default value Point(-1,-1) means that the anchor is at the kernel
      * center.
      * @param normalize flag, specifying whether the kernel is normalized by its area or not.
-     * @param borderType border mode used to extrapolate pixels outside of the image, see #BorderTypes
+     * @param borderType border mode used to extrapolate pixels outside of the image, see #BorderTypes. #BORDER_WRAP is not supported.
      * SEE:  blur, bilateralFilter, GaussianBlur, medianBlur, integral
      */
     public static void boxFilter(Mat src, Mat dst, int ddepth, Size ksize, Point anchor, boolean normalize, int borderType) {
@@ -4285,7 +4332,7 @@ public class Imgproc {
      *
      * where
      *
-     * \(\alpha = \fork{\frac{1}{\texttt{ksize.width*ksize.height}}}{when \texttt{normalize=true}}{1}{otherwise}\)
+     * \(\alpha = \begin{cases} \frac{1}{\texttt{ksize.width*ksize.height}} &amp; \texttt{when } \texttt{normalize=true}  \\1 &amp; \texttt{otherwise}\end{cases}\)
      *
      * Unnormalized box filter is useful for computing various integral characteristics over each pixel
      * neighborhood, such as covariance matrices of image derivatives (used in dense optical flow
@@ -4313,7 +4360,7 @@ public class Imgproc {
      *
      * where
      *
-     * \(\alpha = \fork{\frac{1}{\texttt{ksize.width*ksize.height}}}{when \texttt{normalize=true}}{1}{otherwise}\)
+     * \(\alpha = \begin{cases} \frac{1}{\texttt{ksize.width*ksize.height}} &amp; \texttt{when } \texttt{normalize=true}  \\1 &amp; \texttt{otherwise}\end{cases}\)
      *
      * Unnormalized box filter is useful for computing various integral characteristics over each pixel
      * neighborhood, such as covariance matrices of image derivatives (used in dense optical flow
@@ -4340,7 +4387,7 @@ public class Imgproc {
      *
      * where
      *
-     * \(\alpha = \fork{\frac{1}{\texttt{ksize.width*ksize.height}}}{when \texttt{normalize=true}}{1}{otherwise}\)
+     * \(\alpha = \begin{cases} \frac{1}{\texttt{ksize.width*ksize.height}} &amp; \texttt{when } \texttt{normalize=true}  \\1 &amp; \texttt{otherwise}\end{cases}\)
      *
      * Unnormalized box filter is useful for computing various integral characteristics over each pixel
      * neighborhood, such as covariance matrices of image derivatives (used in dense optical flow
@@ -4710,7 +4757,7 @@ public class Imgproc {
      * @param dst Image to store the results. It has the same size as src and the type CV_32FC(6) .
      * @param blockSize Neighborhood size (see details below).
      * @param ksize Aperture parameter for the Sobel operator.
-     * @param borderType Pixel extrapolation method. See #BorderTypes.
+     * @param borderType Pixel extrapolation method. See #BorderTypes. #BORDER_WRAP is not supported.
      *
      * SEE:  cornerMinEigenVal, cornerHarris, preCornerDetect
      */
@@ -4779,7 +4826,7 @@ public class Imgproc {
      * @param blockSize Neighborhood size (see the details on #cornerEigenValsAndVecs ).
      * @param ksize Aperture parameter for the Sobel operator.
      * @param k Harris detector free parameter. See the formula above.
-     * @param borderType Pixel extrapolation method. See #BorderTypes.
+     * @param borderType Pixel extrapolation method. See #BorderTypes. #BORDER_WRAP is not supported.
      */
     public static void cornerHarris(Mat src, Mat dst, int blockSize, int ksize, double k, int borderType) {
         cornerHarris_0(src.nativeObj, dst.nativeObj, blockSize, ksize, k, borderType);
@@ -4825,7 +4872,7 @@ public class Imgproc {
      * src .
      * @param blockSize Neighborhood size (see the details on #cornerEigenValsAndVecs ).
      * @param ksize Aperture parameter for the Sobel operator.
-     * @param borderType Pixel extrapolation method. See #BorderTypes.
+     * @param borderType Pixel extrapolation method. See #BorderTypes. #BORDER_WRAP is not supported.
      */
     public static void cornerMinEigenVal(Mat src, Mat dst, int blockSize, int ksize, int borderType) {
         cornerMinEigenVal_0(src.nativeObj, dst.nativeObj, blockSize, ksize, borderType);
@@ -5226,7 +5273,7 @@ public class Imgproc {
      * @param anchor position of the anchor within the element; default value (-1, -1) means that the
      * anchor is at the element center.
      * @param iterations number of times dilation is applied.
-     * @param borderType pixel extrapolation method, see #BorderTypes
+     * @param borderType pixel extrapolation method, see #BorderTypes. #BORDER_WRAP is not suported.
      * @param borderValue border value in case of a constant border
      * SEE:  erode, morphologyEx, getStructuringElement
      */
@@ -5252,7 +5299,7 @@ public class Imgproc {
      * @param anchor position of the anchor within the element; default value (-1, -1) means that the
      * anchor is at the element center.
      * @param iterations number of times dilation is applied.
-     * @param borderType pixel extrapolation method, see #BorderTypes
+     * @param borderType pixel extrapolation method, see #BorderTypes. #BORDER_WRAP is not suported.
      * SEE:  erode, morphologyEx, getStructuringElement
      */
     public static void dilate(Mat src, Mat dst, Mat kernel, Point anchor, int iterations, int borderType) {
@@ -6042,7 +6089,7 @@ public class Imgproc {
      * @param anchor position of the anchor within the element; default value (-1, -1) means that the
      * anchor is at the element center.
      * @param iterations number of times erosion is applied.
-     * @param borderType pixel extrapolation method, see #BorderTypes
+     * @param borderType pixel extrapolation method, see #BorderTypes. #BORDER_WRAP is not supported.
      * @param borderValue border value in case of a constant border
      * SEE:  dilate, morphologyEx, getStructuringElement
      */
@@ -6069,7 +6116,7 @@ public class Imgproc {
      * @param anchor position of the anchor within the element; default value (-1, -1) means that the
      * anchor is at the element center.
      * @param iterations number of times erosion is applied.
-     * @param borderType pixel extrapolation method, see #BorderTypes
+     * @param borderType pixel extrapolation method, see #BorderTypes. #BORDER_WRAP is not supported.
      * SEE:  dilate, morphologyEx, getStructuringElement
      */
     public static void erode(Mat src, Mat dst, Mat kernel, Point anchor, int iterations, int borderType) {
@@ -6300,7 +6347,7 @@ public class Imgproc {
      *
      * The function does actually compute correlation, not the convolution:
      *
-     * \(\texttt{dst} (x,y) =  \sum _{ \stackrel{0\leq x' &lt; \texttt{kernel.cols},}{0\leq y' &lt; \texttt{kernel.rows}} }  \texttt{kernel} (x',y')* \texttt{src} (x+x'- \texttt{anchor.x} ,y+y'- \texttt{anchor.y} )\)
+     * \(\texttt{dst} (x,y) =  \sum _{ \substack{0\leq x' &lt; \texttt{kernel.cols}\\{0\leq y' &lt; \texttt{kernel.rows}}}}  \texttt{kernel} (x',y')* \texttt{src} (x+x'- \texttt{anchor.x} ,y+y'- \texttt{anchor.y} )\)
      *
      * That is, the kernel is not mirrored around the anchor point. If you need a real convolution, flip
      * the kernel using #flip and set the new anchor to `(kernel.cols - anchor.x - 1, kernel.rows -
@@ -6319,7 +6366,7 @@ public class Imgproc {
      * the kernel; the anchor should lie within the kernel; default value (-1,-1) means that the anchor
      * is at the kernel center.
      * @param delta optional value added to the filtered pixels before storing them in dst.
-     * @param borderType pixel extrapolation method, see #BorderTypes
+     * @param borderType pixel extrapolation method, see #BorderTypes. #BORDER_WRAP is not supported.
      * SEE:  sepFilter2D, dft, matchTemplate
      */
     public static void filter2D(Mat src, Mat dst, int ddepth, Mat kernel, Point anchor, double delta, int borderType) {
@@ -6335,7 +6382,7 @@ public class Imgproc {
      *
      * The function does actually compute correlation, not the convolution:
      *
-     * \(\texttt{dst} (x,y) =  \sum _{ \stackrel{0\leq x' &lt; \texttt{kernel.cols},}{0\leq y' &lt; \texttt{kernel.rows}} }  \texttt{kernel} (x',y')* \texttt{src} (x+x'- \texttt{anchor.x} ,y+y'- \texttt{anchor.y} )\)
+     * \(\texttt{dst} (x,y) =  \sum _{ \substack{0\leq x' &lt; \texttt{kernel.cols}\\{0\leq y' &lt; \texttt{kernel.rows}}}}  \texttt{kernel} (x',y')* \texttt{src} (x+x'- \texttt{anchor.x} ,y+y'- \texttt{anchor.y} )\)
      *
      * That is, the kernel is not mirrored around the anchor point. If you need a real convolution, flip
      * the kernel using #flip and set the new anchor to `(kernel.cols - anchor.x - 1, kernel.rows -
@@ -6369,7 +6416,7 @@ public class Imgproc {
      *
      * The function does actually compute correlation, not the convolution:
      *
-     * \(\texttt{dst} (x,y) =  \sum _{ \stackrel{0\leq x' &lt; \texttt{kernel.cols},}{0\leq y' &lt; \texttt{kernel.rows}} }  \texttt{kernel} (x',y')* \texttt{src} (x+x'- \texttt{anchor.x} ,y+y'- \texttt{anchor.y} )\)
+     * \(\texttt{dst} (x,y) =  \sum _{ \substack{0\leq x' &lt; \texttt{kernel.cols}\\{0\leq y' &lt; \texttt{kernel.rows}}}}  \texttt{kernel} (x',y')* \texttt{src} (x+x'- \texttt{anchor.x} ,y+y'- \texttt{anchor.y} )\)
      *
      * That is, the kernel is not mirrored around the anchor point. If you need a real convolution, flip
      * the kernel using #flip and set the new anchor to `(kernel.cols - anchor.x - 1, kernel.rows -
@@ -6402,7 +6449,7 @@ public class Imgproc {
      *
      * The function does actually compute correlation, not the convolution:
      *
-     * \(\texttt{dst} (x,y) =  \sum _{ \stackrel{0\leq x' &lt; \texttt{kernel.cols},}{0\leq y' &lt; \texttt{kernel.rows}} }  \texttt{kernel} (x',y')* \texttt{src} (x+x'- \texttt{anchor.x} ,y+y'- \texttt{anchor.y} )\)
+     * \(\texttt{dst} (x,y) =  \sum _{ \substack{0\leq x' &lt; \texttt{kernel.cols}\\{0\leq y' &lt; \texttt{kernel.rows}}}}  \texttt{kernel} (x',y')* \texttt{src} (x+x'- \texttt{anchor.x} ,y+y'- \texttt{anchor.y} )\)
      *
      * That is, the kernel is not mirrored around the anchor point. If you need a real convolution, flip
      * the kernel using #flip and set the new anchor to `(kernel.cols - anchor.x - 1, kernel.rows -
@@ -7415,9 +7462,10 @@ public class Imgproc {
      * Compares a template against overlapped image regions.
      *
      * The function slides through image , compares the overlapped patches of size \(w \times h\) against
-     * templ using the specified method and stores the comparison results in result . Here are the formulae
-     * for the available comparison methods ( \(I\) denotes image, \(T\) template, \(R\) result ). The summation
-     * is done over template and/or the image patch: \(x' = 0...w-1, y' = 0...h-1\)
+     * templ using the specified method and stores the comparison results in result . #TemplateMatchModes
+     * describes the formulae for the available comparison methods ( \(I\) denotes image, \(T\)
+     * template, \(R\) result, \(M\) the optional mask ). The summation is done over template and/or
+     * the image patch: \(x' = 0...w-1, y' = 0...h-1\)
      *
      * After the function finishes the comparison, the best matches can be found as global minimums (when
      * #TM_SQDIFF was used) or maximums (when #TM_CCORR or #TM_CCOEFF was used) using the
@@ -7432,8 +7480,12 @@ public class Imgproc {
      * @param result Map of comparison results. It must be single-channel 32-bit floating-point. If image
      * is \(W \times H\) and templ is \(w \times h\) , then result is \((W-w+1) \times (H-h+1)\) .
      * @param method Parameter specifying the comparison method, see #TemplateMatchModes
-     * @param mask Mask of searched template. It must have the same datatype and size with templ. It is
-     * not set by default. Currently, only the #TM_SQDIFF and #TM_CCORR_NORMED methods are supported.
+     * @param mask Optional mask. It must have the same size as templ. It must either have the same number
+     *             of channels as template or only one channel, which is then used for all template and
+     *             image channels. If the data type is #CV_8U, the mask is interpreted as a binary mask,
+     *             meaning only elements where mask is nonzero are used and are kept unchanged independent
+     *             of the actual mask value (weight equals 1). For data tpye #CV_32F, the mask values are
+     *             used as weights. The exact formulas are documented in #TemplateMatchModes.
      */
     public static void matchTemplate(Mat image, Mat templ, Mat result, int method, Mat mask) {
         matchTemplate_0(image.nativeObj, templ.nativeObj, result.nativeObj, method, mask.nativeObj);
@@ -7443,9 +7495,10 @@ public class Imgproc {
      * Compares a template against overlapped image regions.
      *
      * The function slides through image , compares the overlapped patches of size \(w \times h\) against
-     * templ using the specified method and stores the comparison results in result . Here are the formulae
-     * for the available comparison methods ( \(I\) denotes image, \(T\) template, \(R\) result ). The summation
-     * is done over template and/or the image patch: \(x' = 0...w-1, y' = 0...h-1\)
+     * templ using the specified method and stores the comparison results in result . #TemplateMatchModes
+     * describes the formulae for the available comparison methods ( \(I\) denotes image, \(T\)
+     * template, \(R\) result, \(M\) the optional mask ). The summation is done over template and/or
+     * the image patch: \(x' = 0...w-1, y' = 0...h-1\)
      *
      * After the function finishes the comparison, the best matches can be found as global minimums (when
      * #TM_SQDIFF was used) or maximums (when #TM_CCORR or #TM_CCOEFF was used) using the
@@ -7460,7 +7513,11 @@ public class Imgproc {
      * @param result Map of comparison results. It must be single-channel 32-bit floating-point. If image
      * is \(W \times H\) and templ is \(w \times h\) , then result is \((W-w+1) \times (H-h+1)\) .
      * @param method Parameter specifying the comparison method, see #TemplateMatchModes
-     * not set by default. Currently, only the #TM_SQDIFF and #TM_CCORR_NORMED methods are supported.
+     *             of channels as template or only one channel, which is then used for all template and
+     *             image channels. If the data type is #CV_8U, the mask is interpreted as a binary mask,
+     *             meaning only elements where mask is nonzero are used and are kept unchanged independent
+     *             of the actual mask value (weight equals 1). For data tpye #CV_32F, the mask values are
+     *             used as weights. The exact formulas are documented in #TemplateMatchModes.
      */
     public static void matchTemplate(Mat image, Mat templ, Mat result, int method) {
         matchTemplate_1(image.nativeObj, templ.nativeObj, result.nativeObj, method);
@@ -7535,7 +7592,7 @@ public class Imgproc {
      * @param anchor Anchor position with the kernel. Negative values mean that the anchor is at the
      * kernel center.
      * @param iterations Number of times erosion and dilation are applied.
-     * @param borderType Pixel extrapolation method, see #BorderTypes
+     * @param borderType Pixel extrapolation method, see #BorderTypes. #BORDER_WRAP is not supported.
      * @param borderValue Border value in case of a constant border. The default value has a special
      * meaning.
      * SEE:  dilate, erode, getStructuringElement
@@ -7564,7 +7621,7 @@ public class Imgproc {
      * @param anchor Anchor position with the kernel. Negative values mean that the anchor is at the
      * kernel center.
      * @param iterations Number of times erosion and dilation are applied.
-     * @param borderType Pixel extrapolation method, see #BorderTypes
+     * @param borderType Pixel extrapolation method, see #BorderTypes. #BORDER_WRAP is not supported.
      * meaning.
      * SEE:  dilate, erode, getStructuringElement
      * <b>Note:</b> The number of iterations is the number of times erosion or dilatation operation will be applied.
@@ -7759,7 +7816,7 @@ public class Imgproc {
      * @param src Source single-channel 8-bit of floating-point image.
      * @param dst Output image that has the type CV_32F and the same size as src .
      * @param ksize %Aperture size of the Sobel .
-     * @param borderType Pixel extrapolation method. See #BorderTypes.
+     * @param borderType Pixel extrapolation method. See #BorderTypes. #BORDER_WRAP is not supported.
      */
     public static void preCornerDetect(Mat src, Mat dst, int ksize, int borderType) {
         preCornerDetect_0(src.nativeObj, dst.nativeObj, ksize, borderType);
@@ -8572,7 +8629,7 @@ public class Imgproc {
      * @param anchor Anchor position within the kernel. The default value \((-1,-1)\) means that the anchor
      * is at the kernel center.
      * @param delta Value added to the filtered results before storing them.
-     * @param borderType Pixel extrapolation method, see #BorderTypes
+     * @param borderType Pixel extrapolation method, see #BorderTypes. #BORDER_WRAP is not supported.
      * SEE:  filter2D, Sobel, GaussianBlur, boxFilter, blur
      */
     public static void sepFilter2D(Mat src, Mat dst, int ddepth, Mat kernelX, Mat kernelY, Point anchor, double delta, int borderType) {
@@ -8658,7 +8715,8 @@ public class Imgproc {
      * @param dx output image with first-order derivative in x.
      * @param dy output image with first-order derivative in y.
      * @param ksize size of Sobel kernel. It must be 3.
-     * @param borderType pixel extrapolation method, see #BorderTypes
+     * @param borderType pixel extrapolation method, see #BorderTypes.
+     *                   Only #BORDER_DEFAULT=#BORDER_REFLECT_101 and #BORDER_REPLICATE are supported.
      *
      * SEE: Sobel
      */
@@ -8680,6 +8738,7 @@ public class Imgproc {
      * @param dx output image with first-order derivative in x.
      * @param dy output image with first-order derivative in y.
      * @param ksize size of Sobel kernel. It must be 3.
+     *                   Only #BORDER_DEFAULT=#BORDER_REFLECT_101 and #BORDER_REPLICATE are supported.
      *
      * SEE: Sobel
      */
@@ -8700,6 +8759,7 @@ public class Imgproc {
      * @param src input image.
      * @param dx output image with first-order derivative in x.
      * @param dy output image with first-order derivative in y.
+     *                   Only #BORDER_DEFAULT=#BORDER_REFLECT_101 and #BORDER_REPLICATE are supported.
      *
      * SEE: Sobel
      */
@@ -8728,7 +8788,7 @@ public class Imgproc {
      * @param anchor kernel anchor point. The default value of Point(-1, -1) denotes that the anchor is at the kernel
      * center.
      * @param normalize flag, specifying whether the kernel is to be normalized by it's area or not.
-     * @param borderType border mode used to extrapolate pixels outside of the image, see #BorderTypes
+     * @param borderType border mode used to extrapolate pixels outside of the image, see #BorderTypes. #BORDER_WRAP is not supported.
      * SEE: boxFilter
      */
     public static void sqrBoxFilter(Mat src, Mat dst, int ddepth, Size ksize, Point anchor, boolean normalize, int borderType) {

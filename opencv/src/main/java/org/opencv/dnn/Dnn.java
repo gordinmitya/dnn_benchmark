@@ -9,7 +9,6 @@ import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
 import org.opencv.core.MatOfFloat;
 import org.opencv.core.MatOfInt;
-import org.opencv.core.MatOfRect;
 import org.opencv.core.MatOfRect2d;
 import org.opencv.core.MatOfRotatedRect;
 import org.opencv.core.Scalar;
@@ -34,13 +33,13 @@ public class Dnn {
     // C++: enum Target
     public static final int
             DNN_TARGET_CPU = 0,
-            DNN_TARGET_OPENCL = 1,
-            DNN_TARGET_OPENCL_FP16 = 2,
-            DNN_TARGET_MYRIAD = 3,
-            DNN_TARGET_VULKAN = 4,
-            DNN_TARGET_FPGA = 5,
-            DNN_TARGET_CUDA = 6,
-            DNN_TARGET_CUDA_FP16 = 7;
+            DNN_TARGET_OPENCL = 0+1,
+            DNN_TARGET_OPENCL_FP16 = 0+2,
+            DNN_TARGET_MYRIAD = 0+3,
+            DNN_TARGET_VULKAN = 0+4,
+            DNN_TARGET_FPGA = 0+5,
+            DNN_TARGET_CUDA = 0+6,
+            DNN_TARGET_CUDA_FP16 = 0+7;
 
 
     //
@@ -846,7 +845,16 @@ public class Dnn {
 
 
     //
-    // C++:  void cv::dnn::NMSBoxes(vector_Rect bboxes, vector_float scores, float score_threshold, float nms_threshold, vector_int& indices, float eta = 1.f, int top_k = 0)
+    // C++:  vector_Target cv::dnn::getAvailableTargets(dnn_Backend be)
+    //
+
+    public static List<Integer> getAvailableTargets(int be) {
+        return getAvailableTargets_0(be);
+    }
+
+
+    //
+    // C++:  void cv::dnn::NMSBoxes(vector_Rect2d bboxes, vector_float scores, float score_threshold, float nms_threshold, vector_int& indices, float eta = 1.f, int top_k = 0)
     //
 
     /**
@@ -860,7 +868,7 @@ public class Dnn {
      * @param eta a coefficient in adaptive threshold formula: \(nms\_threshold_{i+1}=eta\cdot nms\_threshold_i\).
      * @param top_k if {@code &gt;0}, keep at most {@code top_k} picked indices.
      */
-    public static void NMSBoxes(MatOfRect bboxes, MatOfFloat scores, float score_threshold, float nms_threshold, MatOfInt indices, float eta, int top_k) {
+    public static void NMSBoxes(MatOfRect2d bboxes, MatOfFloat scores, float score_threshold, float nms_threshold, MatOfInt indices, float eta, int top_k) {
         Mat bboxes_mat = bboxes;
         Mat scores_mat = scores;
         Mat indices_mat = indices;
@@ -877,7 +885,7 @@ public class Dnn {
      * @param indices the kept indices of bboxes after NMS.
      * @param eta a coefficient in adaptive threshold formula: \(nms\_threshold_{i+1}=eta\cdot nms\_threshold_i\).
      */
-    public static void NMSBoxes(MatOfRect bboxes, MatOfFloat scores, float score_threshold, float nms_threshold, MatOfInt indices, float eta) {
+    public static void NMSBoxes(MatOfRect2d bboxes, MatOfFloat scores, float score_threshold, float nms_threshold, MatOfInt indices, float eta) {
         Mat bboxes_mat = bboxes;
         Mat scores_mat = scores;
         Mat indices_mat = indices;
@@ -893,37 +901,11 @@ public class Dnn {
      * @param nms_threshold a threshold used in non maximum suppression.
      * @param indices the kept indices of bboxes after NMS.
      */
-    public static void NMSBoxes(MatOfRect bboxes, MatOfFloat scores, float score_threshold, float nms_threshold, MatOfInt indices) {
-        Mat bboxes_mat = bboxes;
-        Mat scores_mat = scores;
-        Mat indices_mat = indices;
-        NMSBoxes_2(bboxes_mat.nativeObj, scores_mat.nativeObj, score_threshold, nms_threshold, indices_mat.nativeObj);
-    }
-
-
-    //
-    // C++:  void cv::dnn::NMSBoxes(vector_Rect2d bboxes, vector_float scores, float score_threshold, float nms_threshold, vector_int& indices, float eta = 1.f, int top_k = 0)
-    //
-
-    public static void NMSBoxes(MatOfRect2d bboxes, MatOfFloat scores, float score_threshold, float nms_threshold, MatOfInt indices, float eta, int top_k) {
-        Mat bboxes_mat = bboxes;
-        Mat scores_mat = scores;
-        Mat indices_mat = indices;
-        NMSBoxes_3(bboxes_mat.nativeObj, scores_mat.nativeObj, score_threshold, nms_threshold, indices_mat.nativeObj, eta, top_k);
-    }
-
-    public static void NMSBoxes(MatOfRect2d bboxes, MatOfFloat scores, float score_threshold, float nms_threshold, MatOfInt indices, float eta) {
-        Mat bboxes_mat = bboxes;
-        Mat scores_mat = scores;
-        Mat indices_mat = indices;
-        NMSBoxes_4(bboxes_mat.nativeObj, scores_mat.nativeObj, score_threshold, nms_threshold, indices_mat.nativeObj, eta);
-    }
-
     public static void NMSBoxes(MatOfRect2d bboxes, MatOfFloat scores, float score_threshold, float nms_threshold, MatOfInt indices) {
         Mat bboxes_mat = bboxes;
         Mat scores_mat = scores;
         Mat indices_mat = indices;
-        NMSBoxes_5(bboxes_mat.nativeObj, scores_mat.nativeObj, score_threshold, nms_threshold, indices_mat.nativeObj);
+        NMSBoxes_2(bboxes_mat.nativeObj, scores_mat.nativeObj, score_threshold, nms_threshold, indices_mat.nativeObj);
     }
 
 
@@ -1131,15 +1113,13 @@ public class Dnn {
     // C++:  String cv::dnn::setInferenceEngineBackendType(String newBackendType)
     private static native String setInferenceEngineBackendType_0(String newBackendType);
 
-    // C++:  void cv::dnn::NMSBoxes(vector_Rect bboxes, vector_float scores, float score_threshold, float nms_threshold, vector_int& indices, float eta = 1.f, int top_k = 0)
+    // C++:  vector_Target cv::dnn::getAvailableTargets(dnn_Backend be)
+    private static native List<Integer> getAvailableTargets_0(int be);
+
+    // C++:  void cv::dnn::NMSBoxes(vector_Rect2d bboxes, vector_float scores, float score_threshold, float nms_threshold, vector_int& indices, float eta = 1.f, int top_k = 0)
     private static native void NMSBoxes_0(long bboxes_mat_nativeObj, long scores_mat_nativeObj, float score_threshold, float nms_threshold, long indices_mat_nativeObj, float eta, int top_k);
     private static native void NMSBoxes_1(long bboxes_mat_nativeObj, long scores_mat_nativeObj, float score_threshold, float nms_threshold, long indices_mat_nativeObj, float eta);
     private static native void NMSBoxes_2(long bboxes_mat_nativeObj, long scores_mat_nativeObj, float score_threshold, float nms_threshold, long indices_mat_nativeObj);
-
-    // C++:  void cv::dnn::NMSBoxes(vector_Rect2d bboxes, vector_float scores, float score_threshold, float nms_threshold, vector_int& indices, float eta = 1.f, int top_k = 0)
-    private static native void NMSBoxes_3(long bboxes_mat_nativeObj, long scores_mat_nativeObj, float score_threshold, float nms_threshold, long indices_mat_nativeObj, float eta, int top_k);
-    private static native void NMSBoxes_4(long bboxes_mat_nativeObj, long scores_mat_nativeObj, float score_threshold, float nms_threshold, long indices_mat_nativeObj, float eta);
-    private static native void NMSBoxes_5(long bboxes_mat_nativeObj, long scores_mat_nativeObj, float score_threshold, float nms_threshold, long indices_mat_nativeObj);
 
     // C++:  void cv::dnn::NMSBoxes(vector_RotatedRect bboxes, vector_float scores, float score_threshold, float nms_threshold, vector_int& indices, float eta = 1.f, int top_k = 0)
     private static native void NMSBoxesRotated_0(long bboxes_mat_nativeObj, long scores_mat_nativeObj, float score_threshold, float nms_threshold, long indices_mat_nativeObj, float eta, int top_k);

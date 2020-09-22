@@ -14,8 +14,8 @@ class ConvertedModel private constructor(
         val mobilenet_v2 = ConvertedModel(
             MobileNetModel,
             "input",
-            "MobilenetV2/Predictions/Reshape_1",
-            "mobilenet_v2.pb"
+            "473",
+            "mobilenet_v2.onnx"
         )
 
         fun getByModel(model: Model): ConvertedModel? {

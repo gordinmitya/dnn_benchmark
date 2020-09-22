@@ -303,7 +303,7 @@ public class Video {
      * The function estimates the optimum transformation (warpMatrix) with respect to ECC criterion
      * (CITE: EP08), that is
      *
-     * \(\texttt{warpMatrix} = \texttt{warpMatrix} = \arg\max_{W} \texttt{ECC}(\texttt{templateImage}(x,y),\texttt{inputImage}(x',y'))\)
+     * \(\texttt{warpMatrix} = \arg\max_{W} \texttt{ECC}(\texttt{templateImage}(x,y),\texttt{inputImage}(x',y'))\)
      *
      * where
      *

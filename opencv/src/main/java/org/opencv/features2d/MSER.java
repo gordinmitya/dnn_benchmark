@@ -58,7 +58,7 @@ public class MSER extends Feature2D {
     //
 
     /**
-     * Full consturctor for %MSER detector
+     * Full constructor for %MSER detector
      *
      *     @param _delta it compares \((size_{i}-size_{i-delta})/size_{i-delta}\)
      *     @param _min_area prune the area which smaller than minArea
@@ -76,7 +76,7 @@ public class MSER extends Feature2D {
     }
 
     /**
-     * Full consturctor for %MSER detector
+     * Full constructor for %MSER detector
      *
      *     @param _delta it compares \((size_{i}-size_{i-delta})/size_{i-delta}\)
      *     @param _min_area prune the area which smaller than minArea
@@ -93,7 +93,7 @@ public class MSER extends Feature2D {
     }
 
     /**
-     * Full consturctor for %MSER detector
+     * Full constructor for %MSER detector
      *
      *     @param _delta it compares \((size_{i}-size_{i-delta})/size_{i-delta}\)
      *     @param _min_area prune the area which smaller than minArea
@@ -109,7 +109,7 @@ public class MSER extends Feature2D {
     }
 
     /**
-     * Full consturctor for %MSER detector
+     * Full constructor for %MSER detector
      *
      *     @param _delta it compares \((size_{i}-size_{i-delta})/size_{i-delta}\)
      *     @param _min_area prune the area which smaller than minArea
@@ -124,7 +124,7 @@ public class MSER extends Feature2D {
     }
 
     /**
-     * Full consturctor for %MSER detector
+     * Full constructor for %MSER detector
      *
      *     @param _delta it compares \((size_{i}-size_{i-delta})/size_{i-delta}\)
      *     @param _min_area prune the area which smaller than minArea
@@ -138,7 +138,7 @@ public class MSER extends Feature2D {
     }
 
     /**
-     * Full consturctor for %MSER detector
+     * Full constructor for %MSER detector
      *
      *     @param _delta it compares \((size_{i}-size_{i-delta})/size_{i-delta}\)
      *     @param _min_area prune the area which smaller than minArea
@@ -151,7 +151,7 @@ public class MSER extends Feature2D {
     }
 
     /**
-     * Full consturctor for %MSER detector
+     * Full constructor for %MSER detector
      *
      *     @param _delta it compares \((size_{i}-size_{i-delta})/size_{i-delta}\)
      *     @param _min_area prune the area which smaller than minArea
@@ -163,7 +163,7 @@ public class MSER extends Feature2D {
     }
 
     /**
-     * Full consturctor for %MSER detector
+     * Full constructor for %MSER detector
      *
      *     @param _delta it compares \((size_{i}-size_{i-delta})/size_{i-delta}\)
      *     @param _min_area prune the area which smaller than minArea
@@ -174,7 +174,7 @@ public class MSER extends Feature2D {
     }
 
     /**
-     * Full consturctor for %MSER detector
+     * Full constructor for %MSER detector
      *
      *     @param _delta it compares \((size_{i}-size_{i-delta})/size_{i-delta}\)
      * @return automatically generated
@@ -184,7 +184,7 @@ public class MSER extends Feature2D {
     }
 
     /**
-     * Full consturctor for %MSER detector
+     * Full constructor for %MSER detector
      *
      * @return automatically generated
      */

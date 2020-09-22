@@ -27,7 +27,7 @@ class OpenCVClassifier(
     override fun prepare() {
         OpenCVLoader.initDebug()
         val file = AssetUtil.copyFileToCache(context, convertedModel.file)
-        net = Dnn.readNetFromTensorflow(file.path)
+        net = Dnn.readNetFromONNX(file.path)
     }
 
     override fun predict(input: Bitmap): FloatArray {

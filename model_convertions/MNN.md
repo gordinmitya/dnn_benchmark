@@ -1,4 +1,10 @@
-Build MNN converter https://www.yuque.com/mnn/en/cvrt_linux
+Build MNN converter. [Official doc](https://www.yuque.com/mnn/en/cvrt_linux)
+
+```
+mkdir build && cd build
+cmake .. -DMNN_BUILD_CONVERTER=true
+make -j12
+```
 
 *OR*
 

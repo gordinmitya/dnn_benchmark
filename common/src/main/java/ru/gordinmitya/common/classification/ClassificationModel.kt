@@ -31,7 +31,7 @@ object MobileNetModel : ClassificationModel(
     floatArrayOf(0.229f, 0.224f, 0.225f),
     224 to 224,
     3,
-    intArrayOf(1, 1001),
+    intArrayOf(1, 1000),
     "ImageNet/labels.txt",
     "ImageNet/"
 )

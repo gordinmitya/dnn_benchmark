@@ -41,7 +41,7 @@ public class LogisticRegression extends StatModel {
     /**
      * This function returns the trained parameters arranged across rows.
      *
-     *     For a two class classifcation problem, it returns a row matrix. It returns learnt parameters of
+     *     For a two class classification problem, it returns a row matrix. It returns learnt parameters of
      *     the Logistic Regression as a matrix of type CV_32F.
      * @return automatically generated
      */

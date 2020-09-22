@@ -16,10 +16,10 @@ import org.opencv.utils.Converters;
 
 public class Core {
     // these constants are wrapped inside functions to prevent inlining
-    private static String getVersion() { return "4.2.0"; }
-    private static String getNativeLibraryName() { return "opencv_java420"; }
+    private static String getVersion() { return "4.4.0"; }
+    private static String getNativeLibraryName() { return "opencv_java440"; }
     private static int getVersionMajorJ() { return 4; }
-    private static int getVersionMinorJ() { return 2; }
+    private static int getVersionMinorJ() { return 4; }
     private static int getVersionRevisionJ() { return 0; }
     private static String getVersionStatusJ() { return ""; }
 
@@ -1523,6 +1523,35 @@ public class Core {
      */
     public static long getTickCount() {
         return getTickCount_0();
+    }
+
+
+    //
+    // C++:  string cv::getCPUFeaturesLine()
+    //
+
+    /**
+     * Returns list of CPU features enabled during compilation.
+     *
+     * Returned value is a string containing space separated list of CPU features with following markers:
+     *
+     * <ul>
+     *   <li>
+     *  no markers - baseline features
+     *   </li>
+     *   <li>
+     *  prefix {@code *} - features enabled in dispatcher
+     *   </li>
+     *   <li>
+     *  suffix {@code ?} - features enabled but not available in HW
+     *   </li>
+     * </ul>
+     *
+     * Example: {@code SSE SSE2 SSE3 *SSE4.1 *SSE4.2 *FP16 *AVX *AVX2 *AVX512-SKX?}
+     * @return automatically generated
+     */
+    public static String getCPUFeaturesLine() {
+        return getCPUFeaturesLine_0();
     }
 
 
@@ -5818,6 +5847,9 @@ public static MinMaxLocResult minMaxLoc(Mat src) {
 
     // C++:  int64 cv::getTickCount()
     private static native long getTickCount_0();
+
+    // C++:  string cv::getCPUFeaturesLine()
+    private static native String getCPUFeaturesLine_0();
 
     // C++:  void cv::LUT(Mat src, Mat lut, Mat& dst)
     private static native void LUT_0(long src_nativeObj, long lut_nativeObj, long dst_nativeObj);
