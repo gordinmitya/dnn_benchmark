@@ -5,16 +5,12 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 class BenchmarkResult(
-    val loops: Int,
     // time in milliseconds
     val preparation: Long,
-    val firstRun: Long,
-    val min: Long,
-    val max: Long,
-    val avg: Double
+    val times: List<Long>,
 ) : Parcelable {
     override fun toString(): String {
-        return "avg=${"%.2f".format(avg)}ms min=${min}ms max=${max}ms"
+        return "avg=${"%.2f".format(times.average())}ms min=${times.min()}ms max=${times.max()}ms"
     }
 
     companion object {
@@ -23,12 +19,8 @@ class BenchmarkResult(
             times: List<Long>
         ): BenchmarkResult {
             return BenchmarkResult(
-                times.size,
                 preparation,
-                times[0],
-                times.min()!!,
-                times.max()!!,
-                times.average()
+                times
             )
         }
     }
