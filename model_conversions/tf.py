@@ -6,6 +6,11 @@ from torch.autograd import Variable
 import tensorflow as tf
 from tensorflow.python.framework.convert_to_constants import convert_variables_to_constants_v2
 
+'''
+https://github.com/nerox8664/pytorch2keras
+
+pip install pytorch2keras
+'''
 
 # Create and load model
 model = torchvision.models.mobilenet_v2(pretrained=True)
@@ -22,7 +27,7 @@ k_model = pytorch_to_keras(model, input_var, (3, 224, 224),
                      change_ordering=True)
 
 # Save model to SavedModel format
-tf.saved_model.save(k_model, "./models")
+tf.saved_model.save(k_model, "./output/mobilenet_saved")
 
 
 # Convert Keras model to ConcreteFunction
@@ -47,6 +52,6 @@ print(frozen_func.outputs)
 
 # Save frozen graph from frozen ConcreteFunction to hard drive
 tf.io.write_graph(graph_or_graph_def=frozen_func.graph,
-                  logdir="./frozen_models",
-                  name="frozen_graph.pb",
+                  logdir="./output/frozen_models",
+                  name="mobilenet_v2.pb",
                   as_text=False)
