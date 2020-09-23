@@ -14,10 +14,10 @@ class ConvertedModel private constructor(
     companion object {
         val mobilenet_v2 = ConvertedModel(
             MobileNetModel,
-            "input.1",
-            "465",
-            "mobilenet_v2/ncnn.param",
-            "mobilenet_v2/ncnn.bin"
+            "input",
+            "473",
+            "ncnn/mobilenet_v2.param",
+            "ncnn/mobilenet_v2.bin"
         )
 
         fun getByModel(model: Model): ConvertedModel? {

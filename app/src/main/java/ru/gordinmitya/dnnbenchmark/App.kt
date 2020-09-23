@@ -25,14 +25,14 @@ class App : Application() {
         super.onCreate()
         instance = this
         frameworks = listOf(
-            MNNFramework(),
-            TFLiteFramework(),
+//            MNNFramework(),
+//            TFLiteFramework(),
 //            MACEFramework(),
 //            SNPEFramework(),
-            OpenCVFramework(),
+//            OpenCVFramework(),
 //            TFMobileFramework(),
-            PytorchFramework(),
-//            NCNNFramework()
+//            PytorchFramework(),
+            NCNNFramework()
         )
     }
 

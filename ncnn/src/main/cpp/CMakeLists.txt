@@ -22,39 +22,10 @@ set_target_properties(
         PROPERTIES IMPORTED_LOCATION
         ${lib_DIR}/${ANDROID_ABI}/libncnn.a
 )
-add_library(libglslang STATIC IMPORTED)
-set_target_properties(
-        libglslang
-        PROPERTIES IMPORTED_LOCATION
-        ${lib_DIR}/${ANDROID_ABI}/libglslang.a
-)
-add_library(libOGLCompiler STATIC IMPORTED)
-set_target_properties(
-        libOGLCompiler
-        PROPERTIES IMPORTED_LOCATION
-        ${lib_DIR}/${ANDROID_ABI}/libOGLCompiler.a
-)
-add_library(libOSDependent STATIC IMPORTED)
-set_target_properties(
-        libOSDependent
-        PROPERTIES IMPORTED_LOCATION
-        ${lib_DIR}/${ANDROID_ABI}/libOSDependent.a
-)
-add_library(libSPIRV STATIC IMPORTED)
-set_target_properties(
-        libSPIRV
-        PROPERTIES IMPORTED_LOCATION
-        ${lib_DIR}/${ANDROID_ABI}/libSPIRV.a
-)
 
 target_link_libraries(
         ncnncore
-
         libncnn
-        libglslang
-        libOGLCompiler
-        libOSDependent
-        libSPIRV
 
         log
         jnigraphics

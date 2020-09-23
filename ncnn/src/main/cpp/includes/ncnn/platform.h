@@ -24,7 +24,7 @@
 #define NCNN_PIXEL 1
 #define NCNN_PIXEL_ROTATE 1
 #define NCNN_VULKAN 1
-#define NCNN_VULKAN_ONLINE_SPIRV 1
+#define NCNN_VULKAN_ONLINE_SPIRV 0
 #define NCNN_REQUANT 0
 #define NCNN_RUNTIME_CPU 1
 #define NCNN_AVX2 0
@@ -174,6 +174,8 @@ public:
 #if NCNN_SIMPLESTL
 #include "simplestl.h"
 #else
+#include <algorithm>
+#include <list>
 #include <vector>
 #include <string>
 #endif

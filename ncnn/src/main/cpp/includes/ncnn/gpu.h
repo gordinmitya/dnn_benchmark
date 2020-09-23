@@ -85,6 +85,7 @@ public:
     uint32_t driver_version;
     uint32_t vendor_id;
     uint32_t device_id;
+    std::string device_name;
     uint8_t pipeline_cache_uuid[VK_UUID_SIZE];
 
     // 0 = discrete gpu
@@ -324,6 +325,7 @@ VulkanDevice* get_gpu_device(int device_index = get_default_gpu_index());
 
 #if NCNN_VULKAN_ONLINE_SPIRV
 // online spirv compilation
+int compile_spirv_module(const char* comp_data, int comp_data_size, const Option& opt, std::vector<uint32_t>& spirv);
 int compile_spirv_module(int shader_type_index, const Option& opt, std::vector<uint32_t>& spirv);
 #endif
 

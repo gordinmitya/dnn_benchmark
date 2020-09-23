@@ -89,44 +89,36 @@ Java_ru_gordinmitya_ncnn_NCNNNative_nativeRun(JNIEnv *env, jclass type, jlong ne
     AndroidBitmapInfo info;
     AndroidBitmap_getInfo(env, bitmap, &info);
 
-    int width = info.width;
-    int height = info.height;
-
     if (info.format != ANDROID_BITMAP_FORMAT_RGBA_8888) {
         __android_log_print(ANDROID_LOG_DEBUG, TAG, "bitmap format should be RGBA_8888");
         return JNI_FALSE;
     }
 
     // ncnn from bitmap
-    ncnn::Mat in = ncnn::Mat::from_android_bitmap(env, bitmap, ncnn::Mat::PIXEL_BGR);
+    ncnn::Mat in = ncnn::Mat::from_android_bitmap(env, bitmap, ncnn::Mat::PIXEL_RGB);
 
     // inference
     {
-        const float mean_vals[3] = {103.94f, 116.78f, 123.68f};
-//        const float normal_vals[3] = {0.017f, 0.017f, 0.017f};
-        in.substract_mean_normalize(mean_vals, nullptr);
+        float mean_vals[3] = {0.485f, 0.456f, 0.406f};
+        float normal_vals[3] = {0.229f, 0.224f, 0.225f};
+        for (int i = 0; i < 3; ++i) {
+            mean_vals[i] = mean_vals[i] * 255.0f;
+            normal_vals[i] = 1.0f / 255.0f / normal_vals[i];
+        }
+
+        in.substract_mean_normalize(mean_vals, normal_vals);
 
         ncnn::Extractor ex = net->create_extractor();
 
         ex.set_vulkan_compute(net->opt.use_vulkan_compute);
 
-        ex.input("input.1", in);
+        ex.input("input", in);
 
         ncnn::Mat out;
-        ex.extract("465", out);
+        ex.extract("473", out);
 
         int outputLen = env->GetArrayLength(output);
-//        if (out.w != outputLen) {
-//            __android_log_print(ANDROID_LOG_DEBUG, TAG, "output array size missmatch");
-//            return JNI_FALSE;
-//        }
-        auto scores = new jfloat[outputLen];
-        // FIXME started from 1 because of "background tag" in tflite model
-        for (int i = 1; i < out.w; i++) {
-            scores[i] = out[i];
-        }
-        env->SetFloatArrayRegion(output, 0, outputLen, scores);
-        delete[] scores;
+        env->SetFloatArrayRegion(output, 0, outputLen, out.row(0));
     }
 
     return JNI_TRUE;
