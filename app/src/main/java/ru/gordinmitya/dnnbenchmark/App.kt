@@ -27,14 +27,14 @@ class App : Application() {
         instance = this
         frameworks = listOf(
             ONNXFramework(),
-//            MNNFramework(),
-//            TFLiteFramework(),
+            MNNFramework(),
+            TFLiteFramework(),
 //            MACEFramework(),
 //            SNPEFramework(),
-//            OpenCVFramework(),
+            OpenCVFramework(),
 //            TFMobileFramework(),
-//            PytorchFramework(),
-//            NCNNFramework()
+            PytorchFramework(),
+            NCNNFramework()
         )
     }
 
