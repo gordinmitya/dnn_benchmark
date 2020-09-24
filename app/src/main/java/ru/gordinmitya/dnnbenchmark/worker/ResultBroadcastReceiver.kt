@@ -11,12 +11,16 @@ import kotlin.coroutines.resumeWithException
 class ResultBroadcastReceiver(private val cont: Continuation<InferenceResult>) :
     BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        val exception = intent.getSerializableExtra(WorkerProcess.ERROR_KEY) as Throwable?
-        if (exception != null)
-            cont.resumeWithException(exception)
+        if (intent.extras?.containsKey(WorkerProcess.DATA_KEY) == true) {
+            val payload = intent.getParcelableExtra<InferenceResult>(WorkerProcess.DATA_KEY)!!
+            cont.resume(payload)
+        } else {
+            val e = intent.getSerializableExtra(WorkerProcess.ERROR_KEY) as Throwable
+            throw e
+            // TODO deal with coroutines exceptions
+            // continuation.resumeWithException(e)
+        }
 
-        val payload = intent.getParcelableExtra<InferenceResult>(WorkerProcess.DATA_KEY)!!
-        cont.resume(payload)
         context.unregisterReceiver(this)
     }
 }

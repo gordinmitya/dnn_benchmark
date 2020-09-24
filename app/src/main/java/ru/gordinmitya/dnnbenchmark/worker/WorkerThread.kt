@@ -19,7 +19,9 @@ class WorkerThread {
                     val result = Worker.execute(context, configuration, isGameLoop)
                     continuation.resume(result)
                 } catch (e: Throwable) {
-                    continuation.resumeWithException(e)
+                    throw e
+                    // TODO deal with coroutines exceptions
+//                    continuation.resumeWithException(e)
                 }
             }.start()
         }

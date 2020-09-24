@@ -51,10 +51,7 @@ class WorkerProcess : Service() {
             configuration: Configuration,
             isGameLoop: Boolean
         ): InferenceResult = suspendCoroutine { continuation ->
-            val receiver =
-                ResultBroadcastReceiver(
-                    continuation
-                )
+            val receiver = ResultBroadcastReceiver(continuation)
             context.registerReceiver(
                 receiver,
                 resultIntentFilter

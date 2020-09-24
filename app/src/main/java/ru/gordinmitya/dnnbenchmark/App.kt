@@ -36,9 +36,10 @@ class App : Application() {
         )
     }
 
+    @Suppress("SimplifyBooleanWithConstants")
     companion object {
-        @Suppress("SimplifyBooleanWithConstants")
         val DEBUG = true && BuildConfig.DEBUG
+        val USE_PROCESS = true || !DEBUG
 
         lateinit var instance: App
     }

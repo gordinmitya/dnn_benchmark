@@ -86,10 +86,10 @@ class MainActivity : AppCompatActivity() {
                     NotSupportedResult(ConfigurationEntity(configuration))
                 } else {
                     // in order to easily debug and see logs
-                    if (App.DEBUG)
-                        WorkerThread.execute(activity, configuration, isGameLoop)
-                    else
+                    if (App.USE_PROCESS)
                         WorkerProcess.execute(activity, configuration, isGameLoop)
+                    else
+                        WorkerThread.execute(activity, configuration, isGameLoop)
                 }
             results.add(result)
             logger.log(result)
