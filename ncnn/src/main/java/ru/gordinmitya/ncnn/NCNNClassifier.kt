@@ -3,6 +3,7 @@ package ru.gordinmitya.ncnn
 import android.content.Context
 import android.graphics.Bitmap
 import ru.gordinmitya.common.Configuration
+import ru.gordinmitya.common.Constants
 import ru.gordinmitya.common.classification.Classifier
 
 
@@ -21,6 +22,7 @@ class NCNNClassifier(
             context.assets,
             convertedModel.paramFile,
             convertedModel.binFile,
+            Constants.NUM_THREADS,
             inferenceType.gpu
         )
         if (!created)

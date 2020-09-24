@@ -33,6 +33,7 @@ JNIEXPORT jlong JNICALL
 Java_ru_gordinmitya_ncnn_NCNNNative_nativeInit(JNIEnv *env, jclass type, jobject assetManager,
                                                jstring paramFile_,
                                                jstring binFile_,
+                                               jint num_threads,
                                                jboolean use_gpu) {
 
     auto net = new ncnn::Net();
@@ -41,7 +42,7 @@ Java_ru_gordinmitya_ncnn_NCNNNative_nativeInit(JNIEnv *env, jclass type, jobject
 
     ncnn::Option opt;
     opt.lightmode = true;
-    opt.num_threads = 4;
+    opt.num_threads = num_threads;
     opt.blob_allocator = new ncnn::UnlockedPoolAllocator();
     opt.workspace_allocator = new ncnn::PoolAllocator();
     opt.use_vulkan_compute = ncnn::get_gpu_count() != 0 && (bool) use_gpu;
