@@ -12,30 +12,45 @@ Frameworks:
 - [x] TFMobile Google [ver. 1.13.1](https://mvnrepository.com/artifact/org.tensorflow/tensorflow-android)
 - [x] Pytorch Facebook [ver. 1.5.0](https://github.com/pytorch/pytorch/tree/master/android)
 - [x] OpenCV DNN [ver. 4.4.0](https://github.com/opencv/opencv/releases/)
-- [x] Mace Xiaomi
-- [x] SNPE Qualcomm
-- [ ] HiAI (Huawei)
+- [x] onnxruntime Microsoft [ver. 1.4.0](https://github.com/microsoft/onnxruntime/releases/)
+- [?] Mace by Xiaomi
+- [ ] Tengine Lite OPEN AI LAB
+- [ ] TNN Tencent
+- [ ] NeoML ABBYY
+- [?] SNPE Qualcomm
+- [ ] HiAI Huawei
+- [ ] NeuroPilot SDK Mediatek
+- [ ] Paddle-Lite Baidu
+- [ ] Samsung Neural SDK (if they approve my request)
+
+Questionable/other:
+* [huawei-noah/bolt](https://github.com/huawei-noah/bolt) not very popular?
+* [JDAI-CV/dabnn](https://github.com/JDAI-CV/dabnn) binary networks
+
 
 Features:
 
 - [x] Compare inference results between frameworks and desktop
 - [x] Visualize progress/results
-- [ ] Collect results on backend
-- [ ] Publish to Play Market
-- [ ] Users' models, converter on backend side
+- [x] Publish to Play Market
+- [x] Collect results on backend
+- [ ] Web site with agregated results
 
 Models:
 
-- [x] [MobileNet v2](https://www.tensorflow.org/lite/models/image_classification/overview)
+- [x] [MobileNet v2](https://pytorch.org/docs/stable/torchvision/models.html#mobilenet-v2)
 - [x] [Deeplab v3](https://www.tensorflow.org/lite/models/segmentation/overview)
 - [ ] [Bert Question and Answer](https://www.tensorflow.org/lite/models/bert_qa/overview)
 
-> All models are floating point,
-> quantization will be added later.
+> All models are floating point
 
 
 Supported ABIs: armeabi-v7a, arm64-v8a. 
 Some frameworks (eg TF) also supports x86 and x86_64, but are they still exist in 2020?
+
+## Conversions
+
+A detailed explanation of how to convert the model into each framework available [here](model_conversions/README.md).
 
 ## Run your own model
 
@@ -55,11 +70,6 @@ Qualcomm prohibits redestribution of their libraries, so you have to register th
 1. Remove `, ':snpe'` from `settings.gradle`;
 2. Remove `implementation project(path: ':snpe')` from `app/build.gradle`;
 3. Remove amy mentions of SNPE in MainActivity.kt.
-
-## Known issues
-
-* SNPE DSP produces wrong results;
-* smth wrong with NCNN – produces wrong results;
 
 ## License Summary
 
