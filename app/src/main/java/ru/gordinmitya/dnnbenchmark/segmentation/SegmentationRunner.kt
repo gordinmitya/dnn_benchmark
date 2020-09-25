@@ -2,6 +2,7 @@ package ru.gordinmitya.dnnbenchmark.segmentation
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import ru.gordinmitya.common.Configuration
 import ru.gordinmitya.common.segmentation.SegmentationFramework
 import ru.gordinmitya.common.segmentation.SegmentationModel
@@ -12,9 +13,10 @@ import ru.gordinmitya.dnnbenchmark.benchmark.InferenceResult
 import ru.gordinmitya.dnnbenchmark.benchmark.SuccessResult
 import ru.gordinmitya.dnnbenchmark.model.ConfigurationEntity
 import ru.gordinmitya.dnnbenchmark.utils.CyclicIterator
-import ru.gordinmitya.dnnbenchmark.utils.ModelAssets
+import ru.gordinmitya.dnnbenchmark.classification.ModelAssets
 import ru.gordinmitya.dnnbenchmark.utils.Timeit
 import ru.gordinmitya.dnnbenchmark.utils.toCyclicIterator
+import java.io.File
 
 class SegmentationRunner(
     val context: Context,
@@ -39,10 +41,8 @@ class SegmentationRunner(
 
         benchmarker = Benchmarker()
         evaluator = SegmentationEvaluator()
-        samples = ModelAssets.getImagesInSubFolders(context, model.samplesDir)
-            .map {
-                it.second
-            }
+        // TODO refactor
+        samples = getImagesInSubFolders(context, model.samplesDir)
             .toCyclicIterator()
 
         segmentator = framework.createSegmentator(context, configuration)
@@ -58,7 +58,7 @@ class SegmentationRunner(
             for (i in 0 until loops) {
                 // load sample
                 val imagePath = samples.next()
-                var image = ModelAssets.loadImage(context, imagePath)
+                var image = loadImage(context, imagePath)
                 val originalImageSize = image.width to image.height
                 image = Bitmap.createScaledBitmap(image, 257, 257, true)
 
@@ -82,7 +82,7 @@ class SegmentationRunner(
                 val gtPath = imagePath
                     .replace("VOC", "VOC_GT")
                     .replace(".jpg", ".png")
-                val gt = ModelAssets.loadImage(context, gtPath)
+                val gt = loadImage(context, gtPath)
                 evaluator.addNext(segmentation, gt)
 
 //                progressCallback?.onResult(label, time)
@@ -109,6 +109,23 @@ class SegmentationRunner(
             )
         } finally {
             segmentator.release()
+        }
+    }
+
+    private fun getImagesInSubFolders(context: Context, folder: String): List<String> {
+        return context.assets
+            .list(folder)
+            ?.flatMap { label ->
+                context.assets
+                    .list(File(folder, label).path)
+                    ?.filter { it.contains(".jpg") }
+                    ?.map { name -> "$folder/$label/$name" } ?: emptyList()
+            } ?: emptyList()
+    }
+
+    private fun loadImage(context: Context, path: String): Bitmap {
+        return context.assets.open(path).use {
+            BitmapFactory.decodeStream(it)
         }
     }
 }

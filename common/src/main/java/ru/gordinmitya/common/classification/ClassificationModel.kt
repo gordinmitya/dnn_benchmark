@@ -33,5 +33,5 @@ object MobileNetModel : ClassificationModel(
     3,
     intArrayOf(1, 1000),
     "ImageNet/labels.txt",
-    "ImageNet/"
+    "ImageNet"
 )

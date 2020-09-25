@@ -10,7 +10,6 @@ import ru.gordinmitya.dnnbenchmark.benchmark.FailureResult
 import ru.gordinmitya.dnnbenchmark.benchmark.InferenceResult
 import ru.gordinmitya.dnnbenchmark.benchmark.SuccessResult
 import ru.gordinmitya.dnnbenchmark.model.ConfigurationEntity
-import ru.gordinmitya.dnnbenchmark.utils.ModelAssets
 import ru.gordinmitya.dnnbenchmark.utils.Timeit
 
 class ClassificationRunner(

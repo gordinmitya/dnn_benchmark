@@ -64,5 +64,5 @@ object DeepLabModel : SegmentationModel(
         -2139263617,
         -2139156123
     ),
-    "PascalVOC/"
+    "PascalVOC"
 )

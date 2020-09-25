@@ -1,4 +1,3 @@
-background
 tench
 goldfish
 great white shark

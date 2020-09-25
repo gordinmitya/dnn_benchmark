@@ -26,7 +26,6 @@ class App : Application() {
         super.onCreate()
         instance = this
         frameworks = listOf(
-            ONNXFramework(),
             MNNFramework(),
             TFLiteFramework(),
 //            MACEFramework(),
@@ -34,14 +33,15 @@ class App : Application() {
             OpenCVFramework(),
 //            TFMobileFramework(),
             PytorchFramework(),
-            NCNNFramework()
+            NCNNFramework(),
+            ONNXFramework(),
         )
     }
 
     @Suppress("SimplifyBooleanWithConstants")
     companion object {
         val DEBUG = true && BuildConfig.DEBUG
-        val USE_PROCESS = false || !DEBUG
+        val USE_PROCESS = true || !DEBUG
 
         lateinit var instance: App
     }
