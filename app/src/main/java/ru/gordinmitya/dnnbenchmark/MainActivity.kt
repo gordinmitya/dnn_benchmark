@@ -22,6 +22,7 @@ import ru.gordinmitya.dnnbenchmark.model.Measurement
 import ru.gordinmitya.dnnbenchmark.utils.TextLogger
 import ru.gordinmitya.dnnbenchmark.worker.WorkerProcess
 import ru.gordinmitya.dnnbenchmark.worker.WorkerThread
+import kotlin.reflect.full.createInstance
 
 class MainActivity : AppCompatActivity() {
     val TAG = "MainActivity"
@@ -59,12 +60,13 @@ class MainActivity : AppCompatActivity() {
         doit()
     }
 
-    val sleep = 1_000L
+    val sleep = 2_000L
 
     private fun generateConfigurations(): ArrayList<Configuration> {
         val configurations = ArrayList<Configuration>()
         for (model in App.instance.models) {
-            for (framework in App.instance.frameworks) {
+            for (fName in App.instance.frameworks) {
+                val framework = App.instance.createFrameworkInstance(fName)
                 if (!framework.getModels().contains(model)) continue
                 for (type in framework.getInferenceTypes()) {
                     val configuration = Configuration(framework, type, model)

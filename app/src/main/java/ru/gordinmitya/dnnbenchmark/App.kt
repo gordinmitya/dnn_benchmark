@@ -14,35 +14,48 @@ import ru.gordinmitya.pytorch.PytorchFramework
 import ru.gordinmitya.snpe.SNPEFramework
 import ru.gordinmitya.tf_mobile.TFMobileFramework
 import ru.gordinmitya.tflite.TFLiteFramework
+import kotlin.reflect.KClass
+import kotlin.reflect.full.createInstance
 
 class App : Application() {
-    lateinit var frameworks: List<InferenceFramework>
+    private lateinit var frameworkClassess: List<KClass<out InferenceFramework>>
+    lateinit var frameworks: List<String>
     val models = listOf(
         MobileNetModel,
-//        DeepLabModel
+        DeepLabModel
     )
+
+    fun createFrameworkInstance(name: String): InferenceFramework {
+        val kclass = frameworkClassess.first { describeFramework(it) == name }
+        return kclass.createInstance()
+    }
 
     override fun onCreate() {
         super.onCreate()
         instance = this
-        frameworks = listOf(
-            NCNNFramework(),
-            TFLiteFramework(),
-            MNNFramework(),
-            PytorchFramework(),
-            OpenCVFramework(),
-            ONNXFramework(),
+        frameworkClassess = listOf(
+            MNNFramework::class,
+            NCNNFramework::class,
+            TFLiteFramework::class,
+            PytorchFramework::class,
+            OpenCVFramework::class,
+            ONNXFramework::class,
 //            MACEFramework(),
 //            SNPEFramework(),
 //            TFMobileFramework(),
         )
+        frameworks = frameworkClassess.map { describeFramework(it) }
     }
 
     @Suppress("SimplifyBooleanWithConstants")
     companion object {
-        val DEBUG = false && BuildConfig.DEBUG
+        val DEBUG = true && BuildConfig.DEBUG
         val USE_PROCESS = true || !DEBUG
 
         lateinit var instance: App
+
+        fun describeFramework(kclass: KClass<out InferenceFramework>): String {
+            return kclass.simpleName!!
+        }
     }
 }

@@ -16,7 +16,7 @@ class ConfigurationEntity(
 ) : Parcelable {
 
     constructor(configuration: Configuration) : this(
-        framework = configuration.inferenceFramework.name,
+        framework = App.describeFramework(configuration.inferenceFramework.javaClass.kotlin),
         inferenceType = configuration.inferenceType.name,
         isSupported = configuration.inferenceType.isSupported,
         task = configuration.model.task.name.toLowerCase(Locale.ROOT),
@@ -24,15 +24,13 @@ class ConfigurationEntity(
     )
 
     fun toConfiguration(): Configuration {
-        val framework = App.instance.frameworks.first {
-            it.name == framework
-        }
-        val type = framework.getInferenceTypes().first {
+        val frameworkInstance = App.instance.createFrameworkInstance(framework)
+        val type = frameworkInstance.getInferenceTypes().first {
             it.name == inferenceType
         }
         val model = App.instance.models.first {
             it.name == model
         }
-        return Configuration(framework, type, model)
+        return Configuration(frameworkInstance, type, model)
     }
 }
