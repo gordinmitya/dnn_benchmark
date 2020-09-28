@@ -9,4 +9,8 @@ class Configuration(
         require(inferenceType in inferenceFramework.getInferenceTypes())
         require(model in inferenceFramework.getModels())
     }
+
+    override fun toString(): String {
+        return "${model.name} ${inferenceFramework.name} ${inferenceType.name}"
+    }
 }

@@ -1,5 +1,7 @@
 package ru.gordinmitya.dnnbenchmark.benchmark
 
+import android.util.Log
+
 class Benchmarker {
     private var prepareTime = 0L
     private val history = ArrayList<Long>()
@@ -15,6 +17,7 @@ class Benchmarker {
     fun summarize(): BenchmarkResult {
         if (history.isEmpty())
             throw IllegalStateException("No benchmarks were performed")
+        Log.d("timings", history.joinToString(","))
         return BenchmarkResult.fromMeasurements(
             prepareTime,
             history

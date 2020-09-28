@@ -19,28 +19,28 @@ class App : Application() {
     lateinit var frameworks: List<InferenceFramework>
     val models = listOf(
         MobileNetModel,
-        DeepLabModel
+//        DeepLabModel
     )
 
     override fun onCreate() {
         super.onCreate()
         instance = this
         frameworks = listOf(
-            MNNFramework(),
+            NCNNFramework(),
             TFLiteFramework(),
+            MNNFramework(),
+            PytorchFramework(),
+            OpenCVFramework(),
+            ONNXFramework(),
 //            MACEFramework(),
 //            SNPEFramework(),
-            OpenCVFramework(),
 //            TFMobileFramework(),
-            PytorchFramework(),
-            NCNNFramework(),
-            ONNXFramework(),
         )
     }
 
     @Suppress("SimplifyBooleanWithConstants")
     companion object {
-        val DEBUG = true && BuildConfig.DEBUG
+        val DEBUG = false && BuildConfig.DEBUG
         val USE_PROCESS = true || !DEBUG
 
         lateinit var instance: App

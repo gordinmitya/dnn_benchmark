@@ -16,8 +16,8 @@ class ConvertedModel private constructor(
             MobileNetModel,
             "input",
             "473",
-            "ncnn/mobilenet_v2.param",
-            "ncnn/mobilenet_v2.bin"
+            "ncnn/mobilenet_v2-opt.param",
+            "ncnn/mobilenet_v2-opt.bin"
         )
 
         fun getByModel(model: Model): ConvertedModel? {

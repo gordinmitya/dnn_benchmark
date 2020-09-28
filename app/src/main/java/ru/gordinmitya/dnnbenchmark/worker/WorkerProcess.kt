@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.IBinder
+import android.os.Process
+import android.util.Log
 import ru.gordinmitya.common.Configuration
 import ru.gordinmitya.dnnbenchmark.BuildConfig
 import ru.gordinmitya.dnnbenchmark.benchmark.InferenceResult
@@ -16,6 +18,7 @@ class WorkerProcess : Service() {
         return null
     }
 
+    var serviceName: String = ""
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         val resIntent = Intent(RESULT_ACTION)
         try {
@@ -23,6 +26,7 @@ class WorkerProcess : Service() {
                 .getParcelableExtra<ConfigurationEntity>(CONFIGURATION_KEY)!!
                 .toConfiguration()
             val isGameLoop = intent.getBooleanExtra(GAME_LOOP_KEY, false)
+            serviceName = configuration.toString()
 
             val result = Worker.execute(this, configuration, isGameLoop)
 
@@ -33,8 +37,14 @@ class WorkerProcess : Service() {
 
         sendBroadcast(resIntent)
         stopSelf()
+        Process.killProcess(Process.myPid())
 
         return START_NOT_STICKY
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("WorkerProcess", "destroy $serviceName")
     }
 
     companion object {
