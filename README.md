@@ -1,6 +1,8 @@
 # Deep Neural Networks Benchmark for Android
 
 Available on [Google Play](https://play.google.com/store/apps/details?id=ru.gordinmitya.dnnbenchmark).
+Subscribe to news [telegram channel](https://t.me/deepmobile).
+Discuss this repo, frameworks, networks on mobile in [telegram group](https://t.me/androidgpu).
 
 ## Road map
 
