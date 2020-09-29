@@ -9,8 +9,6 @@ object AssetUtil {
         if (file.parentFile?.exists() != true) {
             file.parentFile?.mkdirs()
         }
-        if (file.exists())
-            return file
         context.assets.open(fileName).use { input ->
             file.outputStream().use { output ->
                 input.copyTo(output)
