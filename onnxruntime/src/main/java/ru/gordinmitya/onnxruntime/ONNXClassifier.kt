@@ -21,7 +21,8 @@ class ONNXClassifier(
     override fun prepare() {
         val file = AssetUtil.copyFileToCache(context, convertedModel.fileName)
         val (width, height) = convertedModel.model.inputSize
-        runtime = ONNXNative(file.absolutePath, Constants.NUM_THREADS, width, height)
+        val use_nnapi = inferenceType == ONNX_NNAPI
+        runtime = ONNXNative(file.absolutePath, use_nnapi, Constants.NUM_THREADS, width, height)
         val outputSize = convertedModel.model.outputShape.reduce { acc, i -> acc * i }
         output = FloatArray(outputSize)
     }

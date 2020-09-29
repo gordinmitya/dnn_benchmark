@@ -15,9 +15,9 @@ public class ONNXNative {
      * makes jni call to create c++ reference
      */
 
-    public ONNXNative(String model_path, int num_threads, int img_height, int img_width)
+    public ONNXNative(String model_path, boolean use_nnapi, int num_threads, int img_height, int img_width)
     {
-        selfAddr = newSelf(model_path, num_threads, img_height, img_width); //jni call to create c++ reference and returns address
+        selfAddr = newSelf(model_path, use_nnapi, num_threads, img_height, img_width); //jni call to create c++ reference and returns address
     }
 
     /**
@@ -52,7 +52,7 @@ public class ONNXNative {
     }
 
 
-    private static native long newSelf(String model_path, int num_threads, int img_height, int img_width);
+    private static native long newSelf(String model_path, boolean use_nnapi, int num_threads, int img_height, int img_width);
     private static native void deleteSelf(long selfAddr);
     private static native boolean run(long selfAddr, Bitmap inbitmap, float[] output);
 }

@@ -18,14 +18,16 @@ extern "C"
 
 JNIEXPORT jlong JNICALL
 Java_ru_gordinmitya_onnxruntime_ONNXNative_newSelf(JNIEnv *env, jclass clazz, jstring model_path,
+                                                   jboolean use_nnapi,
                                                    jint num_threads, jint img_height,
                                                    jint img_width) {
 
 
-    Ort::Env environment(ORT_LOGGING_LEVEL_WARNING, "test");
+    std::unique_ptr<Ort::Env> environment(new Ort::Env(ORT_LOGGING_LEVEL_WARNING, "native"));
     const char *model_path_ch = env->GetStringUTFChars(model_path, 0);
 
-    Inference *self = new Inference(environment, model_path_ch, num_threads, img_height, img_width);
+    Inference *self = new Inference(environment, model_path_ch, use_nnapi, num_threads, img_height,
+                                    img_width);
     return (jlong) self;
 }
 

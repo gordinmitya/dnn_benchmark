@@ -11,7 +11,7 @@ import ru.gordinmitya.common.classification.Classifier
 class ONNXFramework : InferenceFramework("onnxruntime", "by Microsoft"), ClassificationFramework {
     private val types = arrayListOf(
         ONNX_CPU,
-//        ONNX_NNAPI
+        ONNX_NNAPI
     )
 
     override fun getInferenceTypes(): List<InferenceType> = types

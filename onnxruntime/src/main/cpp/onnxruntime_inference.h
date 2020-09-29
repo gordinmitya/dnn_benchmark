@@ -21,11 +21,17 @@
 class Inference {
     
 private:
-    Ort::Env& env_;
-    Ort::Session session{nullptr};
+
+    std::unique_ptr<Ort::Env> env_;
+    std::unique_ptr<Ort::Session> session_;
+
     const char* modelpath_;
     int img_height_;
     int img_width_;
+
+    
+    unsigned long input_tensor_size;
+    unsigned long ouput_tensor_size;
     
     std::vector<int64_t> input_node_dims;
     std::vector<int64_t> output_node_dims;
@@ -36,21 +42,23 @@ private:
     
     std::unique_ptr<float[]> input_data_chw;
     std::unique_ptr<float[]> normalized;
-    std::unique_ptr<float[]> softmax_output;
+    std::unique_ptr<float[]> output;
 
+    
     void createInputBuffer();
     void printNodes();
 
-public:
-    unsigned long input_tensor_size;
-    unsigned long ouput_tensor_size;
 
-    Inference(Ort::Env& env,  const char*  modelpath, int num_threads,  int img_height, int img_width);
+
+public:
+
+    Inference(std::unique_ptr<Ort::Env>& env,  const char*  modelpath, bool use_nnapi, int num_threads,  int img_height, int img_width);
     Inference(const Inference& ) = delete; //no copy
     Inference& operator = (const Inference &) = delete;//no copy
     float* run(uint8_t* pixels);
-  
+
     ~Inference();
+    
 };
 
 #endif /* onnxruntime_inference_hpp */
