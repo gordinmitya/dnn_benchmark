@@ -48,15 +48,15 @@ Models:
 Supported ABIs: armeabi-v7a, arm64-v8a. 
 Some frameworks (eg TF) also supports x86 and x86_64, but are they still exist in 2020?
 
-## Conversions
+## Conversions / Run your own model
 
 A detailed explanation of how to convert the model into each framework available [here](model_conversions/README.md).
 
-## Run your own model
+Here is repo with docker images contatining some built converters and other maybe nessesary tools. [gordinmitya/docker_that_framework](https://github.com/gordinmitya/docker_that_framework)
 
-Almost each framework has its own format of model file. So you have to do a lot of conversions.
+## Credits
 
-Here is repo with docker images contatining built converters and other nessesary tools. [gordinmitya/docker_that_framework](https://github.com/gordinmitya/docker_that_framework)
+* Thanks to [Rohithkvsp/OnnxRuntimeAndorid](https://github.com/Rohithkvsp/OnnxRuntimeAndorid/) for sample code on how to use onnxruntime with nnapi!
 
 ## SNPE
 
