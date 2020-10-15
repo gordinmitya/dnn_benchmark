@@ -14,7 +14,7 @@ Frameworks:
 - [x] TFMobile Google [ver. 1.13.1](https://mvnrepository.com/artifact/org.tensorflow/tensorflow-android)
 - [x] Pytorch Facebook [ver. 1.5.0](https://github.com/pytorch/pytorch/tree/master/android)
 - [x] OpenCV DNN [ver. 4.4.0](https://github.com/opencv/opencv/releases/)
-- [x] onnxruntime Microsoft [ver. 1.4.0](https://github.com/microsoft/onnxruntime/releases/)
+- [x] onnxruntime Microsoft [ver. 1.4.0](https://github.com/microsoft/onnxruntime/releases/) [how to build](onnxruntime/README.md)
 - [?] Mace by Xiaomi
 - [ ] Tengine Lite OPEN AI LAB
 - [ ] TNN Tencent
