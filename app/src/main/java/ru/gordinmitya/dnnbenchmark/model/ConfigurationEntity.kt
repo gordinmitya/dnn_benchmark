@@ -8,7 +8,8 @@ import java.util.*
 
 @Parcelize
 class ConfigurationEntity(
-    val framework: String,
+    val frameworkName: String,
+    val frameworkClassName: String,
     val inferenceType: String,
     val isSupported: Boolean,
     val task: String,
@@ -16,7 +17,8 @@ class ConfigurationEntity(
 ) : Parcelable {
 
     constructor(configuration: Configuration) : this(
-        framework = App.describeFramework(configuration.inferenceFramework.javaClass.kotlin),
+        frameworkName = configuration.inferenceFramework.name,
+        frameworkClassName = App.describeFramework(configuration.inferenceFramework.javaClass.kotlin),
         inferenceType = configuration.inferenceType.name,
         isSupported = configuration.inferenceType.isSupported,
         task = configuration.model.task.name.toLowerCase(Locale.ROOT),
@@ -24,7 +26,7 @@ class ConfigurationEntity(
     )
 
     fun toConfiguration(): Configuration {
-        val frameworkInstance = App.instance.createFrameworkInstance(framework)
+        val frameworkInstance = App.instance.createFrameworkInstance(frameworkClassName)
         val type = frameworkInstance.getInferenceTypes().first {
             it.name == inferenceType
         }

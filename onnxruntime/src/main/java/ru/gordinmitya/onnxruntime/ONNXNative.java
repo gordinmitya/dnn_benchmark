@@ -2,13 +2,15 @@ package ru.gordinmitya.onnxruntime;
 
 import android.graphics.Bitmap;
 
+import ru.gordinmitya.common.NativeHelper;
+
 public class ONNXNative {
 
 
     private long selfAddr;
 
     static {
-        System.loadLibrary("onnxcore");
+        NativeHelper.loadLibrary("onnxcore");
     }
 
     /**

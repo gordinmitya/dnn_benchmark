@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-        
+
         isGameLoop = intent.action == "com.google.intent.action.TEST_LOOP"
 
         val textView = TextView(this).also {
@@ -62,19 +62,17 @@ class MainActivity : AppCompatActivity() {
 
     val sleep = 2_000L
 
-    private fun generateConfigurations(): ArrayList<Configuration> {
-        val configurations = ArrayList<Configuration>()
+    private fun generateConfigurations() = sequence {
         for (model in App.instance.models) {
             for (fName in App.instance.frameworks) {
                 val framework = App.instance.createFrameworkInstance(fName)
                 if (!framework.getModels().contains(model)) continue
                 for (type in framework.getInferenceTypes()) {
                     val configuration = Configuration(framework, type, model)
-                    configurations.add(configuration)
+                    yield(configuration)
                 }
             }
         }
-        return configurations
     }
 
     private fun doit() = GlobalScope.launch {
@@ -90,10 +88,10 @@ class MainActivity : AppCompatActivity() {
                 if (!configuration.inferenceType.isSupported) {
                     NotSupportedResult(ConfigurationEntity(configuration))
                 } else {
-                    // in order to easily debug and see logs
                     if (App.USE_PROCESS)
                         WorkerProcess.execute(activity, configuration, isGameLoop)
                     else
+                    // in order to easily debug and see logs
                         WorkerThread.execute(activity, configuration, isGameLoop)
                 }
             results.add(result)
@@ -102,7 +100,7 @@ class MainActivity : AppCompatActivity() {
         }
         logger.drawLine()
 
-        if (App.DEBUG) return@launch
+        if (!App.SEND_STATS) return@launch
 
         logger.spoiler("sending to server…")
         val userUid: String

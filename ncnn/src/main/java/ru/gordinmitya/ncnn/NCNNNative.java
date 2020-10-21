@@ -3,6 +3,8 @@ package ru.gordinmitya.ncnn;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 
+import ru.gordinmitya.common.NativeHelper;
+
 public class NCNNNative {
     private long netPtr = 0;
 
@@ -17,7 +19,7 @@ public class NCNNNative {
     }
 
     public void release() {
-        checkPtr();
+        if (netPtr == 0) return;
         nativeRelease(netPtr);
         netPtr = 0;
     }
@@ -34,6 +36,6 @@ public class NCNNNative {
     private static native void nativeRelease(long netPtr);
 
     static {
-        System.loadLibrary("ncnncore");
+        NativeHelper.loadLibrary("ncnncore");
     }
 }

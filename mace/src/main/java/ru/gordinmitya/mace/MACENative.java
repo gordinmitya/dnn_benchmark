@@ -4,11 +4,12 @@ import android.content.Context;
 import android.util.Log;
 
 import ru.gordinmitya.common.Constants;
+import ru.gordinmitya.common.NativeHelper;
 
 public class MACENative {
     static {
-        System.loadLibrary("mace");
-        System.loadLibrary("macecore");
+        NativeHelper.loadLibrary("mace");
+        NativeHelper.loadLibrary("macecore");
     }
 
     private long contextPtr;

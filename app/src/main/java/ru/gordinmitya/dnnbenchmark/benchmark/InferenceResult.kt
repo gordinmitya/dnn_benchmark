@@ -9,7 +9,7 @@ sealed class InferenceResult : Parcelable {
 
     override fun toString(): String = configuration.run {
         val taskLetter = configuration.task[0].toUpperCase()
-        return "$taskLetter $framework $inferenceType"
+        return "$taskLetter $frameworkName $inferenceType"
     }
 }
 

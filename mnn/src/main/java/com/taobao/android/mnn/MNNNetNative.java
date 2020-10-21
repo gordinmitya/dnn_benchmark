@@ -3,6 +3,8 @@ package com.taobao.android.mnn;
 import android.graphics.Bitmap;
 import android.util.Log;
 
+import ru.gordinmitya.common.NativeHelper;
+
 
 public class MNNNetNative {
     public static final boolean LOADED_CL;
@@ -11,7 +13,7 @@ public class MNNNetNative {
 
     private static boolean loadGpuLibrary(String name) {
         try {
-            System.loadLibrary(name);
+            NativeHelper.loadLibrary(name);
             return true;
         } catch (Throwable ce) {
             Log.w("MNNNetNative", "load MNN " + name + " GPU so exception=%s", ce);
@@ -21,13 +23,13 @@ public class MNNNetNative {
 
     // load libraries
     static {
-        System.loadLibrary("MNN");
+        NativeHelper.loadLibrary("MNN");
 
         LOADED_CL = loadGpuLibrary("MNN_CL");
         LOADED_GL = loadGpuLibrary("MNN_GL");
         LOADED_VULKAN = loadGpuLibrary("MNN_Vulkan");
 
-        System.loadLibrary("mnncore");
+        NativeHelper.loadLibrary("mnncore");
     }
 
     //Net

@@ -17,6 +17,8 @@ class ConvertedModel private constructor(
             "input",
             "473",
             "mobilenet_v2.onnx",
+            // from https://github.com/Rohithkvsp/OnnxRuntimeAndorid
+//            "mobilenet_v2-opt.onnx",
         )
 
         fun getByModel(model: Model): ConvertedModel? {

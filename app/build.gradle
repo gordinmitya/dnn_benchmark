@@ -13,7 +13,7 @@ android {
         applicationId "ru.gordinmitya.dnnbenchmark"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
-        versionCode 10
+        versionCode 11
         versionName "0.3." + versionCode
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -51,7 +51,7 @@ android {
         }
         release {
             signingConfig signingConfigs.release
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             firebaseCrashlytics {
                 nativeSymbolUploadEnabled false
@@ -105,6 +105,6 @@ dependencies {
     implementation project(path: ':pytorch')
     implementation project(path: ':opencv')
     implementation project(path: ':mace')
-    implementation project(path: ':snpe')
+//    implementation project(path: ':snpe')
     implementation project(path: ':onnxruntime')
 }
