@@ -10,7 +10,10 @@ class BenchmarkResult(
     val times: List<Long>,
 ) : Parcelable {
     override fun toString(): String {
-        return "avg=${"%.2f".format(times.average())}ms min=${times.min()}ms max=${times.max()}ms"
+        val mean = times.average()
+        val variance = times.map { it * it }.average()
+        val stdev = Math.sqrt(variance)
+        return "avg=${"%.2f".format(mean)}ms sd=${"%.2f".format(stdev)}ms"
     }
 
     companion object {

@@ -24,7 +24,7 @@ class ClassificationEvaluator :
         return ClassificationPrecisionResult(
             1.0f * errors / total,
             losses.map { it.l1 }.average().toFloat(),
-            losses.map { it.max }.max()!!
+            losses.map { it.max }.max()
         )
     }
 

@@ -1,6 +1,6 @@
 package ru.gordinmitya.dnnbenchmark.classification
 
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import ru.gordinmitya.dnnbenchmark.benchmark.PrecisionResult
 
 @Parcelize
