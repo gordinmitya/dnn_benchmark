@@ -14,13 +14,13 @@ public enum MNNForwardType {
      */
     FORWARD_AUTO(4),
     /**
-     * OPENGL
-     */
-    FORWARD_OPENGL(6),
-    /**
      * VULKAN
      */
-    FORWARD_VULKAN(7);
+    FORWARD_VULKAN(7),
+    /**
+     * NN Api
+     */
+    FORWARD_NN(5);
 
     public int type;
 

@@ -9,13 +9,14 @@ import ru.gordinmitya.common.segmentation.SegmentationFramework
 import ru.gordinmitya.common.segmentation.SegmentationModel
 import ru.gordinmitya.common.segmentation.Segmentator
 
-class MNNFramework : InferenceFramework("MNN", Version("?")), ClassificationFramework,
+class MNNFramework : InferenceFramework("MNN", Version("2.2.0", "4634ed8")),
+    ClassificationFramework,
     SegmentationFramework {
     private val TYPES = arrayListOf(
         CPU,
         OPEN_CL,
         VULKAN,
-        OPEN_GL
+        NN,
     )
 
     override fun getInferenceTypes(): List<InferenceType> = TYPES

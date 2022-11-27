@@ -8,7 +8,6 @@ import ru.gordinmitya.common.NativeHelper;
 
 public class MNNNetNative {
     public static final boolean LOADED_CL;
-    public static final boolean LOADED_GL;
     public static final boolean LOADED_VULKAN;
 
     private static boolean loadGpuLibrary(String name) {
@@ -24,11 +23,8 @@ public class MNNNetNative {
     // load libraries
     static {
         NativeHelper.loadLibrary("MNN");
-
         LOADED_CL = loadGpuLibrary("MNN_CL");
-        LOADED_GL = loadGpuLibrary("MNN_GL");
         LOADED_VULKAN = loadGpuLibrary("MNN_Vulkan");
-
         NativeHelper.loadLibrary("mnncore");
     }
 
