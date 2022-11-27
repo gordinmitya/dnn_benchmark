@@ -8,6 +8,7 @@ apply plugin: 'com.google.firebase.crashlytics'
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
+    ndkVersion rootProject.ndkVersion
 
     defaultConfig {
         applicationId "ru.gordinmitya.dnnbenchmark"
@@ -94,19 +95,19 @@ dependencies {
     implementation 'com.google.firebase:firebase-common-ktx'
     implementation 'com.google.firebase:firebase-firestore-ktx'
 
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.2'
-    testImplementation 'io.mockk:mockk:1.9.3'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.1'
+    testImplementation 'io.mockk:mockk:1.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
 
     implementation project(path: ':common')
     implementation project(path: ':mnn')
-    implementation project(path: ':tf_mobile')
     implementation project(path: ':tflite')
     implementation project(path: ':ncnn')
     implementation project(path: ':pytorch')
     implementation project(path: ':opencv')
-    implementation project(path: ':mace')
-//    implementation project(path: ':snpe')
     implementation project(path: ':onnxruntime')
+//    implementation project(path: ':mace')
+//    implementation project(path: ':tf_mobile')
+//    implementation project(path: ':snpe')
 }

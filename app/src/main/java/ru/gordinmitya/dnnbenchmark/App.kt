@@ -7,7 +7,16 @@ import ru.gordinmitya.common.segmentation.DeepLabModel
 import kotlin.reflect.KClass
 
 class App : Application() {
-    lateinit var frameworks: List<String>
+    val frameworks = listOf(
+        "ru.gordinmitya.mnn.MNNFramework",
+        "ru.gordinmitya.ncnn.NCNNFramework",
+        "ru.gordinmitya.tflite.TFLiteFramework",
+        "ru.gordinmitya.onnxruntime.ONNXFramework",
+        "ru.gordinmitya.pytorch.PytorchFramework",
+        "ru.gordinmitya.opencv.OpenCVFramework",
+//        "ru.gordinmitya.mace.MACEFramework",
+//        "ru.gordinmitya.tf_mobile.TFMobileFramework",
+    )
     val models = listOf(
         MobileNetModel,
 //        DeepLabModel
@@ -20,27 +29,6 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
-//        val frameworkClassess = listOf(
-//            NCNNFramework::class,
-//            MNNFramework::class,
-//            TFLiteFramework::class,
-//            PytorchFramework::class,
-//            OpenCVFramework::class,
-//            ONNXFramework::class,
-//            MACEFramework()::class,
-//            TFMobileFramework()::class,
-//        )
-//        frameworks = frameworkClassess.map { it.simpleName!! to it.qualifiedName!! }
-        frameworks = arrayListOf(
-            "ru.gordinmitya.mnn.MNNFramework",
-            "ru.gordinmitya.ncnn.NCNNFramework",
-            "ru.gordinmitya.tflite.TFLiteFramework",
-            "ru.gordinmitya.onnxruntime.ONNXFramework",
-            "ru.gordinmitya.pytorch.PytorchFramework",
-            "ru.gordinmitya.opencv.OpenCVFramework",
-//            "ru.gordinmitya.mace.MACEFramework",
-//            "ru.gordinmitya.tf_mobile.TFMobileFramework"
-        )
     }
 
     @Suppress("SimplifyBooleanWithConstants")

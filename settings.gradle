@@ -1,12 +1,12 @@
 include ':app',
         ':common',
         ':mnn',
-        ':tf_mobile',
         ':tflite',
         ':ncnn',
         ':pytorch',
         ':opencv',
-        ':mace',
         ':onnxruntime'
+//        ':tf_mobile',
+//        ':mace',
 //        ':snpe'
 rootProject.name='DnnBenchmark'
