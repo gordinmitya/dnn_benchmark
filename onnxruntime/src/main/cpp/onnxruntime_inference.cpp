@@ -6,6 +6,7 @@
 //  Copyright © 2020 rohith kvsp. All rights reserved.
 //
 
+#include <cassert>
 #include "onnxruntime_inference.h"
 #include "logs.h"
 #include "preprocess.h"

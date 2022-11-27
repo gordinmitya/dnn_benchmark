@@ -16,7 +16,8 @@
         tools:ignore="GoogleAppIndexingWarning">
         <activity
             android:name=".MainActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize">
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -30,6 +31,18 @@
         <service
             android:name=".worker.WorkerProcess"
             android:process=":worker" />
+
+        <uses-native-library
+            android:name="libOpenCL.so"
+            android:required="false" />
+
+        <uses-native-library
+            android:name="libGLES_mali.so"
+            android:required="false" />
+
+        <uses-native-library
+            android:name="libmali.so"
+            android:required="false" />
     </application>
 
 </manifest>

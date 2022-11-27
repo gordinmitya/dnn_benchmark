@@ -20,8 +20,8 @@ jobs:
         uses: actions/checkout@v2
         with:
           lfs: true
-      - name: Download SNPE library
-        run: wget -q -P snpe/libs ${{ secrets.SNPE_AAR_LINK }}
+#      - name: Download SNPE library
+#        run: wget -q -P snpe/libs ${{ secrets.SNPE_AAR_LINK }}
       - name: Decrypt and unzip keys
         run: |
           echo "${{ secrets.SECRET_ZIP }}" | base64 -d > secure.zip

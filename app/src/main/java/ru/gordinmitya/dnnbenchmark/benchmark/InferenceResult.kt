@@ -1,14 +1,14 @@
 package ru.gordinmitya.dnnbenchmark.benchmark
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import ru.gordinmitya.dnnbenchmark.model.ConfigurationEntity
 
 sealed class InferenceResult : Parcelable {
     abstract val configuration: ConfigurationEntity
 
     override fun toString(): String = configuration.run {
-        val taskLetter = configuration.task[0].toUpperCase()
+        val taskLetter = configuration.task[0].uppercaseChar()
         return "$taskLetter $frameworkName $inferenceType"
     }
 }
