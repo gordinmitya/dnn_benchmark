@@ -9,7 +9,7 @@ import ru.gordinmitya.common.segmentation.SegmentationFramework
 import ru.gordinmitya.common.segmentation.SegmentationModel
 import ru.gordinmitya.common.segmentation.Segmentator
 
-class TFLiteFramework : InferenceFramework("TFLite", "by Google"),
+class TFLiteFramework : InferenceFramework("TFLite", Version("2.3.0")),
     ClassificationFramework,
     SegmentationFramework {
 

@@ -5,7 +5,7 @@ import android.util.Log
 import java.io.*
 
 object NativeHelper {
-    private fun processName(): String? {
+    private fun processName(): String {
         val path = "/proc/" + Process.myPid() + "/cmdline"
         BufferedReader(InputStreamReader(FileInputStream(path), "iso-8859-1")).use { reader ->
             var c: Int

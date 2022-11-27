@@ -1,7 +1,7 @@
 package ru.gordinmitya.dnnbenchmark.model
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import ru.gordinmitya.common.Configuration
 import ru.gordinmitya.dnnbenchmark.App
 import java.util.*
@@ -9,6 +9,7 @@ import java.util.*
 @Parcelize
 class ConfigurationEntity(
     val frameworkName: String,
+    val frameworkVersion: String,
     val frameworkClassName: String,
     val inferenceType: String,
     val isSupported: Boolean,
@@ -18,10 +19,11 @@ class ConfigurationEntity(
 
     constructor(configuration: Configuration) : this(
         frameworkName = configuration.inferenceFramework.name,
+        frameworkVersion = configuration.inferenceFramework.version.toString(),
         frameworkClassName = App.describeFramework(configuration.inferenceFramework.javaClass.kotlin),
         inferenceType = configuration.inferenceType.name,
         isSupported = configuration.inferenceType.isSupported,
-        task = configuration.model.task.name.toLowerCase(Locale.ROOT),
+        task = configuration.model.task.name.lowercase(Locale.ROOT),
         model = configuration.model.name
     )
 

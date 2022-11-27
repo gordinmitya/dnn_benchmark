@@ -85,7 +85,7 @@ class MainActivity : AppCompatActivity() {
         delay(sleep)
         configurations.forEach { configuration ->
             logger.spoiler("Running with ${configuration.inferenceFramework} on ${configuration.inferenceType}…")
-            val result =
+            val result: InferenceResult =
                 if (!configuration.inferenceType.isSupported) {
                     NotSupportedResult(ConfigurationEntity(configuration))
                 } else {

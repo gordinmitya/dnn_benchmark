@@ -9,7 +9,7 @@ import ru.gordinmitya.common.segmentation.SegmentationFramework
 import ru.gordinmitya.common.segmentation.SegmentationModel
 import ru.gordinmitya.common.segmentation.Segmentator
 
-class MNNFramework : InferenceFramework("MNN", "by Alibaba"), ClassificationFramework,
+class MNNFramework : InferenceFramework("MNN", Version("?")), ClassificationFramework,
     SegmentationFramework {
     private val TYPES = arrayListOf(
         CPU,

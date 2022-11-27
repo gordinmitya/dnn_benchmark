@@ -1,14 +1,11 @@
 package ru.gordinmitya.onnxruntime
 
 import android.content.Context
-import ru.gordinmitya.common.Configuration
-import ru.gordinmitya.common.InferenceFramework
-import ru.gordinmitya.common.InferenceType
-import ru.gordinmitya.common.Model
+import ru.gordinmitya.common.*
 import ru.gordinmitya.common.classification.ClassificationFramework
 import ru.gordinmitya.common.classification.Classifier
 
-class ONNXFramework : InferenceFramework("onnxruntime", "by Microsoft"), ClassificationFramework {
+class ONNXFramework : InferenceFramework("onnxruntime", Version("?")), ClassificationFramework {
     private val types = arrayListOf(
         ONNX_CPU,
         ONNX_NNAPI

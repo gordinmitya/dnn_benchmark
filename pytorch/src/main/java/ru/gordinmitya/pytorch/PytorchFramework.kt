@@ -1,15 +1,12 @@
 package ru.gordinmitya.pytorch
 
 import android.content.Context
-import ru.gordinmitya.common.Configuration
-import ru.gordinmitya.common.InferenceFramework
-import ru.gordinmitya.common.InferenceType
-import ru.gordinmitya.common.Model
+import ru.gordinmitya.common.*
 import ru.gordinmitya.common.classification.ClassificationFramework
 import ru.gordinmitya.common.classification.ClassificationModel
 import ru.gordinmitya.common.classification.Classifier
 
-class PytorchFramework : InferenceFramework("Pytorch", "by Facebook"), ClassificationFramework {
+class PytorchFramework : InferenceFramework("Pytorch", Version("1.5.0")), ClassificationFramework {
     private val TYPES = listOf(PYTORCH_CPU)
 
     override fun getInferenceTypes(): List<InferenceType> = TYPES

@@ -1,11 +1,9 @@
 package ru.gordinmitya.common
 
-import android.content.Context
 import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.assertDoesNotThrow
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
-import ru.gordinmitya.common.classification.Classifier
 
 internal class ConfigurationTest {
     private fun createFramework(): InferenceFramework {
@@ -17,15 +15,10 @@ internal class ConfigurationTest {
             mockk(),
             mockk()
         )
-        return object : InferenceFramework("", "") {
+        return object : InferenceFramework("", Version("?")) {
             override fun getInferenceTypes(): List<InferenceType> = types
 
             override fun getModels(): List<Model> = models
-
-            override fun createClassifier(
-                context: Context,
-                configuration: Configuration
-            ): Classifier = mockk()
         }
     }
 

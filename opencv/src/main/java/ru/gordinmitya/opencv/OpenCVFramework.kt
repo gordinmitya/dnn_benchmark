@@ -1,12 +1,13 @@
 package ru.gordinmitya.opencv
 
 import android.content.Context
+import org.opencv.android.OpenCVLoader.OPENCV_VERSION
 import ru.gordinmitya.common.*
 import ru.gordinmitya.common.classification.ClassificationFramework
 import ru.gordinmitya.common.classification.ClassificationModel
 import ru.gordinmitya.common.classification.Classifier
 
-class OpenCVFramework : InferenceFramework("OpenCV DNN", "by OpenCV"), ClassificationFramework {
+class OpenCVFramework : InferenceFramework("OpenCV DNN", Version(OPENCV_VERSION)), ClassificationFramework {
     private val TYPES = listOf(OPENCV_CPU)
 
     override fun getInferenceTypes(): List<InferenceType> = TYPES
