@@ -9,13 +9,13 @@ import ru.gordinmitya.common.segmentation.SegmentationFramework
 import ru.gordinmitya.common.segmentation.SegmentationModel
 import ru.gordinmitya.common.segmentation.Segmentator
 
-class TFLiteFramework : InferenceFramework("TFLite", Version("2.3.0")),
+class TFLiteFramework : InferenceFramework("TFLite", Version("2.10.0")),
     ClassificationFramework,
     SegmentationFramework {
 
     private val TYPES = listOf(
         TFLITE_CPU,
-        TFLITE_OPENGL,
+        TFLITE_GPU,
         TFLITE_NNAPI
     )
 

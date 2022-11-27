@@ -4,10 +4,10 @@ import android.content.Context
 import android.graphics.Bitmap
 import org.tensorflow.lite.Delegate
 import org.tensorflow.lite.Interpreter
+import org.tensorflow.lite.gpu.CompatibilityList
 import org.tensorflow.lite.gpu.GpuDelegate
 import org.tensorflow.lite.nnapi.NnApiDelegate
 import org.tensorflow.lite.support.common.FileUtil
-import org.tensorflow.lite.support.common.ops.NormalizeOp
 import org.tensorflow.lite.support.image.ImageProcessor
 import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
@@ -34,7 +34,11 @@ class TFLiteClassifier(
         val byteBuffer = FileUtil.loadMappedFile(context, convertedModel.file)
 
         delegate = when (inferenceType) {
-            TFLITE_OPENGL -> GpuDelegate()
+            TFLITE_GPU -> {
+                val compatList = CompatibilityList()
+                val delegateOptions = compatList.bestOptionsForThisDevice
+                GpuDelegate(delegateOptions)
+            }
             TFLITE_NNAPI -> NnApiDelegate()
             TFLITE_CPU -> null
         }

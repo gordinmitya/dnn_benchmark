@@ -32,8 +32,12 @@ android {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-    implementation 'org.tensorflow:tensorflow-lite:2.3.0'
-    implementation 'org.tensorflow:tensorflow-lite-gpu:2.3.0'
+    /*
+        Don't forget to change version in model description file!
+     */
+    implementation 'org.tensorflow:tensorflow-lite:2.10.0'
+    implementation 'org.tensorflow:tensorflow-lite-gpu:2.10.0'
+    implementation 'org.tensorflow:tensorflow-lite-gpu-api:2.10.0'
     implementation 'org.tensorflow:tensorflow-lite-support:0.0.0-nightly'
 
     implementation project(path: ':common')

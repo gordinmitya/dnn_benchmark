@@ -24,8 +24,11 @@ android {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-    implementation 'org.pytorch:pytorch_android:1.5.0'
-    implementation 'org.pytorch:pytorch_android_torchvision:1.5.0'
+    /*
+        Don't forget to change version in model description file!
+     */
+    implementation 'org.pytorch:pytorch_android:1.12.2'
+    implementation 'org.pytorch:pytorch_android_torchvision:1.12.2'
 
     implementation project(path: ':common')
 }

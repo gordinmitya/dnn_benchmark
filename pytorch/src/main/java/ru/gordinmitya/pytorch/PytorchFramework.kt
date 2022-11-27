@@ -6,7 +6,7 @@ import ru.gordinmitya.common.classification.ClassificationFramework
 import ru.gordinmitya.common.classification.ClassificationModel
 import ru.gordinmitya.common.classification.Classifier
 
-class PytorchFramework : InferenceFramework("Pytorch", Version("1.5.0")), ClassificationFramework {
+class PytorchFramework : InferenceFramework("Pytorch", Version("1.12.2")), ClassificationFramework {
     private val TYPES = listOf(PYTORCH_CPU)
 
     override fun getInferenceTypes(): List<InferenceType> = TYPES
