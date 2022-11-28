@@ -29,6 +29,8 @@ public class NCNNNative {
             throw new RuntimeException("init wasn't called or failed");
     }
 
+    public static native boolean isGpuAvailable();
+
     private static native long nativeInit(AssetManager mgr, String paramFile, String binFile, int threads, boolean gpu);
 
     private static native boolean nativeRun(long netPtr, Bitmap bitmap, float[] output);

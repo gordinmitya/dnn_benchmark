@@ -16,11 +16,11 @@ add_library(
         ncnnnative.cpp
 )
 
-add_library(libncnn STATIC IMPORTED)
+add_library(libncnn SHARED IMPORTED)
 set_target_properties(
         libncnn
         PROPERTIES IMPORTED_LOCATION
-        ${lib_DIR}/${ANDROID_ABI}/libncnn.a
+        ${lib_DIR}/${ANDROID_ABI}/libncnn.so
 )
 
 target_link_libraries(

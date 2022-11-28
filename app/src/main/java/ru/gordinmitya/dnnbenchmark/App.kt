@@ -8,8 +8,8 @@ import kotlin.reflect.KClass
 
 class App : Application() {
     val frameworks = listOf(
-        "ru.gordinmitya.mnn.MNNFramework",
         "ru.gordinmitya.ncnn.NCNNFramework",
+        "ru.gordinmitya.mnn.MNNFramework",
         "ru.gordinmitya.tflite.TFLiteFramework",
         "ru.gordinmitya.onnxruntime.ONNXFramework",
         "ru.gordinmitya.pytorch.PytorchFramework",

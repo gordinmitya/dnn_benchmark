@@ -29,6 +29,11 @@ void releaseNet(ncnn::Net *net) {
         ncnn::destroy_gpu_instance();
 }
 
+JNIEXPORT jboolean JNICALL
+Java_ru_gordinmitya_ncnn_NCNNNative_isGpuAvailable(JNIEnv *env, jclass type) {
+    return ncnn::get_gpu_count() > 0;
+}
+
 JNIEXPORT jlong JNICALL
 Java_ru_gordinmitya_ncnn_NCNNNative_nativeInit(JNIEnv *env, jclass type, jobject assetManager,
                                                jstring paramFile_,

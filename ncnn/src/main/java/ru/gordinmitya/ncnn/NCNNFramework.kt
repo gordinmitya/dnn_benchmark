@@ -5,7 +5,7 @@ import ru.gordinmitya.common.*
 import ru.gordinmitya.common.classification.ClassificationFramework
 import ru.gordinmitya.common.classification.Classifier
 
-class NCNNFramework : InferenceFramework("NCNN", Version("?")), ClassificationFramework {
+class NCNNFramework : InferenceFramework("NCNN", Version("20221128", "03550ba")), ClassificationFramework {
     private val types = arrayListOf(
         NCNN_CPU,
         NCNN_VULKAN
